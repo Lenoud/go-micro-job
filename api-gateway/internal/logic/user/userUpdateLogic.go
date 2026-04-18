@@ -29,13 +29,16 @@ func NewUserUpdateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UserUp
 
 func (l *UserUpdateLogic) UserUpdate(req *types.UpdateUserReq) (resp *types.ApiResponse, err error) {
 	rpcResp, err := l.svcCtx.UserRpc.Update(l.ctx, &userclient.UpdateUserReq{
-		Id:       req.Id,
-		Username: req.Username,
-		Nickname: req.Nickname,
-		Mobile:   req.Mobile,
-		Email:    req.Email,
-		Role:     req.Role,
-		Status:   req.Status,
+		Id:         req.Id,
+		Username:   req.Username,
+		Nickname:   req.Nickname,
+		Mobile:     req.Mobile,
+		Email:      req.Email,
+		Role:       req.Role,
+		Status:     req.Status,
+		Password:   req.Password,
+		PushEmail:  req.PushEmail,
+		PushSwitch: req.PushSwitch,
 	})
 	if err != nil {
 		return &types.ApiResponse{Code: -1, Msg: "rpc调用失败", Timestamp: time.Now().UnixMilli()}, nil

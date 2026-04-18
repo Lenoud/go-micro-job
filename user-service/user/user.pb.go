@@ -480,6 +480,9 @@ type UpdateUserReq struct {
 	Email         string                 `protobuf:"bytes,5,opt,name=email,proto3" json:"email,omitempty"`
 	Role          string                 `protobuf:"bytes,6,opt,name=role,proto3" json:"role,omitempty"`
 	Status        string                 `protobuf:"bytes,7,opt,name=status,proto3" json:"status,omitempty"`
+	Password      string                 `protobuf:"bytes,8,opt,name=password,proto3" json:"password,omitempty"`
+	PushEmail     string                 `protobuf:"bytes,9,opt,name=pushEmail,proto3" json:"pushEmail,omitempty"`
+	PushSwitch    string                 `protobuf:"bytes,10,opt,name=pushSwitch,proto3" json:"pushSwitch,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -563,6 +566,27 @@ func (x *UpdateUserReq) GetStatus() string {
 	return ""
 }
 
+func (x *UpdateUserReq) GetPassword() string {
+	if x != nil {
+		return x.Password
+	}
+	return ""
+}
+
+func (x *UpdateUserReq) GetPushEmail() string {
+	if x != nil {
+		return x.PushEmail
+	}
+	return ""
+}
+
+func (x *UpdateUserReq) GetPushSwitch() string {
+	if x != nil {
+		return x.PushSwitch
+	}
+	return ""
+}
+
 // ---- 用户更新自己的信息 ----
 type UpdateUserInfoReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -570,6 +594,8 @@ type UpdateUserInfoReq struct {
 	Nickname      string                 `protobuf:"bytes,2,opt,name=nickname,proto3" json:"nickname,omitempty"`
 	Mobile        string                 `protobuf:"bytes,3,opt,name=mobile,proto3" json:"mobile,omitempty"`
 	Email         string                 `protobuf:"bytes,4,opt,name=email,proto3" json:"email,omitempty"`
+	PushEmail     string                 `protobuf:"bytes,5,opt,name=pushEmail,proto3" json:"pushEmail,omitempty"`
+	PushSwitch    string                 `protobuf:"bytes,6,opt,name=pushSwitch,proto3" json:"pushSwitch,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -632,10 +658,24 @@ func (x *UpdateUserInfoReq) GetEmail() string {
 	return ""
 }
 
+func (x *UpdateUserInfoReq) GetPushEmail() string {
+	if x != nil {
+		return x.PushEmail
+	}
+	return ""
+}
+
+func (x *UpdateUserInfoReq) GetPushSwitch() string {
+	if x != nil {
+		return x.PushSwitch
+	}
+	return ""
+}
+
 // ---- 修改密码 ----
 type UpdatePwdReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	UserId        string                 `protobuf:"bytes,1,opt,name=userId,proto3" json:"userId,omitempty"`
 	OldPassword   string                 `protobuf:"bytes,2,opt,name=oldPassword,proto3" json:"oldPassword,omitempty"`
 	NewPassword   string                 `protobuf:"bytes,3,opt,name=newPassword,proto3" json:"newPassword,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -672,9 +712,9 @@ func (*UpdatePwdReq) Descriptor() ([]byte, []int) {
 	return file_user_proto_rawDescGZIP(), []int{9}
 }
 
-func (x *UpdatePwdReq) GetId() string {
+func (x *UpdatePwdReq) GetUserId() string {
 	if x != nil {
-		return x.Id
+		return x.UserId
 	}
 	return ""
 }
@@ -875,7 +915,7 @@ const file_user_proto_rawDesc = "" +
 	"\x06mobile\x18\x04 \x01(\tR\x06mobile\x12\x14\n" +
 	"\x05email\x18\x05 \x01(\tR\x05email\x12\x12\n" +
 	"\x04role\x18\x06 \x01(\tR\x04role\x12\x16\n" +
-	"\x06status\x18\a \x01(\tR\x06status\"\xb1\x01\n" +
+	"\x06status\x18\a \x01(\tR\x06status\"\x8b\x02\n" +
 	"\rUpdateUserReq\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1a\n" +
 	"\busername\x18\x02 \x01(\tR\busername\x12\x1a\n" +
@@ -883,14 +923,24 @@ const file_user_proto_rawDesc = "" +
 	"\x06mobile\x18\x04 \x01(\tR\x06mobile\x12\x14\n" +
 	"\x05email\x18\x05 \x01(\tR\x05email\x12\x12\n" +
 	"\x04role\x18\x06 \x01(\tR\x04role\x12\x16\n" +
-	"\x06status\x18\a \x01(\tR\x06status\"m\n" +
+	"\x06status\x18\a \x01(\tR\x06status\x12\x1a\n" +
+	"\bpassword\x18\b \x01(\tR\bpassword\x12\x1c\n" +
+	"\tpushEmail\x18\t \x01(\tR\tpushEmail\x12\x1e\n" +
+	"\n" +
+	"pushSwitch\x18\n" +
+	" \x01(\tR\n" +
+	"pushSwitch\"\xab\x01\n" +
 	"\x11UpdateUserInfoReq\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1a\n" +
 	"\bnickname\x18\x02 \x01(\tR\bnickname\x12\x16\n" +
 	"\x06mobile\x18\x03 \x01(\tR\x06mobile\x12\x14\n" +
-	"\x05email\x18\x04 \x01(\tR\x05email\"b\n" +
-	"\fUpdatePwdReq\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12 \n" +
+	"\x05email\x18\x04 \x01(\tR\x05email\x12\x1c\n" +
+	"\tpushEmail\x18\x05 \x01(\tR\tpushEmail\x12\x1e\n" +
+	"\n" +
+	"pushSwitch\x18\x06 \x01(\tR\n" +
+	"pushSwitch\"j\n" +
+	"\fUpdatePwdReq\x12\x16\n" +
+	"\x06userId\x18\x01 \x01(\tR\x06userId\x12 \n" +
 	"\voldPassword\x18\x02 \x01(\tR\voldPassword\x12 \n" +
 	"\vnewPassword\x18\x03 \x01(\tR\vnewPassword\"\x1d\n" +
 	"\tDeleteReq\x12\x10\n" +

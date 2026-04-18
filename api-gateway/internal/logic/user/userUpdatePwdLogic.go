@@ -29,7 +29,7 @@ func NewUserUpdatePwdLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Use
 
 func (l *UserUpdatePwdLogic) UserUpdatePwd(req *types.UpdatePwdReq) (resp *types.ApiResponse, err error) {
 	rpcResp, err := l.svcCtx.UserRpc.UpdatePwd(l.ctx, &userclient.UpdatePwdReq{
-		Id:          req.Id,
+		UserId:      req.UserId,
 		OldPassword: req.OldPassword,
 		NewPassword: req.NewPassword,
 	})

@@ -53,6 +53,15 @@ func (l *UpdateLogic) Update(in *user.UpdateUserReq) (*user.ApiResponse, error) 
 	if in.Status != "" {
 		existing.Status = in.Status
 	}
+	if in.Password != "" {
+		existing.Password = common.EncryptPassword(in.Password)
+	}
+	if in.PushEmail != "" {
+		existing.PushEmail = in.PushEmail
+	}
+	if in.PushSwitch != "" {
+		existing.PushSwitch = in.PushSwitch
+	}
 
 	if err := l.svcCtx.UserModel.Update(l.ctx, existing); err != nil {
 		return common.Fail("更新用户失败"), nil

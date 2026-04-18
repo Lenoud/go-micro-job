@@ -53,14 +53,14 @@ check_infra
 
 # 确保 micro_job 数据库和表存在（复用根目录 mysql 3306）
 print_info "[dev] ensuring database micro_job exists..."
-docker exec go_job_mysql mysql -uroot -proot123 \
+docker exec go_job_mysql mysql -uroot -proot123 --default-character-set=utf8mb4 \
   -e "CREATE DATABASE IF NOT EXISTS micro_job CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;" 2>/dev/null \
   || print_warn "[dev] could not create database, may already exist or mysql not accessible via docker"
 
 print_info "[dev] importing schema into micro_job..."
 USER_SQL="$MICRO_DIR/sql/user.sql"
 if [[ -f "$USER_SQL" ]]; then
-  docker exec -i go_job_mysql mysql -uroot -proot123 < "$USER_SQL" 2>/dev/null \
+  docker exec -i go_job_mysql mysql -uroot -proot123 --default-character-set=utf8mb4 < "$USER_SQL" 2>/dev/null \
     || print_warn "[dev] schema import failed or already imported"
 fi
 

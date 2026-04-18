@@ -44,6 +44,12 @@ func (l *UpdateUserInfoLogic) UpdateUserInfo(in *user.UpdateUserInfoReq) (*user.
 	if in.Email != "" {
 		existing.Email = in.Email
 	}
+	if in.PushEmail != "" {
+		existing.PushEmail = in.PushEmail
+	}
+	if in.PushSwitch != "" {
+		existing.PushSwitch = in.PushSwitch
+	}
 
 	if err := l.svcCtx.UserModel.Update(l.ctx, existing); err != nil {
 		return common.Fail("更新用户信息失败"), nil

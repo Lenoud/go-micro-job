@@ -56,26 +56,31 @@ message CreateUserReq {
 
 // ---- 更新用户（管理员） ----
 message UpdateUserReq {
-  string id       = 1;
-  string username = 2;
-  string nickname = 3;
-  string mobile   = 4;
-  string email    = 5;
-  string role     = 6;
-  string status   = 7;
+  string id         = 1;
+  string username   = 2;
+  string nickname   = 3;
+  string mobile     = 4;
+  string email      = 5;
+  string role       = 6;
+  string status     = 7;
+  string password   = 8;
+  string pushEmail  = 9;
+  string pushSwitch = 10;
 }
 
 // ---- 用户更新自己的信息 ----
 message UpdateUserInfoReq {
-  string id       = 1;
-  string nickname = 2;
-  string mobile   = 3;
-  string email    = 4;
+  string id         = 1;
+  string nickname   = 2;
+  string mobile     = 3;
+  string email      = 4;
+  string pushEmail  = 5;
+  string pushSwitch = 6;
 }
 
 // ---- 修改密码 ----
 message UpdatePwdReq {
-  string id          = 1;
+  string userId      = 1;
   string oldPassword = 2;
   string newPassword = 3;
 }
