@@ -58,11 +58,9 @@ docker exec go_job_mysql mysql -uroot -proot123 \
   || print_warn "[dev] could not create database, may already exist or mysql not accessible via docker"
 
 print_info "[dev] importing schema into micro_job..."
-INIT_SQL="$MICRO_DIR/../sql/init.sql"
-if [[ -f "$INIT_SQL" ]]; then
-  sed 's/^USE `java_job`;/USE `micro_job`;/' "$INIT_SQL" \
-    | grep -v '^mysqldump:' \
-    | docker exec -i go_job_mysql mysql -uroot -proot123 2>/dev/null \
+USER_SQL="$MICRO_DIR/sql/user.sql"
+if [[ -f "$USER_SQL" ]]; then
+  docker exec -i go_job_mysql mysql -uroot -proot123 < "$USER_SQL" 2>/dev/null \
     || print_warn "[dev] schema import failed or already imported"
 fi
 
