@@ -13,9 +13,9 @@ import (
 )
 
 type LoginLogic struct {
+	logx.Logger
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
-	logx.Logger
 }
 
 func NewLoginLogic(ctx context.Context, svcCtx *svc.ServiceContext) *LoginLogic {
@@ -37,7 +37,7 @@ func (l *LoginLogic) Login(in *user.LoginReq) (*user.ApiResponse, error) {
 	if err != nil {
 		return common.Fail("查询管理员失败"), nil
 	}
-	if u == nil || u.Role != "3" {
+	if u == nil || u.Role != common.RoleAdmin {
 		return common.Fail("用户名或密码错误"), nil
 	}
 

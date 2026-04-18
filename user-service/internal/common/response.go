@@ -19,7 +19,7 @@ func apiResp(code int64, msg string, data interface{}) *user.ApiResponse {
 }
 
 func Success(data interface{}) *user.ApiResponse {
-	return apiResp(200, "success", data)
+	return apiResp(200, "操作成功", data)
 }
 
 func SuccessMsg(msg string, data interface{}) *user.ApiResponse {
@@ -27,11 +27,11 @@ func SuccessMsg(msg string, data interface{}) *user.ApiResponse {
 }
 
 func Fail(msg string) *user.ApiResponse {
-	return apiResp(-1, msg, nil)
+	return apiResp(400, msg, nil)
 }
 
 func SuccessPage(list interface{}, total, page, pageSize int64) *user.ApiResponse {
-	return apiResp(200, "success", map[string]interface{}{
+	return apiResp(200, "操作成功", map[string]interface{}{
 		"list":     list,
 		"total":    total,
 		"page":     page,

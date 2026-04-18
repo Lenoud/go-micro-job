@@ -11,9 +11,9 @@ import (
 )
 
 type ListLogic struct {
+	logx.Logger
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
-	logx.Logger
 }
 
 func NewListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ListLogic {

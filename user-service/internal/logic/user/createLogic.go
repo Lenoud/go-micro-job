@@ -12,9 +12,9 @@ import (
 )
 
 type CreateLogic struct {
+	logx.Logger
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
-	logx.Logger
 }
 
 func NewCreateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *CreateLogic {
@@ -44,7 +44,7 @@ func (l *CreateLogic) Create(in *user.CreateUserReq) (*user.ApiResponse, error) 
 
 	role := in.Role
 	if role == "" {
-		role = "1"
+		role = common.RoleJobseeker
 	}
 	status := in.Status
 	if status == "" {

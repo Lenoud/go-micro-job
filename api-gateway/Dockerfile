@@ -14,6 +14,9 @@ WORKDIR /build/api-gateway
 RUN go build -o apigateway apigateway.go
 
 FROM alpine:3.20
+RUN apk --no-cache add ca-certificates tzdata
+ENV TZ=Asia/Shanghai
+
 WORKDIR /app
 COPY --from=builder /build/api-gateway/apigateway /app/apigateway
 COPY --from=builder /build/api-gateway/etc /app/etc
