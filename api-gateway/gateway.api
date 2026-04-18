@@ -1,0 +1,130 @@
+syntax = "v1"
+
+info (
+	title:   "api-gateway"
+	desc:    "REST API Gateway for microservices"
+	author:  "micro"
+	version: "v1"
+)
+
+// ---- 公共类型 ----
+type (
+	ApiResponse {
+		Code      int64       `json:"code"`
+		Msg       string      `json:"msg"`
+		Data      interface{} `json:"data,optional"`
+		Timestamp int64       `json:"timestamp"`
+	}
+	LoginReq {
+		Username string `json:"username"`
+		Password string `json:"password"`
+	}
+	UserLoginReq {
+		Username string `json:"username"`
+		Password string `json:"password"`
+	}
+	UserRegisterReq {
+		Username   string `json:"username"`
+		Password   string `json:"password"`
+		RePassword string `json:"rePassword"`
+		Nickname   string `json:"nickname,optional"`
+		Mobile     string `json:"mobile,optional"`
+		Email      string `json:"email,optional"`
+	}
+	UserDetailReq {
+		UserId string `form:"userId"`
+	}
+	UserListReq {
+		Keyword  string `form:"keyword,optional"`
+		Page     int64  `form:"page,optional,default=1"`
+		PageSize int64  `form:"pageSize,optional,default=10"`
+	}
+	CreateUserReq {
+		Username string `json:"username"`
+		Password string `json:"password"`
+		Nickname string `json:"nickname,optional"`
+		Mobile   string `json:"mobile,optional"`
+		Email    string `json:"email,optional"`
+		Role     string `json:"role,optional"`
+		Status   string `json:"status,optional"`
+	}
+	UpdateUserReq {
+		Id       string `json:"id"`
+		Username string `json:"username,optional"`
+		Nickname string `json:"nickname,optional"`
+		Mobile   string `json:"mobile,optional"`
+		Email    string `json:"email,optional"`
+		Role     string `json:"role,optional"`
+		Status   string `json:"status,optional"`
+	}
+	UpdateUserInfoReq {
+		Id       string `json:"id"`
+		Nickname string `json:"nickname,optional"`
+		Mobile   string `json:"mobile,optional"`
+		Email    string `json:"email,optional"`
+	}
+	UpdatePwdReq {
+		Id          string `json:"id"`
+		OldPassword string `json:"oldPassword"`
+		NewPassword string `json:"newPassword"`
+	}
+	DeleteReq {
+		Ids string `json:"ids"`
+	}
+)
+
+// ---- 无鉴权接口 ----
+@server (
+	prefix: /api/user
+	group:  user
+)
+service apigateway {
+	@doc "管理员登录"
+	@handler userLogin
+	post /login (LoginReq) returns (ApiResponse)
+
+	@doc "前台用户登录"
+	@handler userUserLogin
+	post /userLogin (UserLoginReq) returns (ApiResponse)
+
+	@doc "用户注册"
+	@handler userRegister
+	post /userRegister (UserRegisterReq) returns (ApiResponse)
+}
+
+// ---- 需鉴权接口 ----
+@server (
+	prefix: /api/user
+	group:  user
+	jwt:    JWT
+)
+service apigateway {
+	@doc "用户列表"
+	@handler userList
+	get /list (UserListReq) returns (ApiResponse)
+
+	@doc "用户详情"
+	@handler userDetail
+	get /detail (UserDetailReq) returns (ApiResponse)
+
+	@doc "管理员-创建用户"
+	@handler userCreate
+	post /create (CreateUserReq) returns (ApiResponse)
+
+	@doc "管理员-删除用户"
+	@handler userDelete
+	post /delete (DeleteReq) returns (ApiResponse)
+
+	@doc "管理员-更新用户"
+	@handler userUpdate
+	post /update (UpdateUserReq) returns (ApiResponse)
+
+	@doc "用户-更新信息"
+	@handler userUpdateUserInfo
+	post /updateUserInfo (UpdateUserInfoReq) returns (ApiResponse)
+
+	@doc "用户-修改密码"
+	@handler userUpdatePwd
+	post /updatePwd (UpdatePwdReq) returns (ApiResponse)
+}
+

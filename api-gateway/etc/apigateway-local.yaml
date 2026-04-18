@@ -1,0 +1,13 @@
+Name: apigateway
+Host: 0.0.0.0
+Port: 9000
+
+JWT:
+  AccessSecret: "mysecretkey123456"
+  AccessExpire: 86400
+
+UserRpc:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: user.rpc

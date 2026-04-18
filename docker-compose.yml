@@ -1,0 +1,62 @@
+services:
+  # ==================== 基础设施 ====================
+  # MySQL: 复用根目录 docker-compose 的 mysql (3306), 微服务用独立库 micro_job
+  # 本地开发时通过 dev.sh 脚本自动检查端口
+
+  redis:
+    image: redis:7
+    container_name: micro_redis
+    restart: unless-stopped
+    command: ["redis-server", "--requirepass", "redis123"]
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "redis123", "PING"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  etcd:
+    image: quay.io/coreos/etcd:v3.5.12
+    container_name: micro_etcd
+    restart: unless-stopped
+    command: >
+      etcd
+      --listen-client-urls http://0.0.0.0:2379
+      --advertise-client-urls http://etcd:2379
+    ports:
+      - "2379:2379"
+    healthcheck:
+      test: ["CMD", "etcdctl", "endpoint", "health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  # ==================== 微服务业务 ====================
+  user-service:
+    build:
+      context: .
+      dockerfile: user-service/Dockerfile
+    container_name: micro_user_service
+    restart: unless-stopped
+    ports:
+      - "9101:9101"
+    depends_on:
+      redis:
+        condition: service_healthy
+      etcd:
+        condition: service_healthy
+
+  api-gateway:
+    build:
+      context: .
+      dockerfile: api-gateway/Dockerfile
+    container_name: micro_api_gateway
+    restart: unless-stopped
+    ports:
+      - "9000:9000"
+    depends_on:
+      etcd:
+        condition: service_healthy
+      user-service:
+        condition: service_started

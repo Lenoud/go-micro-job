@@ -1,0 +1,113 @@
+syntax = "proto3";
+
+package user;
+
+option go_package = "./user";
+
+// ---- 公共响应 ----
+message ApiResponse {
+  int64 code   = 1;
+  string msg   = 2;
+  string data  = 3; // JSON string, 保持与单体 ApiResponse 一致
+}
+
+// ---- 登录 ----
+message LoginReq {
+  string username = 1;
+  string password = 2;
+}
+
+message UserLoginReq {
+  string username = 1;
+  string password = 2;
+}
+
+// ---- 注册 ----
+message RegisterReq {
+  string username   = 1;
+  string password   = 2;
+  string rePassword = 3;
+  string nickname   = 4;
+  string mobile     = 5;
+  string email      = 6;
+}
+
+// ---- 用户详情/列表 ----
+message IdReq {
+  string id = 1;
+}
+
+message UserListReq {
+  string keyword  = 1;
+  int64  page     = 2;
+  int64  pageSize = 3;
+}
+
+// ---- 创建用户（管理员） ----
+message CreateUserReq {
+  string username = 1;
+  string password = 2;
+  string nickname = 3;
+  string mobile   = 4;
+  string email    = 5;
+  string role     = 6;
+  string status   = 7;
+}
+
+// ---- 更新用户（管理员） ----
+message UpdateUserReq {
+  string id       = 1;
+  string username = 2;
+  string nickname = 3;
+  string mobile   = 4;
+  string email    = 5;
+  string role     = 6;
+  string status   = 7;
+}
+
+// ---- 用户更新自己的信息 ----
+message UpdateUserInfoReq {
+  string id       = 1;
+  string nickname = 2;
+  string mobile   = 3;
+  string email    = 4;
+}
+
+// ---- 修改密码 ----
+message UpdatePwdReq {
+  string id          = 1;
+  string oldPassword = 2;
+  string newPassword = 3;
+}
+
+// ---- 批量删除 ----
+message DeleteReq {
+  string ids = 1; // 逗号分隔
+}
+
+// ---- 用户上下文（从 JWT claims 传递） ----
+message UserContext {
+  int64  userId   = 1;
+  string username = 2;
+  string role     = 3;
+}
+
+// ---- RPC 方法 ----
+// 无需鉴权
+message Empty {}
+
+service User {
+  // 无鉴权
+  rpc Login(LoginReq) returns(ApiResponse);
+  rpc UserLogin(UserLoginReq) returns(ApiResponse);
+  rpc Register(RegisterReq) returns(ApiResponse);
+
+  // 需鉴权（api-gateway 透传 UserContext）
+  rpc Detail(IdReq) returns(ApiResponse);
+  rpc List(UserListReq) returns(ApiResponse);
+  rpc Create(CreateUserReq) returns(ApiResponse);
+  rpc Update(UpdateUserReq) returns(ApiResponse);
+  rpc Delete(DeleteReq) returns(ApiResponse);
+  rpc UpdateUserInfo(UpdateUserInfoReq) returns(ApiResponse);
+  rpc UpdatePwd(UpdatePwdReq) returns(ApiResponse);
+}

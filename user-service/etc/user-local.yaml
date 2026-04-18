@@ -1,0 +1,18 @@
+Name: user.rpc
+ListenOn: 0.0.0.0:9101
+
+Etcd:
+  Hosts:
+    - 127.0.0.1:2379
+  Key: user.rpc
+
+MySQL:
+  DataSource: "root:root123@tcp(127.0.0.1:3306)/micro_job?charset=utf8mb4&parseTime=true&loc=Local"
+
+RedisConf:
+  Addr: "127.0.0.1:6379"
+  Password: "redis123"
+
+JWT:
+  AccessSecret: "mysecretkey123456"
+  AccessExpire: 86400
