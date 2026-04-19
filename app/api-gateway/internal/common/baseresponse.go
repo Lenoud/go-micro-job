@@ -2,6 +2,7 @@ package common
 
 import (
 	"api-gateway/internal/types"
+	"time"
 )
 
 // ==================== 错误码 ====================
@@ -14,14 +15,18 @@ const (
 	CodeServer       int64 = 500
 )
 
+func currentTimeMillis() int64 {
+	return time.Now().UnixMilli()
+}
+
 // OkBase returns a BaseResp with Code=200 and the given message.
 func OkBase(msg string) types.BaseResp {
-	return types.BaseResp{Code: CodeSuccess, Msg: msg}
+	return types.BaseResp{Code: CodeSuccess, Msg: msg, Timestamp: currentTimeMillis()}
 }
 
 // FailBase returns a BaseResp with the given code and message.
 func FailBase(code int64, msg string) types.BaseResp {
-	return types.BaseResp{Code: code, Msg: msg}
+	return types.BaseResp{Code: code, Msg: msg, Timestamp: currentTimeMillis()}
 }
 
 // FailBaseMsg returns a BaseResp with Code=400.
@@ -35,6 +40,7 @@ func FailBaseForbidden(msg string) types.BaseResp {
 }
 
 // RpcBase extracts code/msg/timestamp from a gRPC response into a BaseResp.
+// For gRPC responses, the timestamp comes from user-service (no local override).
 func RpcBase(resp interface {
 	GetCode() int64
 	GetMsg() string
