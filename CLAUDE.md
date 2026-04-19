@@ -6,8 +6,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 招聘系统的微服务版本，从父仓库 `go-server-resume` 拆分而来。两个 go module 通过 `go.work` 管理：
 
-- **api-gateway**（`api-gateway/`）: REST 网关，端口 9000，接收 HTTP 请求，转发 gRPC 调用
-- **user-service**（`user-service/`）: gRPC 服务，端口 9101，含用户模块全部业务逻辑和数据库访问
+- **api-gateway**（`app/api-gateway/`）: REST 网关，端口 9000，接收 HTTP 请求，转发 gRPC 调用
+- **user-service**（`app/user-service/`）: gRPC 服务，端口 9101，含用户模块全部业务逻辑和数据库访问
 
 - **Go 版本**: 1.25.7
 - **框架**: go-zero v1.10.1
@@ -25,8 +25,8 @@ scripts/dev.sh
 scripts/stop-dev.sh
 
 # 单独编译
-cd api-gateway && go build ./...
-cd user-service && go build ./...
+cd app/api-gateway && go build ./...
+cd app/user-service && go build ./...
 ```
 
 基础设施（redis、etcd）由 `dev.sh` 自动通过 `docker compose` 启动。MySQL 依赖父仓库的 `go_job_mysql` 容器。
@@ -38,31 +38,32 @@ micro/
 ├── go.work                    # Go workspace: api-gateway + user-service
 ├── docker-compose.yml         # 基础设施 + 生产部署
 ├── scripts/                   # dev.sh, curl-test.sh, stop-dev.sh
-├── api-gateway/               # REST 网关 (go-zero rest)
-│   ├── gateway.api            # API 定义（唯一源文件）
-│   ├── apigateway.go          # 入口
-│   ├── etc/apigateway.yaml    # 生产配置
-│   ├── etc/apigateway-local.yaml  # 本地开发配置
-│   └── internal/
-│       ├── config/            # Config 结构体
-│       ├── handler/user/      # HTTP handler（goctl 生成）
-│       ├── logic/user/        # 业务逻辑（调用 gRPC client）
-│       ├── svc/               # ServiceContext，注入 UserRpc client
-│       └── types/             # 请求/响应类型（goctl 生成）
-└── user-service/              # gRPC 服务 (go-zero zrpc)
-    ├── user.proto             # Protobuf 定义（唯一源文件）
-    ├── user.go                # 入口
-    ├── etc/user.yaml          # 生产配置
-    ├── etc/user-local.yaml    # 本地开发配置
-    ├── client/user/           # gRPC client（goctl 生成，api-gateway 引用）
-    ├── user/                  # protobuf 生成代码（.pb.go）
-    └── internal/
-        ├── config/            # Config 结构体
-        ├── server/user/       # gRPC server（goctl 生成）
-        ├── logic/user/        # 核心业务逻辑
-        ├── model/             # 数据库 model + helpers
-        ├── svc/               # ServiceContext，注入 UserModel
-        └── common/            # 响应构造、密码加密、工具函数
+├── app/
+│   ├── api-gateway/           # REST 网关 (go-zero rest)
+│   │   ├── gateway.api        # API 定义（唯一源文件）
+│   │   ├── apigateway.go      # 入口
+│   │   ├── etc/apigateway.yaml    # 生产配置
+│   │   ├── etc/apigateway-local.yaml  # 本地开发配置
+│   │   └── internal/
+│   │       ├── config/        # Config 结构体
+│   │       ├── handler/user/  # HTTP handler（goctl 生成）
+│   │       ├── logic/user/    # 业务逻辑（调用 gRPC client）
+│   │       ├── svc/           # ServiceContext，注入 UserRpc client
+│   │       └── types/         # 请求/响应类型（goctl 生成）
+│   └── user-service/          # gRPC 服务 (go-zero zrpc)
+│       ├── user.proto         # Protobuf 定义（唯一源文件）
+│       ├── user.go            # 入口
+│       ├── etc/user.yaml      # 生产配置
+│       ├── etc/user-local.yaml # 本地开发配置
+│       ├── client/user/       # gRPC client（goctl 生成，api-gateway 引用）
+│       ├── user/              # protobuf 生成代码（.pb.go）
+│       └── internal/
+│           ├── config/        # Config 结构体
+│           ├── server/user/   # gRPC server（goctl 生成）
+│           ├── logic/user/    # 核心业务逻辑
+│           ├── model/         # 数据库 model + helpers
+│           ├── svc/           # ServiceContext，注入 UserModel
+│           └── common/        # 响应构造、密码加密、工具函数
 ```
 
 **调用链**: HTTP → api-gateway handler → logic → gRPC client → user-service server → logic → model → MySQL
@@ -76,7 +77,7 @@ micro/
 `gateway.api` 是唯一源文件。修改 API 定义后：
 
 ```bash
-cd api-gateway && goctl api go --api gateway.api --dir . --style goZero
+cd app/api-gateway && goctl api go --api gateway.api --dir . --style goZero
 ```
 
 goctl 不覆盖已有 logic 文件，但会覆盖 handler/types/routes/config/svc。生成后需恢复 `config.go`、`serviceContext.go`、YAML 配置中的自定义内容。
@@ -86,7 +87,7 @@ goctl 不覆盖已有 logic 文件，但会覆盖 handler/types/routes/config/sv
 `user.proto` 是唯一源文件。修改 protobuf 定义后：
 
 ```bash
-cd user-service && goctl rpc protoc user.proto --go_out=. --go-grpc_out=. --zrpc_out=. --style goZero
+cd app/user-service && goctl rpc protoc user.proto --go_out=. --go-grpc_out=. --zrpc_out=. --style goZero
 ```
 
 同样不覆盖已有 logic 文件，但会覆盖 server/client/config/svc。生成后需恢复自定义内容。

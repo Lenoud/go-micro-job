@@ -2,14 +2,14 @@ FROM golang:1.25-alpine AS builder
 WORKDIR /build
 # 先复制 go.work 和两个模块
 COPY go.work go.work
-COPY user-service/go.mod user-service/go.sum user-service/
-COPY api-gateway/go.mod api-gateway/go.sum api-gateway/
+COPY app/user-service/go.mod app/user-service/go.sum user-service/
+COPY app/api-gateway/go.mod app/api-gateway/go.sum api-gateway/
 WORKDIR /build/api-gateway
 RUN go mod tidy
 WORKDIR /build
 # 复制完整源码
-COPY user-service/ user-service/
-COPY api-gateway/ api-gateway/
+COPY app/user-service/ user-service/
+COPY app/api-gateway/ api-gateway/
 WORKDIR /build/api-gateway
 RUN go build -o apigateway apigateway.go
 

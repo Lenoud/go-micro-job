@@ -67,13 +67,13 @@ fi
 # 构建
 print_info "[dev] building user-service..."
 (
-  cd "$MICRO_DIR/user-service"
+  cd "$MICRO_DIR/app/user-service"
   go build ./...
 )
 
 print_info "[dev] building api-gateway..."
 (
-  cd "$MICRO_DIR/api-gateway"
+  cd "$MICRO_DIR/app/api-gateway"
   go build ./...
 )
 

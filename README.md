@@ -20,25 +20,26 @@
 ## 目录结构
 
 ```
-├── api-gateway/           # REST API 网关
-│   ├── gateway.api        # API 定义（goctl 源文件）
-│   ├── apigateway.go      # 入口
-│   ├── etc/               # 配置文件
-│   └── internal/
-│       ├── handler/       # HTTP handler（goctl 生成）
-│       ├── logic/         # 业务逻辑
-│       ├── svc/           # ServiceContext
-│       └── types/         # 请求/响应类型
-├── user-service/          # gRPC 用户服务
-│   ├── user.proto         # Protobuf 定义
-│   ├── user.go            # 入口
-│   ├── etc/               # 配置文件
-│   └── internal/
-│       ├── logic/         # 业务逻辑
-│       ├── model/         # 数据库 model
-│       ├── server/        # gRPC server
-│       ├── svc/           # ServiceContext
-│       └── common/        # 工具函数
+├── app/
+│   ├── api-gateway/       # REST API 网关
+│   │   ├── gateway.api    # API 定义（goctl 源文件）
+│   │   ├── apigateway.go  # 入口
+│   │   ├── etc/           # 配置文件
+│   │   └── internal/
+│   │       ├── handler/   # HTTP handler（goctl 生成）
+│   │       ├── logic/     # 业务逻辑
+│   │       ├── svc/       # ServiceContext
+│   │       └── types/     # 请求/响应类型
+│   └── user-service/      # gRPC 用户服务
+│       ├── user.proto     # Protobuf 定义
+│       ├── user.go        # 入口
+│       ├── etc/           # 配置文件
+│       └── internal/
+│           ├── logic/     # 业务逻辑
+│           ├── model/     # 数据库 model
+│           ├── server/    # gRPC server
+│           ├── svc/       # ServiceContext
+│           └── common/    # 工具函数
 ├── scripts/               # 开发脚本
 ├── go.work                # Go workspace
 └── docker-compose.yml     # 基础设施编排（Redis + etcd）
@@ -116,7 +117,7 @@ curl -s 'http://localhost:9000/api/user/list?page=1&pageSize=5' \
 修改 `gateway.api` 后重新生成：
 
 ```bash
-cd api-gateway && goctl api go --api gateway.api --dir . --style goZero
+cd app/api-gateway && goctl api go --api gateway.api --dir . --style goZero
 ```
 
 ### user-service（protoc + goctl）
@@ -124,7 +125,7 @@ cd api-gateway && goctl api go --api gateway.api --dir . --style goZero
 修改 `user.proto` 后重新生成：
 
 ```bash
-cd user-service && goctl rpc protoc user.proto --go_out=. --go-grpc_out=. --zrpc_out=. --style goZero
+cd app/user-service && goctl rpc protoc user.proto --go_out=. --go-grpc_out=. --zrpc_out=. --style goZero
 ```
 
 ## Docker 部署
