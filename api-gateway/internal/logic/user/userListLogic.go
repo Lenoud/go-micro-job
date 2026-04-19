@@ -27,24 +27,22 @@ func NewUserListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UserList
 	}
 }
 
-func (l *UserListLogic) UserList(req *types.UserListReq) (resp *types.ApiResponse, err error) {
+func (l *UserListLogic) UserList(req *types.UserListReq) (resp *types.UserListResp, err error) {
 	rpcResp, err := l.svcCtx.UserRpc.List(l.ctx, &userclient.UserListReq{
 		Keyword:  req.Keyword,
 		Page:     req.Page,
 		PageSize: req.PageSize,
 	})
 	if err != nil {
-		return &types.ApiResponse{Code: -1, Msg: "rpc调用失败", Timestamp: time.Now().UnixMilli()}, nil
+		return &types.UserListResp{BaseResp: types.BaseResp{Code: -1, Msg: "rpc调用失败", Timestamp: time.Now().UnixMilli()}}, nil
 	}
 
-	var data interface{}
+	var data types.UserListData
 	if rpcResp.Data != "" {
 		_ = json.Unmarshal([]byte(rpcResp.Data), &data)
 	}
-	return &types.ApiResponse{
-		Code:      rpcResp.Code,
-		Msg:       rpcResp.Msg,
-		Data:      data,
-		Timestamp: time.Now().UnixNano() / 1e6,
+	return &types.UserListResp{
+		BaseResp: types.BaseResp{Code: rpcResp.Code, Msg: rpcResp.Msg, Timestamp: time.Now().UnixMilli()},
+		Data:     &data,
 	}, nil
 }

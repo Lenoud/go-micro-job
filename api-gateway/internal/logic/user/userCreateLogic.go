@@ -2,7 +2,6 @@ package user
 
 import (
 	"context"
-	"encoding/json"
 	"time"
 
 	"api-gateway/internal/svc"
@@ -27,7 +26,7 @@ func NewUserCreateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UserCr
 	}
 }
 
-func (l *UserCreateLogic) UserCreate(req *types.CreateUserReq) (resp *types.ApiResponse, err error) {
+func (l *UserCreateLogic) UserCreate(req *types.CreateUserReq) (resp *types.CreateUserResp, err error) {
 	rpcResp, err := l.svcCtx.UserRpc.Create(l.ctx, &userclient.CreateUserReq{
 		Username: req.Username,
 		Password: req.Password,
@@ -38,17 +37,10 @@ func (l *UserCreateLogic) UserCreate(req *types.CreateUserReq) (resp *types.ApiR
 		Status:   req.Status,
 	})
 	if err != nil {
-		return &types.ApiResponse{Code: -1, Msg: "rpc调用失败", Timestamp: time.Now().UnixMilli()}, nil
+		return &types.CreateUserResp{BaseResp: types.BaseResp{Code: -1, Msg: "rpc调用失败", Timestamp: time.Now().UnixMilli()}}, nil
 	}
 
-	var data interface{}
-	if rpcResp.Data != "" {
-		_ = json.Unmarshal([]byte(rpcResp.Data), &data)
-	}
-	return &types.ApiResponse{
-		Code:      rpcResp.Code,
-		Msg:       rpcResp.Msg,
-		Data:      data,
-		Timestamp: time.Now().UnixNano() / 1e6,
+	return &types.CreateUserResp{
+		BaseResp: types.BaseResp{Code: rpcResp.Code, Msg: rpcResp.Msg, Timestamp: time.Now().UnixMilli()},
 	}, nil
 }

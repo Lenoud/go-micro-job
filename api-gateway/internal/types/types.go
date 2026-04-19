@@ -3,11 +3,10 @@
 
 package types
 
-type ApiResponse struct {
-	Code      int64       `json:"code"`
-	Msg       string      `json:"msg"`
-	Data      interface{} `json:"data,optional"`
-	Timestamp int64       `json:"timestamp"`
+type BaseResp struct {
+	Code      int64  `json:"code"`
+	Msg       string `json:"msg"`
+	Timestamp int64  `json:"timestamp"`
 }
 
 type CreateUserReq struct {
@@ -20,8 +19,16 @@ type CreateUserReq struct {
 	Status   string `json:"status,optional"`
 }
 
+type CreateUserResp struct {
+	BaseResp
+}
+
 type DeleteReq struct {
 	Ids string `json:"ids"`
+}
+
+type DeleteUserResp struct {
+	BaseResp
 }
 
 type LoginReq struct {
@@ -29,10 +36,19 @@ type LoginReq struct {
 	Password string `json:"password"`
 }
 
+type LoginResp struct {
+	BaseResp
+	Data *UserInfo `json:"data,omitempty"`
+}
+
 type UpdatePwdReq struct {
 	UserId      string `json:"userId"`
 	OldPassword string `json:"oldPassword"`
 	NewPassword string `json:"newPassword"`
+}
+
+type UpdatePwdResp struct {
+	BaseResp
 }
 
 type UpdateUserInfoReq struct {
@@ -42,6 +58,10 @@ type UpdateUserInfoReq struct {
 	Email      string `json:"email,optional"`
 	PushEmail  string `json:"pushEmail,optional"`
 	PushSwitch string `json:"pushSwitch,optional"`
+}
+
+type UpdateUserInfoResp struct {
+	BaseResp
 }
 
 type UpdateUserReq struct {
@@ -57,8 +77,39 @@ type UpdateUserReq struct {
 	PushSwitch string `json:"pushSwitch,optional"`
 }
 
+type UpdateUserResp struct {
+	BaseResp
+}
+
 type UserDetailReq struct {
 	UserId string `form:"userId"`
+}
+
+type UserDetailResp struct {
+	BaseResp
+	Data *UserInfo `json:"data,omitempty"`
+}
+
+type UserInfo struct {
+	Id         string `json:"id"`
+	Username   string `json:"username"`
+	Nickname   string `json:"nickname"`
+	Mobile     string `json:"mobile"`
+	Email      string `json:"email"`
+	Role       string `json:"role"`
+	Status     string `json:"status"`
+	Token      string `json:"token,omitempty"`
+	CreateTime string `json:"createTime,omitempty"`
+	PushEmail  string `json:"pushEmail,omitempty"`
+	PushSwitch string `json:"pushSwitch,omitempty"`
+	Avatar     string `json:"avatar,omitempty"`
+}
+
+type UserListData struct {
+	List     []UserInfo `json:"list"`
+	Total    int64      `json:"total"`
+	Page     int64      `json:"page"`
+	PageSize int64      `json:"pageSize"`
 }
 
 type UserListReq struct {
@@ -67,9 +118,19 @@ type UserListReq struct {
 	PageSize int64  `form:"pageSize,optional,default=10"`
 }
 
+type UserListResp struct {
+	BaseResp
+	Data *UserListData `json:"data,omitempty"`
+}
+
 type UserLoginReq struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
+}
+
+type UserLoginResp struct {
+	BaseResp
+	Data *UserInfo `json:"data,omitempty"`
 }
 
 type UserRegisterReq struct {
@@ -79,4 +140,8 @@ type UserRegisterReq struct {
 	Nickname   string `json:"nickname,optional"`
 	Mobile     string `json:"mobile,optional"`
 	Email      string `json:"email,optional"`
+}
+
+type UserRegisterResp struct {
+	BaseResp
 }

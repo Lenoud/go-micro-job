@@ -2,7 +2,6 @@ package user
 
 import (
 	"context"
-	"encoding/json"
 	"time"
 
 	"api-gateway/internal/svc"
@@ -27,22 +26,15 @@ func NewUserDeleteLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UserDe
 	}
 }
 
-func (l *UserDeleteLogic) UserDelete(req *types.DeleteReq) (resp *types.ApiResponse, err error) {
+func (l *UserDeleteLogic) UserDelete(req *types.DeleteReq) (resp *types.DeleteUserResp, err error) {
 	rpcResp, err := l.svcCtx.UserRpc.Delete(l.ctx, &userclient.DeleteReq{
 		Ids: req.Ids,
 	})
 	if err != nil {
-		return &types.ApiResponse{Code: -1, Msg: "rpc调用失败", Timestamp: time.Now().UnixMilli()}, nil
+		return &types.DeleteUserResp{BaseResp: types.BaseResp{Code: -1, Msg: "rpc调用失败", Timestamp: time.Now().UnixMilli()}}, nil
 	}
 
-	var data interface{}
-	if rpcResp.Data != "" {
-		_ = json.Unmarshal([]byte(rpcResp.Data), &data)
-	}
-	return &types.ApiResponse{
-		Code:      rpcResp.Code,
-		Msg:       rpcResp.Msg,
-		Data:      data,
-		Timestamp: time.Now().UnixNano() / 1e6,
+	return &types.DeleteUserResp{
+		BaseResp: types.BaseResp{Code: rpcResp.Code, Msg: rpcResp.Msg, Timestamp: time.Now().UnixMilli()},
 	}, nil
 }

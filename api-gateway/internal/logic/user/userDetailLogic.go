@@ -27,22 +27,20 @@ func NewUserDetailLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UserDe
 	}
 }
 
-func (l *UserDetailLogic) UserDetail(req *types.UserDetailReq) (resp *types.ApiResponse, err error) {
+func (l *UserDetailLogic) UserDetail(req *types.UserDetailReq) (resp *types.UserDetailResp, err error) {
 	rpcResp, err := l.svcCtx.UserRpc.Detail(l.ctx, &userclient.IdReq{
 		Id: req.UserId,
 	})
 	if err != nil {
-		return &types.ApiResponse{Code: -1, Msg: "rpc调用失败", Timestamp: time.Now().UnixMilli()}, nil
+		return &types.UserDetailResp{BaseResp: types.BaseResp{Code: -1, Msg: "rpc调用失败", Timestamp: time.Now().UnixMilli()}}, nil
 	}
 
-	var data interface{}
+	var data types.UserInfo
 	if rpcResp.Data != "" {
 		_ = json.Unmarshal([]byte(rpcResp.Data), &data)
 	}
-	return &types.ApiResponse{
-		Code:      rpcResp.Code,
-		Msg:       rpcResp.Msg,
-		Data:      data,
-		Timestamp: time.Now().UnixNano() / 1e6,
+	return &types.UserDetailResp{
+		BaseResp: types.BaseResp{Code: rpcResp.Code, Msg: rpcResp.Msg, Timestamp: time.Now().UnixMilli()},
+		Data:     &data,
 	}, nil
 }
