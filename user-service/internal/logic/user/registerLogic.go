@@ -60,5 +60,5 @@ func (l *RegisterLogic) Register(in *user.RegisterReq) (*user.ActionResp, error)
 	if err != nil {
 		return common.FailAction("注册用户失败"), nil
 	}
-	return common.SuccessActionMsg("创建成功"), nil
+	return common.OkAction("创建成功"), nil
 }

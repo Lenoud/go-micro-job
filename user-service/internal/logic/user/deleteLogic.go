@@ -33,5 +33,5 @@ func (l *DeleteLogic) Delete(in *user.DeleteReq) (*user.ActionResp, error) {
 	if err := l.svcCtx.UserModel.DeleteBatch(l.ctx, ids); err != nil {
 		return common.FailAction("删除用户失败"), nil
 	}
-	return common.SuccessActionMsg("删除成功"), nil
+	return common.OkAction("删除成功"), nil
 }

@@ -26,6 +26,7 @@ type ActionResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Code          int64                  `protobuf:"varint,1,opt,name=code,proto3" json:"code,omitempty"`
 	Msg           string                 `protobuf:"bytes,2,opt,name=msg,proto3" json:"msg,omitempty"`
+	Timestamp     int64                  `protobuf:"varint,3,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -72,6 +73,13 @@ func (x *ActionResp) GetMsg() string {
 		return x.Msg
 	}
 	return ""
+}
+
+func (x *ActionResp) GetTimestamp() int64 {
+	if x != nil {
+		return x.Timestamp
+	}
+	return 0
 }
 
 // 用户信息（login/userLogin/detail 返回 + list 中每一项）
@@ -213,6 +221,7 @@ type UserInfoResp struct {
 	Code          int64                  `protobuf:"varint,1,opt,name=code,proto3" json:"code,omitempty"`
 	Msg           string                 `protobuf:"bytes,2,opt,name=msg,proto3" json:"msg,omitempty"`
 	Data          *UserInfo              `protobuf:"bytes,3,opt,name=data,proto3" json:"data,omitempty"`
+	Timestamp     int64                  `protobuf:"varint,4,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -266,6 +275,13 @@ func (x *UserInfoResp) GetData() *UserInfo {
 		return x.Data
 	}
 	return nil
+}
+
+func (x *UserInfoResp) GetTimestamp() int64 {
+	if x != nil {
+		return x.Timestamp
+	}
+	return 0
 }
 
 // 分页数据
@@ -343,6 +359,7 @@ type UserListResp struct {
 	Code          int64                  `protobuf:"varint,1,opt,name=code,proto3" json:"code,omitempty"`
 	Msg           string                 `protobuf:"bytes,2,opt,name=msg,proto3" json:"msg,omitempty"`
 	Data          *UserListData          `protobuf:"bytes,3,opt,name=data,proto3" json:"data,omitempty"`
+	Timestamp     int64                  `protobuf:"varint,4,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -396,6 +413,13 @@ func (x *UserListResp) GetData() *UserListData {
 		return x.Data
 	}
 	return nil
+}
+
+func (x *UserListResp) GetTimestamp() int64 {
+	if x != nil {
+		return x.Timestamp
+	}
+	return 0
 }
 
 // ---- 登录 ----
@@ -1197,11 +1221,12 @@ var File_user_proto protoreflect.FileDescriptor
 const file_user_proto_rawDesc = "" +
 	"\n" +
 	"\n" +
-	"user.proto\x12\x04user\"2\n" +
+	"user.proto\x12\x04user\"P\n" +
 	"\n" +
 	"ActionResp\x12\x12\n" +
 	"\x04code\x18\x01 \x01(\x03R\x04code\x12\x10\n" +
-	"\x03msg\x18\x02 \x01(\tR\x03msg\"\xb8\x02\n" +
+	"\x03msg\x18\x02 \x01(\tR\x03msg\x12\x1c\n" +
+	"\ttimestamp\x18\x03 \x01(\x03R\ttimestamp\"\xb8\x02\n" +
 	"\bUserInfo\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1a\n" +
 	"\busername\x18\x02 \x01(\tR\busername\x12\x1a\n" +
@@ -1219,20 +1244,22 @@ const file_user_proto_rawDesc = "" +
 	"\n" +
 	"pushSwitch\x18\v \x01(\tR\n" +
 	"pushSwitch\x12\x16\n" +
-	"\x06avatar\x18\f \x01(\tR\x06avatar\"X\n" +
+	"\x06avatar\x18\f \x01(\tR\x06avatar\"v\n" +
 	"\fUserInfoResp\x12\x12\n" +
 	"\x04code\x18\x01 \x01(\x03R\x04code\x12\x10\n" +
 	"\x03msg\x18\x02 \x01(\tR\x03msg\x12\"\n" +
-	"\x04data\x18\x03 \x01(\v2\x0e.user.UserInfoR\x04data\"x\n" +
+	"\x04data\x18\x03 \x01(\v2\x0e.user.UserInfoR\x04data\x12\x1c\n" +
+	"\ttimestamp\x18\x04 \x01(\x03R\ttimestamp\"x\n" +
 	"\fUserListData\x12\"\n" +
 	"\x04list\x18\x01 \x03(\v2\x0e.user.UserInfoR\x04list\x12\x14\n" +
 	"\x05total\x18\x02 \x01(\x03R\x05total\x12\x12\n" +
 	"\x04page\x18\x03 \x01(\x03R\x04page\x12\x1a\n" +
-	"\bpageSize\x18\x04 \x01(\x03R\bpageSize\"\\\n" +
+	"\bpageSize\x18\x04 \x01(\x03R\bpageSize\"z\n" +
 	"\fUserListResp\x12\x12\n" +
 	"\x04code\x18\x01 \x01(\x03R\x04code\x12\x10\n" +
 	"\x03msg\x18\x02 \x01(\tR\x03msg\x12&\n" +
-	"\x04data\x18\x03 \x01(\v2\x12.user.UserListDataR\x04data\"B\n" +
+	"\x04data\x18\x03 \x01(\v2\x12.user.UserListDataR\x04data\x12\x1c\n" +
+	"\ttimestamp\x18\x04 \x01(\x03R\ttimestamp\"B\n" +
 	"\bLoginReq\x12\x1a\n" +
 	"\busername\x18\x01 \x01(\tR\busername\x12\x1a\n" +
 	"\bpassword\x18\x02 \x01(\tR\bpassword\"F\n" +

@@ -54,5 +54,5 @@ func (l *UpdateUserInfoLogic) UpdateUserInfo(in *user.UpdateUserInfoReq) (*user.
 	if err := l.svcCtx.UserModel.Update(l.ctx, existing); err != nil {
 		return common.FailAction("更新用户信息失败"), nil
 	}
-	return common.SuccessActionMsg("更新成功"), nil
+	return common.OkAction("更新成功"), nil
 }

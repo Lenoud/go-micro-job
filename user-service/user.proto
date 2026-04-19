@@ -10,6 +10,7 @@ option go_package = "./user";
 message ActionResp {
   int64 code = 1;
   string msg = 2;
+  int64 timestamp = 3;
 }
 
 // 用户信息（login/userLogin/detail 返回 + list 中每一项）
@@ -30,9 +31,10 @@ message UserInfo {
 
 // 带用户信息的响应（login/userLogin/detail 共用）
 message UserInfoResp {
-  int64 code    = 1;
-  string msg    = 2;
-  UserInfo data = 3;
+  int64 code      = 1;
+  string msg      = 2;
+  UserInfo data   = 3;
+  int64 timestamp = 4;
 }
 
 // 分页数据
@@ -45,9 +47,10 @@ message UserListData {
 
 // 用户列表响应
 message UserListResp {
-  int64 code       = 1;
-  string msg       = 2;
+  int64 code        = 1;
+  string msg        = 2;
   UserListData data = 3;
+  int64 timestamp   = 4;
 }
 
 // ---- 登录 ----

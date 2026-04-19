@@ -58,5 +58,5 @@ func (l *UserLoginLogic) UserLogin(in *user.UserLoginReq) (*user.UserInfoResp, e
 	info := common.UserModelToProto(u)
 	info.Token = tokenString
 	info.Avatar = ""
-	return common.SuccessUserInfo("查询成功", info), nil
+	return common.OkUserInfo("查询成功", info), nil
 }

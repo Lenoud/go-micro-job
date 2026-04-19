@@ -44,5 +44,5 @@ func (l *UpdatePwdLogic) UpdatePwd(in *user.UpdatePwdReq) (*user.ActionResp, err
 	if err := l.svcCtx.UserModel.UpdatePassword(l.ctx, in.UserId, newHashedPwd); err != nil {
 		return common.FailAction("修改密码失败"), nil
 	}
-	return common.SuccessActionMsg("更新成功"), nil
+	return common.OkAction("更新成功"), nil
 }

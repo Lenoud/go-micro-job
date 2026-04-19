@@ -66,5 +66,5 @@ func (l *UpdateLogic) Update(in *user.UpdateUserReq) (*user.ActionResp, error) {
 	if err := l.svcCtx.UserModel.Update(l.ctx, existing); err != nil {
 		return common.FailAction("更新用户失败"), nil
 	}
-	return common.SuccessActionMsg("更新成功"), nil
+	return common.OkAction("更新成功"), nil
 }

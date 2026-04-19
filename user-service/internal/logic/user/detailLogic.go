@@ -36,5 +36,5 @@ func (l *DetailLogic) Detail(in *user.IdReq) (*user.UserInfoResp, error) {
 	if u == nil {
 		return common.FailUserInfo("用户不存在"), nil
 	}
-	return common.SuccessUserInfo("操作成功", common.UserModelToProto(u)), nil
+	return common.OkUserInfo("操作成功", common.UserModelToProto(u)), nil
 }

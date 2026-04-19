@@ -2,76 +2,73 @@ package common
 
 import (
 	"strings"
+	"time"
 
 	"user-service/user"
 )
 
-// ---- 错误码常量 ----
-
+// ==================== 错误码 ====================
 const (
-	CodeSuccess int64 = 200
-	CodeParam   int64 = 400
+	CodeSuccess      int64 = 200
+	CodeParam        int64 = 400
+	CodeUnauthorized int64 = 401
+	CodeForbidden    int64 = 403
+	CodeNotFound     int64 = 404
+	CodeServer       int64 = 500
 )
 
-// ---- 类型化响应 helpers ----
-
-func SuccessAction() *user.ActionResp {
-	return &user.ActionResp{Code: CodeSuccess, Msg: "操作成功"}
+func currentTimeMillis() int64 {
+	return time.Now().UnixMilli()
 }
 
-func SuccessActionMsg(msg string) *user.ActionResp {
-	return &user.ActionResp{Code: CodeSuccess, Msg: msg}
+// ==================== ActionResp helpers ====================
+
+func OkAction(msg string) *user.ActionResp {
+	return &user.ActionResp{Code: CodeSuccess, Msg: msg, Timestamp: currentTimeMillis()}
 }
 
 func FailAction(msg string) *user.ActionResp {
-	return &user.ActionResp{Code: CodeParam, Msg: msg}
+	return &user.ActionResp{Code: CodeParam, Msg: msg, Timestamp: currentTimeMillis()}
 }
 
-func SuccessUserInfo(msg string, info *user.UserInfo) *user.UserInfoResp {
-	return &user.UserInfoResp{Code: CodeSuccess, Msg: msg, Data: info}
+func FailActionForbidden(msg string) *user.ActionResp {
+	return &user.ActionResp{Code: CodeForbidden, Msg: msg, Timestamp: currentTimeMillis()}
+}
+
+// ==================== UserInfoResp helpers ====================
+
+func OkUserInfo(msg string, info *user.UserInfo) *user.UserInfoResp {
+	return &user.UserInfoResp{Code: CodeSuccess, Msg: msg, Data: info, Timestamp: currentTimeMillis()}
 }
 
 func FailUserInfo(msg string) *user.UserInfoResp {
-	return &user.UserInfoResp{Code: CodeParam, Msg: msg}
+	return &user.UserInfoResp{Code: CodeParam, Msg: msg, Timestamp: currentTimeMillis()}
 }
 
-func SuccessUserList(data *user.UserListData) *user.UserListResp {
-	return &user.UserListResp{Code: CodeSuccess, Msg: "操作成功", Data: data}
+func FailUserInfoForbidden(msg string) *user.UserInfoResp {
+	return &user.UserInfoResp{Code: CodeForbidden, Msg: msg, Timestamp: currentTimeMillis()}
+}
+
+// ==================== UserListResp helpers ====================
+
+func OkUserList(data *user.UserListData) *user.UserListResp {
+	return &user.UserListResp{Code: CodeSuccess, Msg: "操作成功", Data: data, Timestamp: currentTimeMillis()}
 }
 
 func FailUserList(msg string) *user.UserListResp {
-	return &user.UserListResp{Code: CodeParam, Msg: msg}
+	return &user.UserListResp{Code: CodeParam, Msg: msg, Timestamp: currentTimeMillis()}
 }
 
-// ---- 工具函数 ----
+// ==================== 工具函数 ====================
 
-func SplitIDs(ids string) []string {
-	if ids == "" {
-		return nil
-	}
-	parts := make([]string, 0)
-	for _, id := range splitComma(ids) {
-		id = trimSpace(id)
-		if id != "" {
-			parts = append(parts, id)
+func SplitIDs(raw string) []string {
+	parts := strings.Split(raw, ",")
+	result := make([]string, 0, len(parts))
+	for _, part := range parts {
+		part = strings.TrimSpace(part)
+		if part != "" {
+			result = append(result, part)
 		}
 	}
-	return parts
-}
-
-func splitComma(s string) []string {
-	result := make([]string, 0)
-	start := 0
-	for i := 0; i < len(s); i++ {
-		if s[i] == ',' {
-			result = append(result, s[start:i])
-			start = i + 1
-		}
-	}
-	result = append(result, s[start:])
 	return result
-}
-
-func trimSpace(s string) string {
-	return strings.TrimSpace(s)
 }

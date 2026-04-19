@@ -17,5 +17,5 @@ func EncryptPassword(password string) string {
 }
 
 func GenerateToken(username string) string {
-	return Md5(username + Salt + "token")
+	return Md5(username + Salt)
 }

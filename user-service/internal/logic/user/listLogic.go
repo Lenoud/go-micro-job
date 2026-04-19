@@ -43,7 +43,7 @@ func (l *ListLogic) List(in *user.UserListReq) (*user.UserListResp, error) {
 	for _, u := range list {
 		items = append(items, common.UserModelToProto(u))
 	}
-	return common.SuccessUserList(&user.UserListData{
+	return common.OkUserList(&user.UserListData{
 		List:     items,
 		Total:    total,
 		Page:     page,

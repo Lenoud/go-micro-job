@@ -65,5 +65,5 @@ func (l *CreateLogic) Create(in *user.CreateUserReq) (*user.ActionResp, error) {
 	if err != nil {
 		return common.FailAction("创建用户失败"), nil
 	}
-	return common.SuccessActionMsg("创建成功"), nil
+	return common.OkAction("创建成功"), nil
 }

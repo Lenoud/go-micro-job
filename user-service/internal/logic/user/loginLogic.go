@@ -57,5 +57,5 @@ func (l *LoginLogic) Login(in *user.LoginReq) (*user.UserInfoResp, error) {
 
 	info := common.UserModelToProto(u)
 	info.Token = tokenString
-	return common.SuccessUserInfo("查询成功", info), nil
+	return common.OkUserInfo("查询成功", info), nil
 }
