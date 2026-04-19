@@ -33,6 +33,7 @@ func (l *UserListLogic) UserList(req *types.UserListReq) (resp *types.UserListRe
 		PageSize: req.PageSize,
 	})
 	if err != nil {
+		logx.Errorf("[gateway] rpc UserRpc.List failed: %v", err)
 		return &types.UserListResp{BaseResp: common.FailBaseMsg("rpc调用失败")}, nil
 	}
 

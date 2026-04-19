@@ -31,6 +31,7 @@ func (l *UserDeleteLogic) UserDelete(req *types.DeleteReq) (resp *types.DeleteUs
 		Ids: req.Ids,
 	})
 	if err != nil {
+		logx.Errorf("[gateway] rpc UserRpc.Delete failed: %v", err)
 		return &types.DeleteUserResp{BaseResp: common.FailBaseMsg("rpc调用失败")}, nil
 	}
 

@@ -40,6 +40,7 @@ func (l *UserUpdateLogic) UserUpdate(req *types.UpdateUserReq) (resp *types.Upda
 		PushSwitch: req.PushSwitch,
 	})
 	if err != nil {
+		logx.Errorf("[gateway] rpc UserRpc.Update failed: %v", err)
 		return &types.UpdateUserResp{BaseResp: common.FailBaseMsg("rpc调用失败")}, nil
 	}
 

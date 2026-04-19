@@ -32,6 +32,7 @@ func (l *UserLoginLogic) UserLogin(req *types.LoginReq) (resp *types.LoginResp, 
 		Password: req.Password,
 	})
 	if err != nil {
+		logx.Errorf("[gateway] rpc UserRpc.Login failed: %v", err)
 		return &types.LoginResp{BaseResp: common.FailBaseMsg("rpc调用失败")}, nil
 	}
 

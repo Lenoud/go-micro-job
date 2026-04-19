@@ -106,9 +106,16 @@ cd app/user-service && goctl rpc protoc user.proto --go_out=. --go-grpc_out=. --
 ## Key Patterns
 
 ### 统一响应
-- user-service logic 返回 `*user.ApiResponse`，用 `common.Success(data)` / `common.Fail("msg")` / `common.SuccessMsg("msg", data)` / `common.SuccessPage(list, total, page, pageSize)`
-- gRPC `ApiResponse.data` 字段是 JSON string，api-gateway logic 层负责 `json.Unmarshal` 转为 `interface{}`
+- user-service logic 返回类型化 protobuf 响应（`*user.ActionResp` / `*user.UserInfoResp` / `*user.UserListResp` 等），用 `common.OkAction(msg)` / `common.FailAction(msg)` / `common.OkUserInfo(msg, data)` / `common.OkUserList(data)` 等 helper 构造
+- api-gateway logic 从 gRPC 响应提取数据，构造 HTTP 类型化响应（嵌入 `BaseResp`）
 - HTTP 响应格式：`{"code": 200, "msg": "success", "data": ..., "timestamp": ...}`
+
+### Timestamp 设计
+- **user-service**：业务逻辑执行处，每个响应 helper 内部调用 `currentTimeMillis()` 生成 timestamp
+- **api-gateway**：两条路径互不干扰：
+  - gRPC 成功响应 → `RpcBase()` 透传 user-service 的 timestamp（反映业务处理时间）
+  - gRPC 调用失败/本地错误 → `OkBase()` / `FailBase()` 用 api-gateway 本地 `currentTimeMillis()` 生成 timestamp
+- 同一请求只走一条路径，不会出现两个 timestamp 互相覆盖
 
 ### JWT 鉴权
 - Secret: 配置文件 `JWT.AccessSecret`

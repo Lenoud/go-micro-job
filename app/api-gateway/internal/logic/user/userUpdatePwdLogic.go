@@ -33,6 +33,7 @@ func (l *UserUpdatePwdLogic) UserUpdatePwd(req *types.UpdatePwdReq) (resp *types
 		NewPassword: req.NewPassword,
 	})
 	if err != nil {
+		logx.Errorf("[gateway] rpc UserRpc.UpdatePwd failed: %v", err)
 		return &types.UpdatePwdResp{BaseResp: common.FailBaseMsg("rpc调用失败")}, nil
 	}
 

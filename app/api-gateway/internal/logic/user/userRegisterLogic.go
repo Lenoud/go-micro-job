@@ -36,6 +36,7 @@ func (l *UserRegisterLogic) UserRegister(req *types.UserRegisterReq) (resp *type
 		Email:      req.Email,
 	})
 	if err != nil {
+		logx.Errorf("[gateway] rpc UserRpc.Register failed: %v", err)
 		return &types.UserRegisterResp{BaseResp: common.FailBaseMsg("rpc调用失败")}, nil
 	}
 

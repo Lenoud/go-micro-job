@@ -31,6 +31,7 @@ func (l *UserDetailLogic) UserDetail(req *types.UserDetailReq) (resp *types.User
 		Id: req.UserId,
 	})
 	if err != nil {
+		logx.Errorf("[gateway] rpc UserRpc.Detail failed: %v", err)
 		return &types.UserDetailResp{BaseResp: common.FailBaseMsg("rpc调用失败")}, nil
 	}
 

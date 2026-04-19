@@ -37,6 +37,7 @@ func (l *UserCreateLogic) UserCreate(req *types.CreateUserReq) (resp *types.Crea
 		Status:   req.Status,
 	})
 	if err != nil {
+		logx.Errorf("[gateway] rpc UserRpc.Create failed: %v", err)
 		return &types.CreateUserResp{BaseResp: common.FailBaseMsg("rpc调用失败")}, nil
 	}
 
