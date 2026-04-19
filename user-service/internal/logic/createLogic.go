@@ -1,4 +1,4 @@
-package userlogic
+package logic
 
 import (
 	"context"
@@ -11,23 +11,23 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type RegisterLogic struct {
+type CreateLogic struct {
 	logx.Logger
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 }
 
-func NewRegisterLogic(ctx context.Context, svcCtx *svc.ServiceContext) *RegisterLogic {
-	return &RegisterLogic{
+func NewCreateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *CreateLogic {
+	return &CreateLogic{
 		ctx:    ctx,
 		svcCtx: svcCtx,
 		Logger: logx.WithContext(ctx),
 	}
 }
 
-// 用户注册
-func (l *RegisterLogic) Register(in *user.RegisterReq) (*user.ActionResp, error) {
-	if in.Username == "" || in.Password == "" || in.RePassword == "" {
+// 管理员创建用户
+func (l *CreateLogic) Create(in *user.CreateUserReq) (*user.ActionResp, error) {
+	if in.Username == "" || in.Password == "" {
 		return common.FailAction("参数不完整"), nil
 	}
 
@@ -39,12 +39,17 @@ func (l *RegisterLogic) Register(in *user.RegisterReq) (*user.ActionResp, error)
 		return common.FailAction("用户名重复"), nil
 	}
 
-	if in.Password != in.RePassword {
-		return common.FailAction("密码不一致"), nil
-	}
-
 	md5Password := common.EncryptPassword(in.Password)
 	token := common.GenerateToken(in.Username)
+
+	role := in.Role
+	if role == "" {
+		role = common.RoleJobseeker
+	}
+	status := in.Status
+	if status == "" {
+		status = "0"
+	}
 
 	u := &model.User{
 		Username: in.Username,
@@ -52,13 +57,13 @@ func (l *RegisterLogic) Register(in *user.RegisterReq) (*user.ActionResp, error)
 		Nickname: in.Nickname,
 		Mobile:   in.Mobile,
 		Email:    in.Email,
-		Role:     "1",
-		Status:   "0",
+		Role:     role,
+		Status:   status,
 		Token:    token,
 	}
 	_, err = l.svcCtx.UserModel.Insert(l.ctx, u)
 	if err != nil {
-		return common.FailAction("注册用户失败"), nil
+		return common.FailAction("创建用户失败"), nil
 	}
 	return common.OkAction("创建成功"), nil
 }

@@ -3,7 +3,7 @@ package svc
 import (
 	"api-gateway/internal/config"
 
-	userClient "user-service/client/user"
+	userClient "user-service/userClient"
 
 	"github.com/zeromicro/go-zero/zrpc"
 )

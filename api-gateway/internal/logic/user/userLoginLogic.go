@@ -7,7 +7,7 @@ import (
 	"api-gateway/internal/svc"
 	"api-gateway/internal/types"
 
-	userclient "user-service/client/user"
+	userclient "user-service/userClient"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )

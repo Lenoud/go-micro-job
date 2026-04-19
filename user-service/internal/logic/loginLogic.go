@@ -1,4 +1,4 @@
-package userlogic
+package logic
 
 import (
 	"context"
@@ -12,32 +12,32 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type UserLoginLogic struct {
+type LoginLogic struct {
 	logx.Logger
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 }
 
-func NewUserLoginLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UserLoginLogic {
-	return &UserLoginLogic{
+func NewLoginLogic(ctx context.Context, svcCtx *svc.ServiceContext) *LoginLogic {
+	return &LoginLogic{
 		ctx:    ctx,
 		svcCtx: svcCtx,
 		Logger: logx.WithContext(ctx),
 	}
 }
 
-// 前台用户登录
-func (l *UserLoginLogic) UserLogin(in *user.UserLoginReq) (*user.UserInfoResp, error) {
+// 管理员登录
+func (l *LoginLogic) Login(in *user.LoginReq) (*user.UserInfoResp, error) {
 	if in.Username == "" || in.Password == "" {
 		return common.FailUserInfo("用户名或密码不能为空"), nil
 	}
 
 	password := common.EncryptPassword(in.Password)
-	u, err := l.svcCtx.UserModel.FindNormalUser(l.ctx, in.Username, password)
+	u, err := l.svcCtx.UserModel.FindAdminUser(l.ctx, in.Username, password)
 	if err != nil {
-		return common.FailUserInfo("查询用户失败"), nil
+		return common.FailUserInfo("查询管理员失败"), nil
 	}
-	if u == nil || (u.Role != common.RoleJobseeker && u.Role != common.RoleRecruiter) {
+	if u == nil || u.Role != common.RoleAdmin {
 		return common.FailUserInfo("用户名或密码错误"), nil
 	}
 
@@ -57,6 +57,5 @@ func (l *UserLoginLogic) UserLogin(in *user.UserLoginReq) (*user.UserInfoResp, e
 
 	info := common.UserModelToProto(u)
 	info.Token = tokenString
-	info.Avatar = ""
 	return common.OkUserInfo("查询成功", info), nil
 }

@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"user-service/internal/config"
-	userServer "user-service/internal/server/user"
+	userServer "user-service/internal/server"
 	"user-service/internal/svc"
 	"user-service/user"
 

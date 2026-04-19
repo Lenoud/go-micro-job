@@ -7,7 +7,7 @@ package server
 import (
 	"context"
 
-	logic "user-service/internal/logic/user"
+	"user-service/internal/logic"
 	"user-service/internal/svc"
 	"user-service/user"
 )

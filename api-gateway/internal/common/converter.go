@@ -2,7 +2,7 @@ package common
 
 import (
 	"api-gateway/internal/types"
-	userclient "user-service/client/user"
+	userclient "user-service/userClient"
 )
 
 // ProtoToUserInfo 将 proto UserInfo 转为 API types.UserInfo
