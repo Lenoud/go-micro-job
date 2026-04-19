@@ -4,11 +4,50 @@ package user;
 
 option go_package = "./user";
 
-// ---- 公共响应 ----
-message ApiResponse {
-  int64 code   = 1;
-  string msg   = 2;
-  string data  = 3; // JSON string, 保持与单体 ApiResponse 一致
+// ---- 公共响应类型 ----
+
+// 简单操作响应（create/update/delete/register/updateUserInfo/updatePwd）
+message ActionResp {
+  int64 code = 1;
+  string msg = 2;
+}
+
+// 用户信息（login/userLogin/detail 返回 + list 中每一项）
+message UserInfo {
+  string id         = 1;
+  string username   = 2;
+  string nickname   = 3;
+  string mobile     = 4;
+  string email      = 5;
+  string role       = 6;
+  string status     = 7;
+  string token      = 8;
+  string createTime = 9;
+  string pushEmail  = 10;
+  string pushSwitch = 11;
+  string avatar     = 12;
+}
+
+// 带用户信息的响应（login/userLogin/detail 共用）
+message UserInfoResp {
+  int64 code    = 1;
+  string msg    = 2;
+  UserInfo data = 3;
+}
+
+// 分页数据
+message UserListData {
+  repeated UserInfo list = 1;
+  int64 total    = 2;
+  int64 page     = 3;
+  int64 pageSize = 4;
+}
+
+// 用户列表响应
+message UserListResp {
+  int64 code       = 1;
+  string msg       = 2;
+  UserListData data = 3;
 }
 
 // ---- 登录 ----
@@ -98,21 +137,20 @@ message UserContext {
 }
 
 // ---- RPC 方法 ----
-// 无需鉴权
 message Empty {}
 
 service User {
   // 无鉴权
-  rpc Login(LoginReq) returns(ApiResponse);
-  rpc UserLogin(UserLoginReq) returns(ApiResponse);
-  rpc Register(RegisterReq) returns(ApiResponse);
+  rpc Login(LoginReq)              returns(UserInfoResp);
+  rpc UserLogin(UserLoginReq)      returns(UserInfoResp);
+  rpc Register(RegisterReq)        returns(ActionResp);
 
   // 需鉴权（api-gateway 透传 UserContext）
-  rpc Detail(IdReq) returns(ApiResponse);
-  rpc List(UserListReq) returns(ApiResponse);
-  rpc Create(CreateUserReq) returns(ApiResponse);
-  rpc Update(UpdateUserReq) returns(ApiResponse);
-  rpc Delete(DeleteReq) returns(ApiResponse);
-  rpc UpdateUserInfo(UpdateUserInfoReq) returns(ApiResponse);
-  rpc UpdatePwd(UpdatePwdReq) returns(ApiResponse);
+  rpc Detail(IdReq)                returns(UserInfoResp);
+  rpc List(UserListReq)            returns(UserListResp);
+  rpc Create(CreateUserReq)        returns(ActionResp);
+  rpc Update(UpdateUserReq)        returns(ActionResp);
+  rpc Delete(DeleteReq)            returns(ActionResp);
+  rpc UpdateUserInfo(UpdateUserInfoReq) returns(ActionResp);
+  rpc UpdatePwd(UpdatePwdReq)      returns(ActionResp);
 }

@@ -25,24 +25,24 @@ func NewUpdatePwdLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UpdateP
 }
 
 // 修改密码
-func (l *UpdatePwdLogic) UpdatePwd(in *user.UpdatePwdReq) (*user.ApiResponse, error) {
+func (l *UpdatePwdLogic) UpdatePwd(in *user.UpdatePwdReq) (*user.ActionResp, error) {
 	if in.UserId == "" || in.OldPassword == "" || in.NewPassword == "" {
-		return common.Fail("参数不完整"), nil
+		return common.FailAction("参数不完整"), nil
 	}
 
 	u, err := l.svcCtx.UserModel.FindOne(l.ctx, in.UserId)
 	if err != nil || u == nil {
-		return common.Fail("用户不存在"), nil
+		return common.FailAction("用户不存在"), nil
 	}
 
 	oldMd5Pwd := common.EncryptPassword(in.OldPassword)
 	if u.Password != oldMd5Pwd {
-		return common.Fail("原密码错误"), nil
+		return common.FailAction("原密码错误"), nil
 	}
 
 	newHashedPwd := common.EncryptPassword(in.NewPassword)
 	if err := l.svcCtx.UserModel.UpdatePassword(l.ctx, in.UserId, newHashedPwd); err != nil {
-		return common.Fail("修改密码失败"), nil
+		return common.FailAction("修改密码失败"), nil
 	}
-	return common.SuccessMsg("更新成功", nil), nil
+	return common.SuccessActionMsg("更新成功"), nil
 }

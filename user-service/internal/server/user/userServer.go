@@ -7,7 +7,7 @@ package server
 import (
 	"context"
 
-	"user-service/internal/logic/user"
+	logic "user-service/internal/logic/user"
 	"user-service/internal/svc"
 	"user-service/user"
 )
@@ -24,53 +24,53 @@ func NewUserServer(svcCtx *svc.ServiceContext) *UserServer {
 }
 
 // 无鉴权
-func (s *UserServer) Login(ctx context.Context, in *user.LoginReq) (*user.ApiResponse, error) {
-	l := userlogic.NewLoginLogic(ctx, s.svcCtx)
+func (s *UserServer) Login(ctx context.Context, in *user.LoginReq) (*user.UserInfoResp, error) {
+	l := logic.NewLoginLogic(ctx, s.svcCtx)
 	return l.Login(in)
 }
 
-func (s *UserServer) UserLogin(ctx context.Context, in *user.UserLoginReq) (*user.ApiResponse, error) {
-	l := userlogic.NewUserLoginLogic(ctx, s.svcCtx)
+func (s *UserServer) UserLogin(ctx context.Context, in *user.UserLoginReq) (*user.UserInfoResp, error) {
+	l := logic.NewUserLoginLogic(ctx, s.svcCtx)
 	return l.UserLogin(in)
 }
 
-func (s *UserServer) Register(ctx context.Context, in *user.RegisterReq) (*user.ApiResponse, error) {
-	l := userlogic.NewRegisterLogic(ctx, s.svcCtx)
+func (s *UserServer) Register(ctx context.Context, in *user.RegisterReq) (*user.ActionResp, error) {
+	l := logic.NewRegisterLogic(ctx, s.svcCtx)
 	return l.Register(in)
 }
 
 // 需鉴权（api-gateway 透传 UserContext）
-func (s *UserServer) Detail(ctx context.Context, in *user.IdReq) (*user.ApiResponse, error) {
-	l := userlogic.NewDetailLogic(ctx, s.svcCtx)
+func (s *UserServer) Detail(ctx context.Context, in *user.IdReq) (*user.UserInfoResp, error) {
+	l := logic.NewDetailLogic(ctx, s.svcCtx)
 	return l.Detail(in)
 }
 
-func (s *UserServer) List(ctx context.Context, in *user.UserListReq) (*user.ApiResponse, error) {
-	l := userlogic.NewListLogic(ctx, s.svcCtx)
+func (s *UserServer) List(ctx context.Context, in *user.UserListReq) (*user.UserListResp, error) {
+	l := logic.NewListLogic(ctx, s.svcCtx)
 	return l.List(in)
 }
 
-func (s *UserServer) Create(ctx context.Context, in *user.CreateUserReq) (*user.ApiResponse, error) {
-	l := userlogic.NewCreateLogic(ctx, s.svcCtx)
+func (s *UserServer) Create(ctx context.Context, in *user.CreateUserReq) (*user.ActionResp, error) {
+	l := logic.NewCreateLogic(ctx, s.svcCtx)
 	return l.Create(in)
 }
 
-func (s *UserServer) Update(ctx context.Context, in *user.UpdateUserReq) (*user.ApiResponse, error) {
-	l := userlogic.NewUpdateLogic(ctx, s.svcCtx)
+func (s *UserServer) Update(ctx context.Context, in *user.UpdateUserReq) (*user.ActionResp, error) {
+	l := logic.NewUpdateLogic(ctx, s.svcCtx)
 	return l.Update(in)
 }
 
-func (s *UserServer) Delete(ctx context.Context, in *user.DeleteReq) (*user.ApiResponse, error) {
-	l := userlogic.NewDeleteLogic(ctx, s.svcCtx)
+func (s *UserServer) Delete(ctx context.Context, in *user.DeleteReq) (*user.ActionResp, error) {
+	l := logic.NewDeleteLogic(ctx, s.svcCtx)
 	return l.Delete(in)
 }
 
-func (s *UserServer) UpdateUserInfo(ctx context.Context, in *user.UpdateUserInfoReq) (*user.ApiResponse, error) {
-	l := userlogic.NewUpdateUserInfoLogic(ctx, s.svcCtx)
+func (s *UserServer) UpdateUserInfo(ctx context.Context, in *user.UpdateUserInfoReq) (*user.ActionResp, error) {
+	l := logic.NewUpdateUserInfoLogic(ctx, s.svcCtx)
 	return l.UpdateUserInfo(in)
 }
 
-func (s *UserServer) UpdatePwd(ctx context.Context, in *user.UpdatePwdReq) (*user.ApiResponse, error) {
-	l := userlogic.NewUpdatePwdLogic(ctx, s.svcCtx)
+func (s *UserServer) UpdatePwd(ctx context.Context, in *user.UpdatePwdReq) (*user.ActionResp, error) {
+	l := logic.NewUpdatePwdLogic(ctx, s.svcCtx)
 	return l.UpdatePwd(in)
 }

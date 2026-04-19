@@ -26,21 +26,21 @@ func NewRegisterLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Register
 }
 
 // 用户注册
-func (l *RegisterLogic) Register(in *user.RegisterReq) (*user.ApiResponse, error) {
+func (l *RegisterLogic) Register(in *user.RegisterReq) (*user.ActionResp, error) {
 	if in.Username == "" || in.Password == "" || in.RePassword == "" {
-		return common.Fail("参数不完整"), nil
+		return common.FailAction("参数不完整"), nil
 	}
 
 	existing, err := l.svcCtx.UserModel.FindByUsername(l.ctx, in.Username)
 	if err != nil {
-		return common.Fail("查询用户失败"), nil
+		return common.FailAction("查询用户失败"), nil
 	}
 	if existing != nil {
-		return common.Fail("用户名重复"), nil
+		return common.FailAction("用户名重复"), nil
 	}
 
 	if in.Password != in.RePassword {
-		return common.Fail("密码不一致"), nil
+		return common.FailAction("密码不一致"), nil
 	}
 
 	md5Password := common.EncryptPassword(in.Password)
@@ -58,7 +58,7 @@ func (l *RegisterLogic) Register(in *user.RegisterReq) (*user.ApiResponse, error
 	}
 	_, err = l.svcCtx.UserModel.Insert(l.ctx, u)
 	if err != nil {
-		return common.Fail("注册用户失败"), nil
+		return common.FailAction("注册用户失败"), nil
 	}
-	return common.SuccessMsg("创建成功", nil), nil
+	return common.SuccessActionMsg("创建成功"), nil
 }

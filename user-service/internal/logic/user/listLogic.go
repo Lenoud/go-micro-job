@@ -24,7 +24,7 @@ func NewListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ListLogic {
 	}
 }
 
-func (l *ListLogic) List(in *user.UserListReq) (*user.ApiResponse, error) {
+func (l *ListLogic) List(in *user.UserListReq) (*user.UserListResp, error) {
 	page := in.Page
 	pageSize := in.PageSize
 	if page < 1 {
@@ -36,7 +36,17 @@ func (l *ListLogic) List(in *user.UserListReq) (*user.ApiResponse, error) {
 
 	list, total, err := l.svcCtx.UserModel.FindList(l.ctx, in.Keyword, page, pageSize)
 	if err != nil {
-		return common.Fail("查询用户列表失败"), nil
+		return common.FailUserList("查询用户列表失败"), nil
 	}
-	return common.SuccessPage(list, total, page, pageSize), nil
+
+	items := make([]*user.UserInfo, 0, len(list))
+	for _, u := range list {
+		items = append(items, common.UserModelToProto(u))
+	}
+	return common.SuccessUserList(&user.UserListData{
+		List:     items,
+		Total:    total,
+		Page:     page,
+		PageSize: pageSize,
+	}), nil
 }

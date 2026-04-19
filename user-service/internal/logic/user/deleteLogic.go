@@ -25,13 +25,13 @@ func NewDeleteLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DeleteLogi
 }
 
 // 批量删除用户
-func (l *DeleteLogic) Delete(in *user.DeleteReq) (*user.ApiResponse, error) {
+func (l *DeleteLogic) Delete(in *user.DeleteReq) (*user.ActionResp, error) {
 	ids := common.SplitIDs(in.Ids)
 	if len(ids) == 0 {
-		return common.Fail("删除用户失败"), nil
+		return common.FailAction("删除用户失败"), nil
 	}
 	if err := l.svcCtx.UserModel.DeleteBatch(l.ctx, ids); err != nil {
-		return common.Fail("删除用户失败"), nil
+		return common.FailAction("删除用户失败"), nil
 	}
-	return common.SuccessMsg("删除成功", nil), nil
+	return common.SuccessActionMsg("删除成功"), nil
 }

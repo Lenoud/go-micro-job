@@ -2,8 +2,8 @@ package user
 
 import (
 	"context"
-	"time"
 
+	"api-gateway/internal/common"
 	"api-gateway/internal/svc"
 	"api-gateway/internal/types"
 
@@ -31,10 +31,10 @@ func (l *UserDeleteLogic) UserDelete(req *types.DeleteReq) (resp *types.DeleteUs
 		Ids: req.Ids,
 	})
 	if err != nil {
-		return &types.DeleteUserResp{BaseResp: types.BaseResp{Code: -1, Msg: "rpc调用失败", Timestamp: time.Now().UnixMilli()}}, nil
+		return &types.DeleteUserResp{BaseResp: common.FailBaseMsg("rpc调用失败")}, nil
 	}
 
 	return &types.DeleteUserResp{
-		BaseResp: types.BaseResp{Code: rpcResp.Code, Msg: rpcResp.Msg, Timestamp: time.Now().UnixMilli()},
+		BaseResp: common.RpcBase(rpcResp),
 	}, nil
 }

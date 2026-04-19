@@ -2,8 +2,8 @@ package user
 
 import (
 	"context"
-	"time"
 
+	"api-gateway/internal/common"
 	"api-gateway/internal/svc"
 	"api-gateway/internal/types"
 
@@ -33,10 +33,10 @@ func (l *UserUpdatePwdLogic) UserUpdatePwd(req *types.UpdatePwdReq) (resp *types
 		NewPassword: req.NewPassword,
 	})
 	if err != nil {
-		return &types.UpdatePwdResp{BaseResp: types.BaseResp{Code: -1, Msg: "rpc调用失败", Timestamp: time.Now().UnixMilli()}}, nil
+		return &types.UpdatePwdResp{BaseResp: common.FailBaseMsg("rpc调用失败")}, nil
 	}
 
 	return &types.UpdatePwdResp{
-		BaseResp: types.BaseResp{Code: rpcResp.Code, Msg: rpcResp.Msg, Timestamp: time.Now().UnixMilli()},
+		BaseResp: common.RpcBase(rpcResp),
 	}, nil
 }

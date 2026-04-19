@@ -2,9 +2,8 @@ package user
 
 import (
 	"context"
-	"encoding/json"
-	"time"
 
+	"api-gateway/internal/common"
 	"api-gateway/internal/svc"
 	"api-gateway/internal/types"
 
@@ -34,15 +33,11 @@ func (l *UserListLogic) UserList(req *types.UserListReq) (resp *types.UserListRe
 		PageSize: req.PageSize,
 	})
 	if err != nil {
-		return &types.UserListResp{BaseResp: types.BaseResp{Code: -1, Msg: "rpc调用失败", Timestamp: time.Now().UnixMilli()}}, nil
+		return &types.UserListResp{BaseResp: common.FailBaseMsg("rpc调用失败")}, nil
 	}
 
-	var data types.UserListData
-	if rpcResp.Data != "" {
-		_ = json.Unmarshal([]byte(rpcResp.Data), &data)
-	}
 	return &types.UserListResp{
-		BaseResp: types.BaseResp{Code: rpcResp.Code, Msg: rpcResp.Msg, Timestamp: time.Now().UnixMilli()},
-		Data:     &data,
+		BaseResp: common.RpcBase(rpcResp),
+		Data:     common.ProtoToUserListData(rpcResp.Data),
 	}, nil
 }

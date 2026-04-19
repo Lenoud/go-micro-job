@@ -36,17 +36,17 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UserClient interface {
 	// 无鉴权
-	Login(ctx context.Context, in *LoginReq, opts ...grpc.CallOption) (*ApiResponse, error)
-	UserLogin(ctx context.Context, in *UserLoginReq, opts ...grpc.CallOption) (*ApiResponse, error)
-	Register(ctx context.Context, in *RegisterReq, opts ...grpc.CallOption) (*ApiResponse, error)
+	Login(ctx context.Context, in *LoginReq, opts ...grpc.CallOption) (*UserInfoResp, error)
+	UserLogin(ctx context.Context, in *UserLoginReq, opts ...grpc.CallOption) (*UserInfoResp, error)
+	Register(ctx context.Context, in *RegisterReq, opts ...grpc.CallOption) (*ActionResp, error)
 	// 需鉴权（api-gateway 透传 UserContext）
-	Detail(ctx context.Context, in *IdReq, opts ...grpc.CallOption) (*ApiResponse, error)
-	List(ctx context.Context, in *UserListReq, opts ...grpc.CallOption) (*ApiResponse, error)
-	Create(ctx context.Context, in *CreateUserReq, opts ...grpc.CallOption) (*ApiResponse, error)
-	Update(ctx context.Context, in *UpdateUserReq, opts ...grpc.CallOption) (*ApiResponse, error)
-	Delete(ctx context.Context, in *DeleteReq, opts ...grpc.CallOption) (*ApiResponse, error)
-	UpdateUserInfo(ctx context.Context, in *UpdateUserInfoReq, opts ...grpc.CallOption) (*ApiResponse, error)
-	UpdatePwd(ctx context.Context, in *UpdatePwdReq, opts ...grpc.CallOption) (*ApiResponse, error)
+	Detail(ctx context.Context, in *IdReq, opts ...grpc.CallOption) (*UserInfoResp, error)
+	List(ctx context.Context, in *UserListReq, opts ...grpc.CallOption) (*UserListResp, error)
+	Create(ctx context.Context, in *CreateUserReq, opts ...grpc.CallOption) (*ActionResp, error)
+	Update(ctx context.Context, in *UpdateUserReq, opts ...grpc.CallOption) (*ActionResp, error)
+	Delete(ctx context.Context, in *DeleteReq, opts ...grpc.CallOption) (*ActionResp, error)
+	UpdateUserInfo(ctx context.Context, in *UpdateUserInfoReq, opts ...grpc.CallOption) (*ActionResp, error)
+	UpdatePwd(ctx context.Context, in *UpdatePwdReq, opts ...grpc.CallOption) (*ActionResp, error)
 }
 
 type userClient struct {
@@ -57,9 +57,9 @@ func NewUserClient(cc grpc.ClientConnInterface) UserClient {
 	return &userClient{cc}
 }
 
-func (c *userClient) Login(ctx context.Context, in *LoginReq, opts ...grpc.CallOption) (*ApiResponse, error) {
+func (c *userClient) Login(ctx context.Context, in *LoginReq, opts ...grpc.CallOption) (*UserInfoResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ApiResponse)
+	out := new(UserInfoResp)
 	err := c.cc.Invoke(ctx, User_Login_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -67,9 +67,9 @@ func (c *userClient) Login(ctx context.Context, in *LoginReq, opts ...grpc.CallO
 	return out, nil
 }
 
-func (c *userClient) UserLogin(ctx context.Context, in *UserLoginReq, opts ...grpc.CallOption) (*ApiResponse, error) {
+func (c *userClient) UserLogin(ctx context.Context, in *UserLoginReq, opts ...grpc.CallOption) (*UserInfoResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ApiResponse)
+	out := new(UserInfoResp)
 	err := c.cc.Invoke(ctx, User_UserLogin_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -77,9 +77,9 @@ func (c *userClient) UserLogin(ctx context.Context, in *UserLoginReq, opts ...gr
 	return out, nil
 }
 
-func (c *userClient) Register(ctx context.Context, in *RegisterReq, opts ...grpc.CallOption) (*ApiResponse, error) {
+func (c *userClient) Register(ctx context.Context, in *RegisterReq, opts ...grpc.CallOption) (*ActionResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ApiResponse)
+	out := new(ActionResp)
 	err := c.cc.Invoke(ctx, User_Register_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -87,9 +87,9 @@ func (c *userClient) Register(ctx context.Context, in *RegisterReq, opts ...grpc
 	return out, nil
 }
 
-func (c *userClient) Detail(ctx context.Context, in *IdReq, opts ...grpc.CallOption) (*ApiResponse, error) {
+func (c *userClient) Detail(ctx context.Context, in *IdReq, opts ...grpc.CallOption) (*UserInfoResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ApiResponse)
+	out := new(UserInfoResp)
 	err := c.cc.Invoke(ctx, User_Detail_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -97,9 +97,9 @@ func (c *userClient) Detail(ctx context.Context, in *IdReq, opts ...grpc.CallOpt
 	return out, nil
 }
 
-func (c *userClient) List(ctx context.Context, in *UserListReq, opts ...grpc.CallOption) (*ApiResponse, error) {
+func (c *userClient) List(ctx context.Context, in *UserListReq, opts ...grpc.CallOption) (*UserListResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ApiResponse)
+	out := new(UserListResp)
 	err := c.cc.Invoke(ctx, User_List_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -107,9 +107,9 @@ func (c *userClient) List(ctx context.Context, in *UserListReq, opts ...grpc.Cal
 	return out, nil
 }
 
-func (c *userClient) Create(ctx context.Context, in *CreateUserReq, opts ...grpc.CallOption) (*ApiResponse, error) {
+func (c *userClient) Create(ctx context.Context, in *CreateUserReq, opts ...grpc.CallOption) (*ActionResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ApiResponse)
+	out := new(ActionResp)
 	err := c.cc.Invoke(ctx, User_Create_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -117,9 +117,9 @@ func (c *userClient) Create(ctx context.Context, in *CreateUserReq, opts ...grpc
 	return out, nil
 }
 
-func (c *userClient) Update(ctx context.Context, in *UpdateUserReq, opts ...grpc.CallOption) (*ApiResponse, error) {
+func (c *userClient) Update(ctx context.Context, in *UpdateUserReq, opts ...grpc.CallOption) (*ActionResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ApiResponse)
+	out := new(ActionResp)
 	err := c.cc.Invoke(ctx, User_Update_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -127,9 +127,9 @@ func (c *userClient) Update(ctx context.Context, in *UpdateUserReq, opts ...grpc
 	return out, nil
 }
 
-func (c *userClient) Delete(ctx context.Context, in *DeleteReq, opts ...grpc.CallOption) (*ApiResponse, error) {
+func (c *userClient) Delete(ctx context.Context, in *DeleteReq, opts ...grpc.CallOption) (*ActionResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ApiResponse)
+	out := new(ActionResp)
 	err := c.cc.Invoke(ctx, User_Delete_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -137,9 +137,9 @@ func (c *userClient) Delete(ctx context.Context, in *DeleteReq, opts ...grpc.Cal
 	return out, nil
 }
 
-func (c *userClient) UpdateUserInfo(ctx context.Context, in *UpdateUserInfoReq, opts ...grpc.CallOption) (*ApiResponse, error) {
+func (c *userClient) UpdateUserInfo(ctx context.Context, in *UpdateUserInfoReq, opts ...grpc.CallOption) (*ActionResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ApiResponse)
+	out := new(ActionResp)
 	err := c.cc.Invoke(ctx, User_UpdateUserInfo_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -147,9 +147,9 @@ func (c *userClient) UpdateUserInfo(ctx context.Context, in *UpdateUserInfoReq, 
 	return out, nil
 }
 
-func (c *userClient) UpdatePwd(ctx context.Context, in *UpdatePwdReq, opts ...grpc.CallOption) (*ApiResponse, error) {
+func (c *userClient) UpdatePwd(ctx context.Context, in *UpdatePwdReq, opts ...grpc.CallOption) (*ActionResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ApiResponse)
+	out := new(ActionResp)
 	err := c.cc.Invoke(ctx, User_UpdatePwd_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -162,17 +162,17 @@ func (c *userClient) UpdatePwd(ctx context.Context, in *UpdatePwdReq, opts ...gr
 // for forward compatibility.
 type UserServer interface {
 	// 无鉴权
-	Login(context.Context, *LoginReq) (*ApiResponse, error)
-	UserLogin(context.Context, *UserLoginReq) (*ApiResponse, error)
-	Register(context.Context, *RegisterReq) (*ApiResponse, error)
+	Login(context.Context, *LoginReq) (*UserInfoResp, error)
+	UserLogin(context.Context, *UserLoginReq) (*UserInfoResp, error)
+	Register(context.Context, *RegisterReq) (*ActionResp, error)
 	// 需鉴权（api-gateway 透传 UserContext）
-	Detail(context.Context, *IdReq) (*ApiResponse, error)
-	List(context.Context, *UserListReq) (*ApiResponse, error)
-	Create(context.Context, *CreateUserReq) (*ApiResponse, error)
-	Update(context.Context, *UpdateUserReq) (*ApiResponse, error)
-	Delete(context.Context, *DeleteReq) (*ApiResponse, error)
-	UpdateUserInfo(context.Context, *UpdateUserInfoReq) (*ApiResponse, error)
-	UpdatePwd(context.Context, *UpdatePwdReq) (*ApiResponse, error)
+	Detail(context.Context, *IdReq) (*UserInfoResp, error)
+	List(context.Context, *UserListReq) (*UserListResp, error)
+	Create(context.Context, *CreateUserReq) (*ActionResp, error)
+	Update(context.Context, *UpdateUserReq) (*ActionResp, error)
+	Delete(context.Context, *DeleteReq) (*ActionResp, error)
+	UpdateUserInfo(context.Context, *UpdateUserInfoReq) (*ActionResp, error)
+	UpdatePwd(context.Context, *UpdatePwdReq) (*ActionResp, error)
 	mustEmbedUnimplementedUserServer()
 }
 
@@ -183,34 +183,34 @@ type UserServer interface {
 // pointer dereference when methods are called.
 type UnimplementedUserServer struct{}
 
-func (UnimplementedUserServer) Login(context.Context, *LoginReq) (*ApiResponse, error) {
+func (UnimplementedUserServer) Login(context.Context, *LoginReq) (*UserInfoResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method Login not implemented")
 }
-func (UnimplementedUserServer) UserLogin(context.Context, *UserLoginReq) (*ApiResponse, error) {
+func (UnimplementedUserServer) UserLogin(context.Context, *UserLoginReq) (*UserInfoResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method UserLogin not implemented")
 }
-func (UnimplementedUserServer) Register(context.Context, *RegisterReq) (*ApiResponse, error) {
+func (UnimplementedUserServer) Register(context.Context, *RegisterReq) (*ActionResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method Register not implemented")
 }
-func (UnimplementedUserServer) Detail(context.Context, *IdReq) (*ApiResponse, error) {
+func (UnimplementedUserServer) Detail(context.Context, *IdReq) (*UserInfoResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method Detail not implemented")
 }
-func (UnimplementedUserServer) List(context.Context, *UserListReq) (*ApiResponse, error) {
+func (UnimplementedUserServer) List(context.Context, *UserListReq) (*UserListResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method List not implemented")
 }
-func (UnimplementedUserServer) Create(context.Context, *CreateUserReq) (*ApiResponse, error) {
+func (UnimplementedUserServer) Create(context.Context, *CreateUserReq) (*ActionResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method Create not implemented")
 }
-func (UnimplementedUserServer) Update(context.Context, *UpdateUserReq) (*ApiResponse, error) {
+func (UnimplementedUserServer) Update(context.Context, *UpdateUserReq) (*ActionResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method Update not implemented")
 }
-func (UnimplementedUserServer) Delete(context.Context, *DeleteReq) (*ApiResponse, error) {
+func (UnimplementedUserServer) Delete(context.Context, *DeleteReq) (*ActionResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method Delete not implemented")
 }
-func (UnimplementedUserServer) UpdateUserInfo(context.Context, *UpdateUserInfoReq) (*ApiResponse, error) {
+func (UnimplementedUserServer) UpdateUserInfo(context.Context, *UpdateUserInfoReq) (*ActionResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method UpdateUserInfo not implemented")
 }
-func (UnimplementedUserServer) UpdatePwd(context.Context, *UpdatePwdReq) (*ApiResponse, error) {
+func (UnimplementedUserServer) UpdatePwd(context.Context, *UpdatePwdReq) (*ActionResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method UpdatePwd not implemented")
 }
 func (UnimplementedUserServer) mustEmbedUnimplementedUserServer() {}

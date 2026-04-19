@@ -26,17 +26,17 @@ func NewCreateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *CreateLogi
 }
 
 // 管理员创建用户
-func (l *CreateLogic) Create(in *user.CreateUserReq) (*user.ApiResponse, error) {
+func (l *CreateLogic) Create(in *user.CreateUserReq) (*user.ActionResp, error) {
 	if in.Username == "" || in.Password == "" {
-		return common.Fail("参数不完整"), nil
+		return common.FailAction("参数不完整"), nil
 	}
 
 	existing, err := l.svcCtx.UserModel.FindByUsername(l.ctx, in.Username)
 	if err != nil {
-		return common.Fail("查询用户失败"), nil
+		return common.FailAction("查询用户失败"), nil
 	}
 	if existing != nil {
-		return common.Fail("用户名重复"), nil
+		return common.FailAction("用户名重复"), nil
 	}
 
 	md5Password := common.EncryptPassword(in.Password)
@@ -63,7 +63,7 @@ func (l *CreateLogic) Create(in *user.CreateUserReq) (*user.ApiResponse, error) 
 	}
 	_, err = l.svcCtx.UserModel.Insert(l.ctx, u)
 	if err != nil {
-		return common.Fail("创建用户失败"), nil
+		return common.FailAction("创建用户失败"), nil
 	}
-	return common.SuccessMsg("创建成功", nil), nil
+	return common.SuccessActionMsg("创建成功"), nil
 }

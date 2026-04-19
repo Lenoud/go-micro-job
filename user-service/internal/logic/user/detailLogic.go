@@ -24,17 +24,17 @@ func NewDetailLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DetailLogi
 	}
 }
 
-func (l *DetailLogic) Detail(in *user.IdReq) (*user.ApiResponse, error) {
+func (l *DetailLogic) Detail(in *user.IdReq) (*user.UserInfoResp, error) {
 	if in.Id == "" {
-		return common.Fail("用户ID不能为空"), nil
+		return common.FailUserInfo("用户ID不能为空"), nil
 	}
 
 	u, err := l.svcCtx.UserModel.FindOne(l.ctx, in.Id)
 	if err != nil {
-		return common.Fail("查询用户信息失败"), nil
+		return common.FailUserInfo("查询用户信息失败"), nil
 	}
 	if u == nil {
-		return common.Fail("用户不存在"), nil
+		return common.FailUserInfo("用户不存在"), nil
 	}
-	return common.Success(u), nil
+	return common.SuccessUserInfo("操作成功", common.UserModelToProto(u)), nil
 }

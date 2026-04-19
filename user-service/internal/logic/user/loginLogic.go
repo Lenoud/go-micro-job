@@ -27,18 +27,18 @@ func NewLoginLogic(ctx context.Context, svcCtx *svc.ServiceContext) *LoginLogic 
 }
 
 // 管理员登录
-func (l *LoginLogic) Login(in *user.LoginReq) (*user.ApiResponse, error) {
+func (l *LoginLogic) Login(in *user.LoginReq) (*user.UserInfoResp, error) {
 	if in.Username == "" || in.Password == "" {
-		return common.Fail("用户名或密码不能为空"), nil
+		return common.FailUserInfo("用户名或密码不能为空"), nil
 	}
 
 	password := common.EncryptPassword(in.Password)
 	u, err := l.svcCtx.UserModel.FindAdminUser(l.ctx, in.Username, password)
 	if err != nil {
-		return common.Fail("查询管理员失败"), nil
+		return common.FailUserInfo("查询管理员失败"), nil
 	}
 	if u == nil || u.Role != common.RoleAdmin {
-		return common.Fail("用户名或密码错误"), nil
+		return common.FailUserInfo("用户名或密码错误"), nil
 	}
 
 	now := time.Now()
@@ -52,21 +52,10 @@ func (l *LoginLogic) Login(in *user.LoginReq) (*user.ApiResponse, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	tokenString, err := token.SignedString([]byte(l.svcCtx.Config.JWT.AccessSecret))
 	if err != nil {
-		return common.Fail("生成token失败"), nil
+		return common.FailUserInfo("生成token失败"), nil
 	}
 
-	respData := map[string]interface{}{
-		"id":         u.Id,
-		"username":   u.Username,
-		"nickname":   u.Nickname,
-		"mobile":     u.Mobile,
-		"email":      u.Email,
-		"role":       u.Role,
-		"status":     u.Status,
-		"token":      tokenString,
-		"createTime": u.CreateTime,
-		"pushEmail":  u.PushEmail,
-		"pushSwitch": u.PushSwitch,
-	}
-	return common.SuccessMsg("查询成功", respData), nil
+	info := common.UserModelToProto(u)
+	info.Token = tokenString
+	return common.SuccessUserInfo("查询成功", info), nil
 }

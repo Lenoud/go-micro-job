@@ -2,7 +2,7 @@
 // goctl 1.10.1
 // Source: user.proto
 
-package user
+package userClient
 
 import (
 	"context"
@@ -14,31 +14,37 @@ import (
 )
 
 type (
-	ApiResponse       = user.ApiResponse
+	ActionResp        = user.ActionResp
 	CreateUserReq     = user.CreateUserReq
 	DeleteReq         = user.DeleteReq
+	Empty             = user.Empty
 	IdReq             = user.IdReq
 	LoginReq          = user.LoginReq
 	RegisterReq       = user.RegisterReq
 	UpdatePwdReq      = user.UpdatePwdReq
 	UpdateUserInfoReq = user.UpdateUserInfoReq
 	UpdateUserReq     = user.UpdateUserReq
+	UserContext       = user.UserContext
+	UserInfo          = user.UserInfo
+	UserInfoResp      = user.UserInfoResp
+	UserListData      = user.UserListData
 	UserListReq       = user.UserListReq
+	UserListResp      = user.UserListResp
 	UserLoginReq      = user.UserLoginReq
 
 	User interface {
 		// 无鉴权
-		Login(ctx context.Context, in *LoginReq, opts ...grpc.CallOption) (*ApiResponse, error)
-		UserLogin(ctx context.Context, in *UserLoginReq, opts ...grpc.CallOption) (*ApiResponse, error)
-		Register(ctx context.Context, in *RegisterReq, opts ...grpc.CallOption) (*ApiResponse, error)
+		Login(ctx context.Context, in *LoginReq, opts ...grpc.CallOption) (*UserInfoResp, error)
+		UserLogin(ctx context.Context, in *UserLoginReq, opts ...grpc.CallOption) (*UserInfoResp, error)
+		Register(ctx context.Context, in *RegisterReq, opts ...grpc.CallOption) (*ActionResp, error)
 		// 需鉴权（api-gateway 透传 UserContext）
-		Detail(ctx context.Context, in *IdReq, opts ...grpc.CallOption) (*ApiResponse, error)
-		List(ctx context.Context, in *UserListReq, opts ...grpc.CallOption) (*ApiResponse, error)
-		Create(ctx context.Context, in *CreateUserReq, opts ...grpc.CallOption) (*ApiResponse, error)
-		Update(ctx context.Context, in *UpdateUserReq, opts ...grpc.CallOption) (*ApiResponse, error)
-		Delete(ctx context.Context, in *DeleteReq, opts ...grpc.CallOption) (*ApiResponse, error)
-		UpdateUserInfo(ctx context.Context, in *UpdateUserInfoReq, opts ...grpc.CallOption) (*ApiResponse, error)
-		UpdatePwd(ctx context.Context, in *UpdatePwdReq, opts ...grpc.CallOption) (*ApiResponse, error)
+		Detail(ctx context.Context, in *IdReq, opts ...grpc.CallOption) (*UserInfoResp, error)
+		List(ctx context.Context, in *UserListReq, opts ...grpc.CallOption) (*UserListResp, error)
+		Create(ctx context.Context, in *CreateUserReq, opts ...grpc.CallOption) (*ActionResp, error)
+		Update(ctx context.Context, in *UpdateUserReq, opts ...grpc.CallOption) (*ActionResp, error)
+		Delete(ctx context.Context, in *DeleteReq, opts ...grpc.CallOption) (*ActionResp, error)
+		UpdateUserInfo(ctx context.Context, in *UpdateUserInfoReq, opts ...grpc.CallOption) (*ActionResp, error)
+		UpdatePwd(ctx context.Context, in *UpdatePwdReq, opts ...grpc.CallOption) (*ActionResp, error)
 	}
 
 	defaultUser struct {
@@ -53,53 +59,53 @@ func NewUser(cli zrpc.Client) User {
 }
 
 // 无鉴权
-func (m *defaultUser) Login(ctx context.Context, in *LoginReq, opts ...grpc.CallOption) (*ApiResponse, error) {
+func (m *defaultUser) Login(ctx context.Context, in *LoginReq, opts ...grpc.CallOption) (*UserInfoResp, error) {
 	client := user.NewUserClient(m.cli.Conn())
 	return client.Login(ctx, in, opts...)
 }
 
-func (m *defaultUser) UserLogin(ctx context.Context, in *UserLoginReq, opts ...grpc.CallOption) (*ApiResponse, error) {
+func (m *defaultUser) UserLogin(ctx context.Context, in *UserLoginReq, opts ...grpc.CallOption) (*UserInfoResp, error) {
 	client := user.NewUserClient(m.cli.Conn())
 	return client.UserLogin(ctx, in, opts...)
 }
 
-func (m *defaultUser) Register(ctx context.Context, in *RegisterReq, opts ...grpc.CallOption) (*ApiResponse, error) {
+func (m *defaultUser) Register(ctx context.Context, in *RegisterReq, opts ...grpc.CallOption) (*ActionResp, error) {
 	client := user.NewUserClient(m.cli.Conn())
 	return client.Register(ctx, in, opts...)
 }
 
 // 需鉴权（api-gateway 透传 UserContext）
-func (m *defaultUser) Detail(ctx context.Context, in *IdReq, opts ...grpc.CallOption) (*ApiResponse, error) {
+func (m *defaultUser) Detail(ctx context.Context, in *IdReq, opts ...grpc.CallOption) (*UserInfoResp, error) {
 	client := user.NewUserClient(m.cli.Conn())
 	return client.Detail(ctx, in, opts...)
 }
 
-func (m *defaultUser) List(ctx context.Context, in *UserListReq, opts ...grpc.CallOption) (*ApiResponse, error) {
+func (m *defaultUser) List(ctx context.Context, in *UserListReq, opts ...grpc.CallOption) (*UserListResp, error) {
 	client := user.NewUserClient(m.cli.Conn())
 	return client.List(ctx, in, opts...)
 }
 
-func (m *defaultUser) Create(ctx context.Context, in *CreateUserReq, opts ...grpc.CallOption) (*ApiResponse, error) {
+func (m *defaultUser) Create(ctx context.Context, in *CreateUserReq, opts ...grpc.CallOption) (*ActionResp, error) {
 	client := user.NewUserClient(m.cli.Conn())
 	return client.Create(ctx, in, opts...)
 }
 
-func (m *defaultUser) Update(ctx context.Context, in *UpdateUserReq, opts ...grpc.CallOption) (*ApiResponse, error) {
+func (m *defaultUser) Update(ctx context.Context, in *UpdateUserReq, opts ...grpc.CallOption) (*ActionResp, error) {
 	client := user.NewUserClient(m.cli.Conn())
 	return client.Update(ctx, in, opts...)
 }
 
-func (m *defaultUser) Delete(ctx context.Context, in *DeleteReq, opts ...grpc.CallOption) (*ApiResponse, error) {
+func (m *defaultUser) Delete(ctx context.Context, in *DeleteReq, opts ...grpc.CallOption) (*ActionResp, error) {
 	client := user.NewUserClient(m.cli.Conn())
 	return client.Delete(ctx, in, opts...)
 }
 
-func (m *defaultUser) UpdateUserInfo(ctx context.Context, in *UpdateUserInfoReq, opts ...grpc.CallOption) (*ApiResponse, error) {
+func (m *defaultUser) UpdateUserInfo(ctx context.Context, in *UpdateUserInfoReq, opts ...grpc.CallOption) (*ActionResp, error) {
 	client := user.NewUserClient(m.cli.Conn())
 	return client.UpdateUserInfo(ctx, in, opts...)
 }
 
-func (m *defaultUser) UpdatePwd(ctx context.Context, in *UpdatePwdReq, opts ...grpc.CallOption) (*ApiResponse, error) {
+func (m *defaultUser) UpdatePwd(ctx context.Context, in *UpdatePwdReq, opts ...grpc.CallOption) (*ActionResp, error) {
 	client := user.NewUserClient(m.cli.Conn())
 	return client.UpdatePwd(ctx, in, opts...)
 }

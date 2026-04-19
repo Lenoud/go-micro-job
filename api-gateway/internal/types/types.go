@@ -6,6 +6,7 @@ package types
 type BaseResp struct {
 	Code      int64  `json:"code"`
 	Msg       string `json:"msg"`
+	Trace     string `json:"trace,omitempty"`
 	Timestamp int64  `json:"timestamp"`
 }
 

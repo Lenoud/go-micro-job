@@ -25,14 +25,14 @@ func NewUpdateUserInfoLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Up
 }
 
 // 用户更新自己的信息
-func (l *UpdateUserInfoLogic) UpdateUserInfo(in *user.UpdateUserInfoReq) (*user.ApiResponse, error) {
+func (l *UpdateUserInfoLogic) UpdateUserInfo(in *user.UpdateUserInfoReq) (*user.ActionResp, error) {
 	if in.Id == "" {
-		return common.Fail("用户ID不能为空"), nil
+		return common.FailAction("用户ID不能为空"), nil
 	}
 
 	existing, err := l.svcCtx.UserModel.FindOne(l.ctx, in.Id)
 	if err != nil || existing == nil {
-		return common.Fail("用户不存在"), nil
+		return common.FailAction("用户不存在"), nil
 	}
 
 	if in.Nickname != "" {
@@ -52,7 +52,7 @@ func (l *UpdateUserInfoLogic) UpdateUserInfo(in *user.UpdateUserInfoReq) (*user.
 	}
 
 	if err := l.svcCtx.UserModel.Update(l.ctx, existing); err != nil {
-		return common.Fail("更新用户信息失败"), nil
+		return common.FailAction("更新用户信息失败"), nil
 	}
-	return common.SuccessMsg("更新成功", nil), nil
+	return common.SuccessActionMsg("更新成功"), nil
 }

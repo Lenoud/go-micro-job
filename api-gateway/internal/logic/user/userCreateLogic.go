@@ -2,8 +2,8 @@ package user
 
 import (
 	"context"
-	"time"
 
+	"api-gateway/internal/common"
 	"api-gateway/internal/svc"
 	"api-gateway/internal/types"
 
@@ -37,10 +37,10 @@ func (l *UserCreateLogic) UserCreate(req *types.CreateUserReq) (resp *types.Crea
 		Status:   req.Status,
 	})
 	if err != nil {
-		return &types.CreateUserResp{BaseResp: types.BaseResp{Code: -1, Msg: "rpc调用失败", Timestamp: time.Now().UnixMilli()}}, nil
+		return &types.CreateUserResp{BaseResp: common.FailBaseMsg("rpc调用失败")}, nil
 	}
 
 	return &types.CreateUserResp{
-		BaseResp: types.BaseResp{Code: rpcResp.Code, Msg: rpcResp.Msg, Timestamp: time.Now().UnixMilli()},
+		BaseResp: common.RpcBase(rpcResp),
 	}, nil
 }
