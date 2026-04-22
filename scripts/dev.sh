@@ -80,7 +80,7 @@ print_info "[dev] building api-gateway..."
 # 启动 user-service (gRPC)
 print_info "[dev] starting user-service (gRPC :9101)..."
 (
-  cd "$MICRO_DIR/user-service"
+  cd "$MICRO_DIR/app/user-service"
   exec go run user.go -f etc/user-local.yaml
 ) >> "$USER_SVC_LOG" 2>&1 &
 USER_SVC_PID=$!
@@ -93,7 +93,7 @@ sleep_cmd 3
 # 启动 api-gateway (REST)
 print_info "[dev] starting api-gateway (REST :9000)..."
 (
-  cd "$MICRO_DIR/api-gateway"
+  cd "$MICRO_DIR/app/api-gateway"
   exec go run apigateway.go -f etc/apigateway-local.yaml
 ) >> "$GW_LOG" 2>&1 &
 GW_PID=$!
