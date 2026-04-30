@@ -27,8 +27,14 @@ func NewUserDetailLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UserDe
 }
 
 func (l *UserDetailLogic) UserDetail(req *types.UserDetailReq) (resp *types.UserDetailResp, err error) {
+	auth, ok := common.AuthFromContext(l.ctx)
+	if !ok {
+		return &types.UserDetailResp{BaseResp: common.FailBaseForbidden("无权访问")}, nil
+	}
+
 	rpcResp, err := l.svcCtx.UserRpc.Detail(l.ctx, &userclient.IdReq{
-		Id: req.UserId,
+		Id:   req.UserId,
+		Auth: auth,
 	})
 	if err != nil {
 		logx.Errorf("[gateway] rpc UserRpc.Detail failed: %v", err)

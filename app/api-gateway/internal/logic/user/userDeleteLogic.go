@@ -27,8 +27,14 @@ func NewUserDeleteLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UserDe
 }
 
 func (l *UserDeleteLogic) UserDelete(req *types.DeleteReq) (resp *types.DeleteUserResp, err error) {
+	auth, ok := common.AuthFromContext(l.ctx)
+	if !ok {
+		return &types.DeleteUserResp{BaseResp: common.FailBaseForbidden("无权访问")}, nil
+	}
+
 	rpcResp, err := l.svcCtx.UserRpc.Delete(l.ctx, &userclient.DeleteReq{
-		Ids: req.Ids,
+		Ids:  req.Ids,
+		Auth: auth,
 	})
 	if err != nil {
 		logx.Errorf("[gateway] rpc UserRpc.Delete failed: %v", err)

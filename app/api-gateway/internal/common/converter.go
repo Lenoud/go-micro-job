@@ -20,8 +20,6 @@ func ProtoToUserInfo(u *userclient.UserInfo) *types.UserInfo {
 		Status:     u.Status,
 		Token:      u.Token,
 		CreateTime: u.CreateTime,
-		PushEmail:  u.PushEmail,
-		PushSwitch: u.PushSwitch,
 		Avatar:     u.Avatar,
 	}
 }

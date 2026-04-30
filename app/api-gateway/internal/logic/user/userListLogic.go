@@ -27,10 +27,16 @@ func NewUserListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UserList
 }
 
 func (l *UserListLogic) UserList(req *types.UserListReq) (resp *types.UserListResp, err error) {
+	auth, ok := common.AuthFromContext(l.ctx)
+	if !ok {
+		return &types.UserListResp{BaseResp: common.FailBaseForbidden("无权访问")}, nil
+	}
+
 	rpcResp, err := l.svcCtx.UserRpc.List(l.ctx, &userclient.UserListReq{
 		Keyword:  req.Keyword,
 		Page:     req.Page,
 		PageSize: req.PageSize,
+		Auth:     auth,
 	})
 	if err != nil {
 		logx.Errorf("[gateway] rpc UserRpc.List failed: %v", err)

@@ -27,6 +27,11 @@ func NewUserCreateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UserCr
 }
 
 func (l *UserCreateLogic) UserCreate(req *types.CreateUserReq) (resp *types.CreateUserResp, err error) {
+	auth, ok := common.AuthFromContext(l.ctx)
+	if !ok {
+		return &types.CreateUserResp{BaseResp: common.FailBaseForbidden("无权访问")}, nil
+	}
+
 	rpcResp, err := l.svcCtx.UserRpc.Create(l.ctx, &userclient.CreateUserReq{
 		Username: req.Username,
 		Password: req.Password,
@@ -35,6 +40,7 @@ func (l *UserCreateLogic) UserCreate(req *types.CreateUserReq) (resp *types.Crea
 		Email:    req.Email,
 		Role:     req.Role,
 		Status:   req.Status,
+		Auth:     auth,
 	})
 	if err != nil {
 		logx.Errorf("[gateway] rpc UserRpc.Create failed: %v", err)

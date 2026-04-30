@@ -82,7 +82,7 @@ for i in $(seq 0 $((COUNT - 1))); do
   # 仅对比一次，因为列表整体一致即可
   if [ "$i" -eq 0 ]; then
     FIELDS_OK=true
-    for field in id username nickname mobile email role status pushEmail pushSwitch; do
+    for field in id username nickname mobile email role status; do
       V1=$(echo "$r1" | python3 -c "import sys,json; d=json.load(sys.stdin)['data']['list'][$i]; print(d.get('$field',''))" 2>/dev/null)
       V2=$(echo "$r2" | python3 -c "import sys,json; d=json.load(sys.stdin)['data']['list'][$i]; print(d.get('$field',''))" 2>/dev/null)
       if [ "$V1" != "$V2" ]; then
@@ -104,7 +104,7 @@ for uid in 1 2 3 4 5; do
   r1=$(curl -s "$MONO/api/user/detail?userId=$uid" -H "Authorization: Bearer $T1")
   r2=$(curl -s "$MICRO/api/user/detail?userId=$uid" -H "Authorization: Bearer $T2")
   compare "detail id=$uid" "$r1" "$r2"
-  for field in username nickname mobile email role status pushEmail pushSwitch; do
+  for field in username nickname mobile email role status; do
     V1=$(echo "$r1" | python3 -c "import sys,json; d=json.load(sys.stdin).get('data',{}); print(d.get('$field',''))" 2>/dev/null)
     V2=$(echo "$r2" | python3 -c "import sys,json; d=json.load(sys.stdin).get('data',{}); print(d.get('$field',''))" 2>/dev/null)
     if [ "$V1" != "$V2" ]; then
@@ -117,9 +117,9 @@ done
 # ===== 6. 管理员 update =====
 print_info "=== 6. 管理员 update ==="
 r1=$(curl -s -X POST "$MONO/api/user/update" -H "Authorization: Bearer $T1" -H 'Content-Type: application/json' \
-  -d '{"id":"3","nickname":"对比测试昵称","pushEmail":"compare@test.com","pushSwitch":"0"}')
+  -d '{"id":"3","nickname":"对比测试昵称"}')
 r2=$(curl -s -X POST "$MICRO/api/user/update" -H "Authorization: Bearer $T2" -H 'Content-Type: application/json' \
-  -d '{"id":"3","nickname":"对比测试昵称","pushEmail":"compare@test.com","pushSwitch":"0"}')
+  -d '{"id":"3","nickname":"对比测试昵称"}')
 compare "update id=3" "$r1" "$r2"
 
 # 验证更新结果
@@ -129,16 +129,16 @@ compare "验证 update" "$r1" "$r2"
 
 # 恢复
 curl -s -X POST "$MONO/api/user/update" -H "Authorization: Bearer $T1" -H 'Content-Type: application/json' \
-  -d '{"id":"3","nickname":"张求职","pushEmail":"351719672@qq.com","pushSwitch":"1"}' > /dev/null
+  -d '{"id":"3","nickname":"张求职"}' > /dev/null
 curl -s -X POST "$MICRO/api/user/update" -H "Authorization: Bearer $T2" -H 'Content-Type: application/json' \
-  -d '{"id":"3","nickname":"张求职","pushEmail":"351719672@qq.com","pushSwitch":"1"}' > /dev/null
+  -d '{"id":"3","nickname":"张求职"}' > /dev/null
 
 # ===== 7. updateUserInfo =====
 print_info "=== 7. updateUserInfo ==="
 r1=$(curl -s -X POST "$MONO/api/user/updateUserInfo" -H "Authorization: Bearer $HR1" -H 'Content-Type: application/json' \
-  -d '{"id":"2","pushEmail":"selftest@compare.com"}')
+  -d '{"id":"2","nickname":"对比HR昵称"}')
 r2=$(curl -s -X POST "$MICRO/api/user/updateUserInfo" -H "Authorization: Bearer $HR2" -H 'Content-Type: application/json' \
-  -d '{"id":"2","pushEmail":"selftest@compare.com"}')
+  -d '{"id":"2","nickname":"对比HR昵称"}')
 compare "updateUserInfo" "$r1" "$r2"
 
 r1=$(curl -s "$MONO/api/user/detail?userId=2" -H "Authorization: Bearer $T1")
@@ -147,9 +147,9 @@ compare "验证 updateUserInfo" "$r1" "$r2"
 
 # 恢复
 curl -s -X POST "$MONO/api/user/updateUserInfo" -H "Authorization: Bearer $HR1" -H 'Content-Type: application/json' \
-  -d '{"id":"2","pushEmail":"liubiao351719672@gmail.com"}' > /dev/null
+  -d '{"id":"2","nickname":"玛咖HR-刘经理"}' > /dev/null
 curl -s -X POST "$MICRO/api/user/updateUserInfo" -H "Authorization: Bearer $HR2" -H 'Content-Type: application/json' \
-  -d '{"id":"2","pushEmail":"liubiao351719672@gmail.com"}' > /dev/null
+  -d '{"id":"2","nickname":"玛咖HR-刘经理"}' > /dev/null
 
 # ===== 8. updatePwd =====
 print_info "=== 8. updatePwd ==="

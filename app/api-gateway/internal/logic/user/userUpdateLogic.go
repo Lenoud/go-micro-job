@@ -27,17 +27,21 @@ func NewUserUpdateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UserUp
 }
 
 func (l *UserUpdateLogic) UserUpdate(req *types.UpdateUserReq) (resp *types.UpdateUserResp, err error) {
+	auth, ok := common.AuthFromContext(l.ctx)
+	if !ok {
+		return &types.UpdateUserResp{BaseResp: common.FailBaseForbidden("无权访问")}, nil
+	}
+
 	rpcResp, err := l.svcCtx.UserRpc.Update(l.ctx, &userclient.UpdateUserReq{
-		Id:         req.Id,
-		Username:   req.Username,
-		Nickname:   req.Nickname,
-		Mobile:     req.Mobile,
-		Email:      req.Email,
-		Role:       req.Role,
-		Status:     req.Status,
-		Password:   req.Password,
-		PushEmail:  req.PushEmail,
-		PushSwitch: req.PushSwitch,
+		Id:       req.Id,
+		Username: req.Username,
+		Nickname: req.Nickname,
+		Mobile:   req.Mobile,
+		Email:    req.Email,
+		Role:     req.Role,
+		Status:   req.Status,
+		Password: req.Password,
+		Auth:     auth,
 	})
 	if err != nil {
 		logx.Errorf("[gateway] rpc UserRpc.Update failed: %v", err)

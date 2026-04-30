@@ -2,6 +2,7 @@ package logic
 
 import (
 	"context"
+	"strings"
 
 	"user-service/internal/common"
 	"user-service/internal/svc"
@@ -26,6 +27,10 @@ func NewUpdateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UpdateLogi
 
 // 管理员更新用户
 func (l *UpdateLogic) Update(in *user.UpdateUserReq) (*user.ActionResp, error) {
+	if !common.HasRole(in.GetAuth(), common.RoleAdmin) {
+		return common.FailActionForbidden("无权访问"), nil
+	}
+
 	if in.Id == "" {
 		return common.FailAction("用户ID不能为空"), nil
 	}
@@ -53,14 +58,10 @@ func (l *UpdateLogic) Update(in *user.UpdateUserReq) (*user.ActionResp, error) {
 	if in.Status != "" {
 		existing.Status = in.Status
 	}
-	if in.Password != "" {
-		existing.Password = common.EncryptPassword(in.Password)
-	}
-	if in.PushEmail != "" {
-		existing.PushEmail = in.PushEmail
-	}
-	if in.PushSwitch != "" {
-		existing.PushSwitch = in.PushSwitch
+	if strings.TrimSpace(in.Password) != "" {
+		if err := l.svcCtx.UserModel.UpdatePassword(l.ctx, existing.Id, common.EncryptPassword(in.Password)); err != nil {
+			return common.FailAction("重置密码失败"), nil
+		}
 	}
 
 	if err := l.svcCtx.UserModel.Update(l.ctx, existing); err != nil {

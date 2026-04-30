@@ -11,7 +11,7 @@ import (
 
 const (
 	UserTableName = "b_user"
-	userFields    = "id, username, password, IFNULL(nickname,'') AS nickname, IFNULL(mobile,'') AS mobile, IFNULL(email,'') AS email, IFNULL(role,'1') AS role, IFNULL(status,'0') AS status, IFNULL(token,'') AS token, create_time, IFNULL(push_email,'') AS push_email, IFNULL(push_switch,'') AS push_switch"
+	userFields    = "id, username, password, IFNULL(nickname,'') AS nickname, IFNULL(mobile,'') AS mobile, IFNULL(email,'') AS email, IFNULL(role,'1') AS role, IFNULL(status,'0') AS status, IFNULL(token,'') AS token, create_time"
 )
 
 type User struct {
@@ -25,8 +25,6 @@ type User struct {
 	Status     string   `db:"status"      json:"status"`
 	Token      string   `db:"token"       json:"token"`
 	CreateTime NullTime `db:"create_time" json:"createTime"`
-	PushEmail  string   `db:"push_email"  json:"pushEmail"`
-	PushSwitch string   `db:"push_switch" json:"pushSwitch"`
 }
 
 type UserModel interface {
@@ -55,10 +53,10 @@ func NewUserModel(conn sqlx.SqlConn) UserModel {
 }
 
 func (m *defaultUserModel) Insert(ctx context.Context, data *User) (sql.Result, error) {
-	query := fmt.Sprintf("INSERT INTO %s (username, password, nickname, mobile, email, role, status, token, create_time, push_email, push_switch) VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?)", m.table)
+	query := fmt.Sprintf("INSERT INTO %s (username, password, nickname, mobile, email, role, status, token, create_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())", m.table)
 	return m.conn.ExecCtx(ctx, query,
 		data.Username, data.Password, data.Nickname, data.Mobile, data.Email,
-		data.Role, data.Status, data.Token, data.PushEmail, data.PushSwitch,
+		data.Role, data.Status, data.Token,
 	)
 }
 
@@ -170,10 +168,9 @@ func (m *defaultUserModel) DeleteBatch(ctx context.Context, ids []string) error 
 }
 
 func (m *defaultUserModel) Update(ctx context.Context, data *User) error {
-	query := fmt.Sprintf("UPDATE %s SET username=?, nickname=?, mobile=?, email=?, role=?, status=?, token=?, push_email=?, push_switch=? WHERE id=?", m.table)
+	query := fmt.Sprintf("UPDATE %s SET username=?, nickname=?, mobile=?, email=?, role=?, status=?, token=? WHERE id=?", m.table)
 	_, err := m.conn.ExecCtx(ctx, query,
-		data.Username, data.Nickname, data.Mobile, data.Email,
-		data.Role, data.Status, data.Token, data.PushEmail, data.PushSwitch, data.Id,
+		data.Username, data.Nickname, data.Mobile, data.Email, data.Role, data.Status, data.Token, data.Id,
 	)
 	return err
 }

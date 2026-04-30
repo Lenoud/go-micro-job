@@ -53,12 +53,10 @@ type UpdatePwdResp struct {
 }
 
 type UpdateUserInfoReq struct {
-	Id         string `json:"id"`
-	Nickname   string `json:"nickname,optional"`
-	Mobile     string `json:"mobile,optional"`
-	Email      string `json:"email,optional"`
-	PushEmail  string `json:"pushEmail,optional"`
-	PushSwitch string `json:"pushSwitch,optional"`
+	Id       string `json:"id"`
+	Nickname string `json:"nickname,optional"`
+	Mobile   string `json:"mobile,optional"`
+	Email    string `json:"email,optional"`
 }
 
 type UpdateUserInfoResp struct {
@@ -66,16 +64,14 @@ type UpdateUserInfoResp struct {
 }
 
 type UpdateUserReq struct {
-	Id         string `json:"id"`
-	Username   string `json:"username,optional"`
-	Nickname   string `json:"nickname,optional"`
-	Mobile     string `json:"mobile,optional"`
-	Email      string `json:"email,optional"`
-	Role       string `json:"role,optional"`
-	Status     string `json:"status,optional"`
-	Password   string `json:"password,optional"`
-	PushEmail  string `json:"pushEmail,optional"`
-	PushSwitch string `json:"pushSwitch,optional"`
+	Id       string `json:"id"`
+	Username string `json:"username,optional"`
+	Nickname string `json:"nickname,optional"`
+	Mobile   string `json:"mobile,optional"`
+	Email    string `json:"email,optional"`
+	Role     string `json:"role,optional"`
+	Status   string `json:"status,optional"`
+	Password string `json:"password,optional"`
 }
 
 type UpdateUserResp struct {
@@ -101,8 +97,6 @@ type UserInfo struct {
 	Status     string `json:"status"`
 	Token      string `json:"token,omitempty"`
 	CreateTime string `json:"createTime,omitempty"`
-	PushEmail  string `json:"pushEmail,omitempty"`
-	PushSwitch string `json:"pushSwitch,omitempty"`
 	Avatar     string `json:"avatar,omitempty"`
 }
 

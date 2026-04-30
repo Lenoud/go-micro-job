@@ -26,11 +26,20 @@ func NewUpdatePwdLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UpdateP
 
 // 修改密码
 func (l *UpdatePwdLogic) UpdatePwd(in *user.UpdatePwdReq) (*user.ActionResp, error) {
-	if in.UserId == "" || in.OldPassword == "" || in.NewPassword == "" {
+	if !common.HasRole(in.GetAuth(), common.RoleJobseeker, common.RoleRecruiter, common.RoleAdmin) {
+		return common.FailAction("非法操作"), nil
+	}
+
+	targetUserID, allowed := common.ScopedMutationUserID(in.GetAuth(), in.GetUserId())
+	if !allowed {
+		return common.FailAction("非法操作"), nil
+	}
+
+	if in.OldPassword == "" || in.NewPassword == "" {
 		return common.FailAction("参数不完整"), nil
 	}
 
-	u, err := l.svcCtx.UserModel.FindOne(l.ctx, in.UserId)
+	u, err := l.svcCtx.UserModel.FindOne(l.ctx, targetUserID)
 	if err != nil || u == nil {
 		return common.FailAction("用户不存在"), nil
 	}
@@ -41,7 +50,7 @@ func (l *UpdatePwdLogic) UpdatePwd(in *user.UpdatePwdReq) (*user.ActionResp, err
 	}
 
 	newHashedPwd := common.EncryptPassword(in.NewPassword)
-	if err := l.svcCtx.UserModel.UpdatePassword(l.ctx, in.UserId, newHashedPwd); err != nil {
+	if err := l.svcCtx.UserModel.UpdatePassword(l.ctx, targetUserID, newHashedPwd); err != nil {
 		return common.FailAction("修改密码失败"), nil
 	}
 	return common.OkAction("更新成功"), nil

@@ -27,10 +27,16 @@ func NewUserUpdatePwdLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Use
 }
 
 func (l *UserUpdatePwdLogic) UserUpdatePwd(req *types.UpdatePwdReq) (resp *types.UpdatePwdResp, err error) {
+	auth, ok := common.AuthFromContext(l.ctx)
+	if !ok {
+		return &types.UpdatePwdResp{BaseResp: common.FailBaseForbidden("无权访问")}, nil
+	}
+
 	rpcResp, err := l.svcCtx.UserRpc.UpdatePwd(l.ctx, &userclient.UpdatePwdReq{
 		UserId:      req.UserId,
 		OldPassword: req.OldPassword,
 		NewPassword: req.NewPassword,
+		Auth:        auth,
 	})
 	if err != nil {
 		logx.Errorf("[gateway] rpc UserRpc.UpdatePwd failed: %v", err)

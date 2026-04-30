@@ -25,8 +25,12 @@ func NewListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ListLogic {
 }
 
 func (l *ListLogic) List(in *user.UserListReq) (*user.UserListResp, error) {
-	page := in.Page
-	pageSize := in.PageSize
+	if !common.HasRole(in.GetAuth(), common.RoleAdmin) {
+		return common.FailUserListForbidden("无权访问"), nil
+	}
+
+	page := in.GetPage()
+	pageSize := in.GetPageSize()
 	if page < 1 {
 		page = 1
 	}
@@ -34,7 +38,7 @@ func (l *ListLogic) List(in *user.UserListReq) (*user.UserListResp, error) {
 		pageSize = 10
 	}
 
-	list, total, err := l.svcCtx.UserModel.FindList(l.ctx, in.Keyword, page, pageSize)
+	list, total, err := l.svcCtx.UserModel.FindList(l.ctx, in.GetKeyword(), page, pageSize)
 	if err != nil {
 		return common.FailUserList("查询用户列表失败"), nil
 	}

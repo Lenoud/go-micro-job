@@ -26,11 +26,16 @@ func NewUpdateUserInfoLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Up
 
 // 用户更新自己的信息
 func (l *UpdateUserInfoLogic) UpdateUserInfo(in *user.UpdateUserInfoReq) (*user.ActionResp, error) {
-	if in.Id == "" {
-		return common.FailAction("用户ID不能为空"), nil
+	if !common.HasRole(in.GetAuth(), common.RoleJobseeker, common.RoleRecruiter, common.RoleAdmin) {
+		return common.FailAction("非法操作"), nil
 	}
 
-	existing, err := l.svcCtx.UserModel.FindOne(l.ctx, in.Id)
+	targetUserID, allowed := common.ScopedMutationUserID(in.GetAuth(), in.GetId())
+	if !allowed {
+		return common.FailAction("非法操作"), nil
+	}
+
+	existing, err := l.svcCtx.UserModel.FindOne(l.ctx, targetUserID)
 	if err != nil || existing == nil {
 		return common.FailAction("用户不存在"), nil
 	}
@@ -43,12 +48,6 @@ func (l *UpdateUserInfoLogic) UpdateUserInfo(in *user.UpdateUserInfoReq) (*user.
 	}
 	if in.Email != "" {
 		existing.Email = in.Email
-	}
-	if in.PushEmail != "" {
-		existing.PushEmail = in.PushEmail
-	}
-	if in.PushSwitch != "" {
-		existing.PushSwitch = in.PushSwitch
 	}
 
 	if err := l.svcCtx.UserModel.Update(l.ctx, existing); err != nil {

@@ -24,9 +24,7 @@ message UserInfo {
   string status     = 7;
   string token      = 8;
   string createTime = 9;
-  string pushEmail  = 10;
-  string pushSwitch = 11;
-  string avatar     = 12;
+  string avatar     = 10;
 }
 
 // 带用户信息的响应（login/userLogin/detail 共用）
@@ -77,12 +75,14 @@ message RegisterReq {
 // ---- 用户详情/列表 ----
 message IdReq {
   string id = 1;
+  UserContext auth = 2;
 }
 
 message UserListReq {
   string keyword  = 1;
   int64  page     = 2;
   int64  pageSize = 3;
+  UserContext auth = 4;
 }
 
 // ---- 创建用户（管理员） ----
@@ -94,6 +94,7 @@ message CreateUserReq {
   string email    = 5;
   string role     = 6;
   string status   = 7;
+  UserContext auth = 8;
 }
 
 // ---- 更新用户（管理员） ----
@@ -106,8 +107,7 @@ message UpdateUserReq {
   string role       = 6;
   string status     = 7;
   string password   = 8;
-  string pushEmail  = 9;
-  string pushSwitch = 10;
+  UserContext auth  = 9;
 }
 
 // ---- 用户更新自己的信息 ----
@@ -116,8 +116,7 @@ message UpdateUserInfoReq {
   string nickname   = 2;
   string mobile     = 3;
   string email      = 4;
-  string pushEmail  = 5;
-  string pushSwitch = 6;
+  UserContext auth  = 5;
 }
 
 // ---- 修改密码 ----
@@ -125,16 +124,18 @@ message UpdatePwdReq {
   string userId      = 1;
   string oldPassword = 2;
   string newPassword = 3;
+  UserContext auth   = 4;
 }
 
 // ---- 批量删除 ----
 message DeleteReq {
   string ids = 1; // 逗号分隔
+  UserContext auth = 2;
 }
 
 // ---- 用户上下文（从 JWT claims 传递） ----
 message UserContext {
-  int64  userId   = 1;
+  string userId   = 1;
   string username = 2;
   string role     = 3;
 }

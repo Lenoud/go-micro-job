@@ -25,11 +25,16 @@ func NewDetailLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DetailLogi
 }
 
 func (l *DetailLogic) Detail(in *user.IdReq) (*user.UserInfoResp, error) {
-	if in.Id == "" {
-		return common.FailUserInfo("用户ID不能为空"), nil
+	if !common.HasRole(in.GetAuth(), common.RoleAdmin, common.RoleRecruiter, common.RoleJobseeker) {
+		return common.FailUserInfoForbidden("无权访问"), nil
 	}
 
-	u, err := l.svcCtx.UserModel.FindOne(l.ctx, in.Id)
+	targetUserID, ok := common.DetailTargetUserID(in.GetAuth(), in.GetId())
+	if !ok {
+		return common.FailUserInfoForbidden("无权访问"), nil
+	}
+
+	u, err := l.svcCtx.UserModel.FindOne(l.ctx, targetUserID)
 	if err != nil {
 		return common.FailUserInfo("查询用户信息失败"), nil
 	}

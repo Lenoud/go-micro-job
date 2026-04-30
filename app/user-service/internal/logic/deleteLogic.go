@@ -26,6 +26,10 @@ func NewDeleteLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DeleteLogi
 
 // 批量删除用户
 func (l *DeleteLogic) Delete(in *user.DeleteReq) (*user.ActionResp, error) {
+	if !common.HasRole(in.GetAuth(), common.RoleAdmin) {
+		return common.FailActionForbidden("无权访问"), nil
+	}
+
 	ids := common.SplitIDs(in.Ids)
 	if len(ids) == 0 {
 		return common.FailAction("删除用户失败"), nil

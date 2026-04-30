@@ -27,13 +27,17 @@ func NewUserUpdateUserInfoLogic(ctx context.Context, svcCtx *svc.ServiceContext)
 }
 
 func (l *UserUpdateUserInfoLogic) UserUpdateUserInfo(req *types.UpdateUserInfoReq) (resp *types.UpdateUserInfoResp, err error) {
+	auth, ok := common.AuthFromContext(l.ctx)
+	if !ok {
+		return &types.UpdateUserInfoResp{BaseResp: common.FailBaseForbidden("无权访问")}, nil
+	}
+
 	rpcResp, err := l.svcCtx.UserRpc.UpdateUserInfo(l.ctx, &userclient.UpdateUserInfoReq{
-		Id:         req.Id,
-		Nickname:   req.Nickname,
-		Mobile:     req.Mobile,
-		Email:      req.Email,
-		PushEmail:  req.PushEmail,
-		PushSwitch: req.PushSwitch,
+		Id:       req.Id,
+		Nickname: req.Nickname,
+		Mobile:   req.Mobile,
+		Email:    req.Email,
+		Auth:     auth,
 	})
 	if err != nil {
 		logx.Errorf("[gateway] rpc UserRpc.UpdateUserInfo failed: %v", err)

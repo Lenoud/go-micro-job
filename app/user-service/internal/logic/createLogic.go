@@ -27,6 +27,10 @@ func NewCreateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *CreateLogi
 
 // 管理员创建用户
 func (l *CreateLogic) Create(in *user.CreateUserReq) (*user.ActionResp, error) {
+	if !common.HasRole(in.GetAuth(), common.RoleAdmin) {
+		return common.FailActionForbidden("无权访问"), nil
+	}
+
 	if in.Username == "" || in.Password == "" {
 		return common.FailAction("参数不完整"), nil
 	}

@@ -59,6 +59,10 @@ func FailUserList(msg string) *user.UserListResp {
 	return &user.UserListResp{Code: CodeParam, Msg: msg, Timestamp: currentTimeMillis()}
 }
 
+func FailUserListForbidden(msg string) *user.UserListResp {
+	return &user.UserListResp{Code: CodeForbidden, Msg: msg, Timestamp: currentTimeMillis()}
+}
+
 // ==================== 工具函数 ====================
 
 func SplitIDs(raw string) []string {

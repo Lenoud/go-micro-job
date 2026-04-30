@@ -94,9 +94,7 @@ type UserInfo struct {
 	Status        string                 `protobuf:"bytes,7,opt,name=status,proto3" json:"status,omitempty"`
 	Token         string                 `protobuf:"bytes,8,opt,name=token,proto3" json:"token,omitempty"`
 	CreateTime    string                 `protobuf:"bytes,9,opt,name=createTime,proto3" json:"createTime,omitempty"`
-	PushEmail     string                 `protobuf:"bytes,10,opt,name=pushEmail,proto3" json:"pushEmail,omitempty"`
-	PushSwitch    string                 `protobuf:"bytes,11,opt,name=pushSwitch,proto3" json:"pushSwitch,omitempty"`
-	Avatar        string                 `protobuf:"bytes,12,opt,name=avatar,proto3" json:"avatar,omitempty"`
+	Avatar        string                 `protobuf:"bytes,10,opt,name=avatar,proto3" json:"avatar,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -190,20 +188,6 @@ func (x *UserInfo) GetToken() string {
 func (x *UserInfo) GetCreateTime() string {
 	if x != nil {
 		return x.CreateTime
-	}
-	return ""
-}
-
-func (x *UserInfo) GetPushEmail() string {
-	if x != nil {
-		return x.PushEmail
-	}
-	return ""
-}
-
-func (x *UserInfo) GetPushSwitch() string {
-	if x != nil {
-		return x.PushSwitch
 	}
 	return ""
 }
@@ -616,6 +600,7 @@ func (x *RegisterReq) GetEmail() string {
 type IdReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Auth          *UserContext           `protobuf:"bytes,2,opt,name=auth,proto3" json:"auth,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -657,11 +642,19 @@ func (x *IdReq) GetId() string {
 	return ""
 }
 
+func (x *IdReq) GetAuth() *UserContext {
+	if x != nil {
+		return x.Auth
+	}
+	return nil
+}
+
 type UserListReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Keyword       string                 `protobuf:"bytes,1,opt,name=keyword,proto3" json:"keyword,omitempty"`
 	Page          int64                  `protobuf:"varint,2,opt,name=page,proto3" json:"page,omitempty"`
 	PageSize      int64                  `protobuf:"varint,3,opt,name=pageSize,proto3" json:"pageSize,omitempty"`
+	Auth          *UserContext           `protobuf:"bytes,4,opt,name=auth,proto3" json:"auth,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -717,6 +710,13 @@ func (x *UserListReq) GetPageSize() int64 {
 	return 0
 }
 
+func (x *UserListReq) GetAuth() *UserContext {
+	if x != nil {
+		return x.Auth
+	}
+	return nil
+}
+
 // ---- 创建用户（管理员） ----
 type CreateUserReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -727,6 +727,7 @@ type CreateUserReq struct {
 	Email         string                 `protobuf:"bytes,5,opt,name=email,proto3" json:"email,omitempty"`
 	Role          string                 `protobuf:"bytes,6,opt,name=role,proto3" json:"role,omitempty"`
 	Status        string                 `protobuf:"bytes,7,opt,name=status,proto3" json:"status,omitempty"`
+	Auth          *UserContext           `protobuf:"bytes,8,opt,name=auth,proto3" json:"auth,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -810,6 +811,13 @@ func (x *CreateUserReq) GetStatus() string {
 	return ""
 }
 
+func (x *CreateUserReq) GetAuth() *UserContext {
+	if x != nil {
+		return x.Auth
+	}
+	return nil
+}
+
 // ---- 更新用户（管理员） ----
 type UpdateUserReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -821,8 +829,7 @@ type UpdateUserReq struct {
 	Role          string                 `protobuf:"bytes,6,opt,name=role,proto3" json:"role,omitempty"`
 	Status        string                 `protobuf:"bytes,7,opt,name=status,proto3" json:"status,omitempty"`
 	Password      string                 `protobuf:"bytes,8,opt,name=password,proto3" json:"password,omitempty"`
-	PushEmail     string                 `protobuf:"bytes,9,opt,name=pushEmail,proto3" json:"pushEmail,omitempty"`
-	PushSwitch    string                 `protobuf:"bytes,10,opt,name=pushSwitch,proto3" json:"pushSwitch,omitempty"`
+	Auth          *UserContext           `protobuf:"bytes,9,opt,name=auth,proto3" json:"auth,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -913,18 +920,11 @@ func (x *UpdateUserReq) GetPassword() string {
 	return ""
 }
 
-func (x *UpdateUserReq) GetPushEmail() string {
+func (x *UpdateUserReq) GetAuth() *UserContext {
 	if x != nil {
-		return x.PushEmail
+		return x.Auth
 	}
-	return ""
-}
-
-func (x *UpdateUserReq) GetPushSwitch() string {
-	if x != nil {
-		return x.PushSwitch
-	}
-	return ""
+	return nil
 }
 
 // ---- 用户更新自己的信息 ----
@@ -934,8 +934,7 @@ type UpdateUserInfoReq struct {
 	Nickname      string                 `protobuf:"bytes,2,opt,name=nickname,proto3" json:"nickname,omitempty"`
 	Mobile        string                 `protobuf:"bytes,3,opt,name=mobile,proto3" json:"mobile,omitempty"`
 	Email         string                 `protobuf:"bytes,4,opt,name=email,proto3" json:"email,omitempty"`
-	PushEmail     string                 `protobuf:"bytes,5,opt,name=pushEmail,proto3" json:"pushEmail,omitempty"`
-	PushSwitch    string                 `protobuf:"bytes,6,opt,name=pushSwitch,proto3" json:"pushSwitch,omitempty"`
+	Auth          *UserContext           `protobuf:"bytes,5,opt,name=auth,proto3" json:"auth,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -998,18 +997,11 @@ func (x *UpdateUserInfoReq) GetEmail() string {
 	return ""
 }
 
-func (x *UpdateUserInfoReq) GetPushEmail() string {
+func (x *UpdateUserInfoReq) GetAuth() *UserContext {
 	if x != nil {
-		return x.PushEmail
+		return x.Auth
 	}
-	return ""
-}
-
-func (x *UpdateUserInfoReq) GetPushSwitch() string {
-	if x != nil {
-		return x.PushSwitch
-	}
-	return ""
+	return nil
 }
 
 // ---- 修改密码 ----
@@ -1018,6 +1010,7 @@ type UpdatePwdReq struct {
 	UserId        string                 `protobuf:"bytes,1,opt,name=userId,proto3" json:"userId,omitempty"`
 	OldPassword   string                 `protobuf:"bytes,2,opt,name=oldPassword,proto3" json:"oldPassword,omitempty"`
 	NewPassword   string                 `protobuf:"bytes,3,opt,name=newPassword,proto3" json:"newPassword,omitempty"`
+	Auth          *UserContext           `protobuf:"bytes,4,opt,name=auth,proto3" json:"auth,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1073,10 +1066,18 @@ func (x *UpdatePwdReq) GetNewPassword() string {
 	return ""
 }
 
+func (x *UpdatePwdReq) GetAuth() *UserContext {
+	if x != nil {
+		return x.Auth
+	}
+	return nil
+}
+
 // ---- 批量删除 ----
 type DeleteReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Ids           string                 `protobuf:"bytes,1,opt,name=ids,proto3" json:"ids,omitempty"` // 逗号分隔
+	Auth          *UserContext           `protobuf:"bytes,2,opt,name=auth,proto3" json:"auth,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1118,10 +1119,17 @@ func (x *DeleteReq) GetIds() string {
 	return ""
 }
 
+func (x *DeleteReq) GetAuth() *UserContext {
+	if x != nil {
+		return x.Auth
+	}
+	return nil
+}
+
 // ---- 用户上下文（从 JWT claims 传递） ----
 type UserContext struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserId        int64                  `protobuf:"varint,1,opt,name=userId,proto3" json:"userId,omitempty"`
+	UserId        string                 `protobuf:"bytes,1,opt,name=userId,proto3" json:"userId,omitempty"`
 	Username      string                 `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
 	Role          string                 `protobuf:"bytes,3,opt,name=role,proto3" json:"role,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -1158,11 +1166,11 @@ func (*UserContext) Descriptor() ([]byte, []int) {
 	return file_user_proto_rawDescGZIP(), []int{15}
 }
 
-func (x *UserContext) GetUserId() int64 {
+func (x *UserContext) GetUserId() string {
 	if x != nil {
 		return x.UserId
 	}
-	return 0
+	return ""
 }
 
 func (x *UserContext) GetUsername() string {
@@ -1226,7 +1234,7 @@ const file_user_proto_rawDesc = "" +
 	"ActionResp\x12\x12\n" +
 	"\x04code\x18\x01 \x01(\x03R\x04code\x12\x10\n" +
 	"\x03msg\x18\x02 \x01(\tR\x03msg\x12\x1c\n" +
-	"\ttimestamp\x18\x03 \x01(\x03R\ttimestamp\"\xb8\x02\n" +
+	"\ttimestamp\x18\x03 \x01(\x03R\ttimestamp\"\xfa\x01\n" +
 	"\bUserInfo\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1a\n" +
 	"\busername\x18\x02 \x01(\tR\busername\x12\x1a\n" +
@@ -1238,13 +1246,9 @@ const file_user_proto_rawDesc = "" +
 	"\x05token\x18\b \x01(\tR\x05token\x12\x1e\n" +
 	"\n" +
 	"createTime\x18\t \x01(\tR\n" +
-	"createTime\x12\x1c\n" +
-	"\tpushEmail\x18\n" +
-	" \x01(\tR\tpushEmail\x12\x1e\n" +
-	"\n" +
-	"pushSwitch\x18\v \x01(\tR\n" +
-	"pushSwitch\x12\x16\n" +
-	"\x06avatar\x18\f \x01(\tR\x06avatar\"v\n" +
+	"createTime\x12\x16\n" +
+	"\x06avatar\x18\n" +
+	" \x01(\tR\x06avatar\"v\n" +
 	"\fUserInfoResp\x12\x12\n" +
 	"\x04code\x18\x01 \x01(\x03R\x04code\x12\x10\n" +
 	"\x03msg\x18\x02 \x01(\tR\x03msg\x12\"\n" +
@@ -1274,13 +1278,15 @@ const file_user_proto_rawDesc = "" +
 	"rePassword\x12\x1a\n" +
 	"\bnickname\x18\x04 \x01(\tR\bnickname\x12\x16\n" +
 	"\x06mobile\x18\x05 \x01(\tR\x06mobile\x12\x14\n" +
-	"\x05email\x18\x06 \x01(\tR\x05email\"\x17\n" +
+	"\x05email\x18\x06 \x01(\tR\x05email\">\n" +
 	"\x05IdReq\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\"W\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12%\n" +
+	"\x04auth\x18\x02 \x01(\v2\x11.user.UserContextR\x04auth\"~\n" +
 	"\vUserListReq\x12\x18\n" +
 	"\akeyword\x18\x01 \x01(\tR\akeyword\x12\x12\n" +
 	"\x04page\x18\x02 \x01(\x03R\x04page\x12\x1a\n" +
-	"\bpageSize\x18\x03 \x01(\x03R\bpageSize\"\xbd\x01\n" +
+	"\bpageSize\x18\x03 \x01(\x03R\bpageSize\x12%\n" +
+	"\x04auth\x18\x04 \x01(\v2\x11.user.UserContextR\x04auth\"\xe4\x01\n" +
 	"\rCreateUserReq\x12\x1a\n" +
 	"\busername\x18\x01 \x01(\tR\busername\x12\x1a\n" +
 	"\bpassword\x18\x02 \x01(\tR\bpassword\x12\x1a\n" +
@@ -1288,7 +1294,8 @@ const file_user_proto_rawDesc = "" +
 	"\x06mobile\x18\x04 \x01(\tR\x06mobile\x12\x14\n" +
 	"\x05email\x18\x05 \x01(\tR\x05email\x12\x12\n" +
 	"\x04role\x18\x06 \x01(\tR\x04role\x12\x16\n" +
-	"\x06status\x18\a \x01(\tR\x06status\"\x8b\x02\n" +
+	"\x06status\x18\a \x01(\tR\x06status\x12%\n" +
+	"\x04auth\x18\b \x01(\v2\x11.user.UserContextR\x04auth\"\xf4\x01\n" +
 	"\rUpdateUserReq\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1a\n" +
 	"\busername\x18\x02 \x01(\tR\busername\x12\x1a\n" +
@@ -1297,29 +1304,24 @@ const file_user_proto_rawDesc = "" +
 	"\x05email\x18\x05 \x01(\tR\x05email\x12\x12\n" +
 	"\x04role\x18\x06 \x01(\tR\x04role\x12\x16\n" +
 	"\x06status\x18\a \x01(\tR\x06status\x12\x1a\n" +
-	"\bpassword\x18\b \x01(\tR\bpassword\x12\x1c\n" +
-	"\tpushEmail\x18\t \x01(\tR\tpushEmail\x12\x1e\n" +
-	"\n" +
-	"pushSwitch\x18\n" +
-	" \x01(\tR\n" +
-	"pushSwitch\"\xab\x01\n" +
+	"\bpassword\x18\b \x01(\tR\bpassword\x12%\n" +
+	"\x04auth\x18\t \x01(\v2\x11.user.UserContextR\x04auth\"\x94\x01\n" +
 	"\x11UpdateUserInfoReq\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1a\n" +
 	"\bnickname\x18\x02 \x01(\tR\bnickname\x12\x16\n" +
 	"\x06mobile\x18\x03 \x01(\tR\x06mobile\x12\x14\n" +
-	"\x05email\x18\x04 \x01(\tR\x05email\x12\x1c\n" +
-	"\tpushEmail\x18\x05 \x01(\tR\tpushEmail\x12\x1e\n" +
-	"\n" +
-	"pushSwitch\x18\x06 \x01(\tR\n" +
-	"pushSwitch\"j\n" +
+	"\x05email\x18\x04 \x01(\tR\x05email\x12%\n" +
+	"\x04auth\x18\x05 \x01(\v2\x11.user.UserContextR\x04auth\"\x91\x01\n" +
 	"\fUpdatePwdReq\x12\x16\n" +
 	"\x06userId\x18\x01 \x01(\tR\x06userId\x12 \n" +
 	"\voldPassword\x18\x02 \x01(\tR\voldPassword\x12 \n" +
-	"\vnewPassword\x18\x03 \x01(\tR\vnewPassword\"\x1d\n" +
+	"\vnewPassword\x18\x03 \x01(\tR\vnewPassword\x12%\n" +
+	"\x04auth\x18\x04 \x01(\v2\x11.user.UserContextR\x04auth\"D\n" +
 	"\tDeleteReq\x12\x10\n" +
-	"\x03ids\x18\x01 \x01(\tR\x03ids\"U\n" +
+	"\x03ids\x18\x01 \x01(\tR\x03ids\x12%\n" +
+	"\x04auth\x18\x02 \x01(\v2\x11.user.UserContextR\x04auth\"U\n" +
 	"\vUserContext\x12\x16\n" +
-	"\x06userId\x18\x01 \x01(\x03R\x06userId\x12\x1a\n" +
+	"\x06userId\x18\x01 \x01(\tR\x06userId\x12\x1a\n" +
 	"\busername\x18\x02 \x01(\tR\busername\x12\x12\n" +
 	"\x04role\x18\x03 \x01(\tR\x04role\"\a\n" +
 	"\x05Empty2\xf2\x03\n" +
@@ -1371,31 +1373,38 @@ var file_user_proto_depIdxs = []int32{
 	1,  // 0: user.UserInfoResp.data:type_name -> user.UserInfo
 	1,  // 1: user.UserListData.list:type_name -> user.UserInfo
 	3,  // 2: user.UserListResp.data:type_name -> user.UserListData
-	5,  // 3: user.User.Login:input_type -> user.LoginReq
-	6,  // 4: user.User.UserLogin:input_type -> user.UserLoginReq
-	7,  // 5: user.User.Register:input_type -> user.RegisterReq
-	8,  // 6: user.User.Detail:input_type -> user.IdReq
-	9,  // 7: user.User.List:input_type -> user.UserListReq
-	10, // 8: user.User.Create:input_type -> user.CreateUserReq
-	11, // 9: user.User.Update:input_type -> user.UpdateUserReq
-	14, // 10: user.User.Delete:input_type -> user.DeleteReq
-	12, // 11: user.User.UpdateUserInfo:input_type -> user.UpdateUserInfoReq
-	13, // 12: user.User.UpdatePwd:input_type -> user.UpdatePwdReq
-	2,  // 13: user.User.Login:output_type -> user.UserInfoResp
-	2,  // 14: user.User.UserLogin:output_type -> user.UserInfoResp
-	0,  // 15: user.User.Register:output_type -> user.ActionResp
-	2,  // 16: user.User.Detail:output_type -> user.UserInfoResp
-	4,  // 17: user.User.List:output_type -> user.UserListResp
-	0,  // 18: user.User.Create:output_type -> user.ActionResp
-	0,  // 19: user.User.Update:output_type -> user.ActionResp
-	0,  // 20: user.User.Delete:output_type -> user.ActionResp
-	0,  // 21: user.User.UpdateUserInfo:output_type -> user.ActionResp
-	0,  // 22: user.User.UpdatePwd:output_type -> user.ActionResp
-	13, // [13:23] is the sub-list for method output_type
-	3,  // [3:13] is the sub-list for method input_type
-	3,  // [3:3] is the sub-list for extension type_name
-	3,  // [3:3] is the sub-list for extension extendee
-	0,  // [0:3] is the sub-list for field type_name
+	15, // 3: user.IdReq.auth:type_name -> user.UserContext
+	15, // 4: user.UserListReq.auth:type_name -> user.UserContext
+	15, // 5: user.CreateUserReq.auth:type_name -> user.UserContext
+	15, // 6: user.UpdateUserReq.auth:type_name -> user.UserContext
+	15, // 7: user.UpdateUserInfoReq.auth:type_name -> user.UserContext
+	15, // 8: user.UpdatePwdReq.auth:type_name -> user.UserContext
+	15, // 9: user.DeleteReq.auth:type_name -> user.UserContext
+	5,  // 10: user.User.Login:input_type -> user.LoginReq
+	6,  // 11: user.User.UserLogin:input_type -> user.UserLoginReq
+	7,  // 12: user.User.Register:input_type -> user.RegisterReq
+	8,  // 13: user.User.Detail:input_type -> user.IdReq
+	9,  // 14: user.User.List:input_type -> user.UserListReq
+	10, // 15: user.User.Create:input_type -> user.CreateUserReq
+	11, // 16: user.User.Update:input_type -> user.UpdateUserReq
+	14, // 17: user.User.Delete:input_type -> user.DeleteReq
+	12, // 18: user.User.UpdateUserInfo:input_type -> user.UpdateUserInfoReq
+	13, // 19: user.User.UpdatePwd:input_type -> user.UpdatePwdReq
+	2,  // 20: user.User.Login:output_type -> user.UserInfoResp
+	2,  // 21: user.User.UserLogin:output_type -> user.UserInfoResp
+	0,  // 22: user.User.Register:output_type -> user.ActionResp
+	2,  // 23: user.User.Detail:output_type -> user.UserInfoResp
+	4,  // 24: user.User.List:output_type -> user.UserListResp
+	0,  // 25: user.User.Create:output_type -> user.ActionResp
+	0,  // 26: user.User.Update:output_type -> user.ActionResp
+	0,  // 27: user.User.Delete:output_type -> user.ActionResp
+	0,  // 28: user.User.UpdateUserInfo:output_type -> user.ActionResp
+	0,  // 29: user.User.UpdatePwd:output_type -> user.ActionResp
+	20, // [20:30] is the sub-list for method output_type
+	10, // [10:20] is the sub-list for method input_type
+	10, // [10:10] is the sub-list for extension type_name
+	10, // [10:10] is the sub-list for extension extendee
+	0,  // [0:10] is the sub-list for field type_name
 }
 
 func init() { file_user_proto_init() }

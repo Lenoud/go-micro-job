@@ -24,7 +24,5 @@ func UserModelToProto(u *model.User) *user.UserInfo {
 		Status:     u.Status,
 		Token:      u.Token,
 		CreateTime: createTime,
-		PushEmail:  u.PushEmail,
-		PushSwitch: u.PushSwitch,
 	}
 }
