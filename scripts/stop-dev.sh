@@ -10,9 +10,11 @@ RUN_DIR="$MICRO_DIR/run"
 source "$SCRIPT_DIR/dev-common.sh"
 
 USER_SVC_PID_FILE="$RUN_DIR/user-service.pid"
+DEPARTMENT_SVC_PID_FILE="$RUN_DIR/department-service.pid"
 GW_PID_FILE="$RUN_DIR/api-gateway.pid"
 
 stop_pid_file "$GW_PID_FILE" "api-gateway"
+stop_pid_file "$DEPARTMENT_SVC_PID_FILE" "department-service"
 stop_pid_file "$USER_SVC_PID_FILE" "user-service"
 
 print_success "[stop-dev] done."

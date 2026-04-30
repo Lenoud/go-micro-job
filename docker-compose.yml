@@ -47,6 +47,18 @@ services:
       etcd:
         condition: service_healthy
 
+  department-service:
+    build:
+      context: .
+      dockerfile: app/department-service/Dockerfile
+    container_name: micro_department_service
+    restart: unless-stopped
+    ports:
+      - "9102:9102"
+    depends_on:
+      etcd:
+        condition: service_healthy
+
   api-gateway:
     build:
       context: .
@@ -59,4 +71,6 @@ services:
       etcd:
         condition: service_healthy
       user-service:
+        condition: service_started
+      department-service:
         condition: service_started

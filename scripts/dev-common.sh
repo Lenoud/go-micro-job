@@ -103,12 +103,12 @@ port_listening() {
 }
 
 check_infra() {
-  local missing=0
+	local missing=0
 
-  if ! port_listening 3306; then
-    print_error "[dev] mysql (3306) is not running"
-    missing=1
-  fi
+	if ! port_listening 3306; then
+		print_error "[dev] mysql (3306) is not running"
+		missing=1
+	fi
 
   if ! port_listening 6379; then
     print_error "[dev] redis (6379) is not running"
@@ -118,17 +118,12 @@ check_infra() {
   if ! port_listening 2379; then
     print_error "[dev] etcd (2379) is not running"
     missing=1
-  fi
+	fi
 
-  if [[ "$missing" -eq 1 ]]; then
-    print_info "[dev] starting infrastructure services..."
-    (
-      cd "$MICRO_DIR"
-      docker compose up -d redis etcd
-    )
-    print_info "[dev] waiting for infrastructure to be healthy..."
-    sleep_cmd 10
-  else
-    print_success "[dev] infrastructure ready (mysql:3306, redis:6379, etcd:2379)"
-  fi
+	if [[ "$missing" -eq 1 ]]; then
+		print_error "[dev] start local mysql, redis, and etcd first; dev.sh no longer starts Docker infrastructure automatically"
+		exit 1
+	else
+		print_success "[dev] infrastructure ready (mysql:3306, redis:6379, etcd:2379)"
+	fi
 }

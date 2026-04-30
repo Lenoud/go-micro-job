@@ -2,5 +2,6 @@ go 1.25.7
 
 use (
 	./app/api-gateway
+	./app/department-service
 	./app/user-service
 )

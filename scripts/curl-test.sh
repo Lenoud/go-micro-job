@@ -55,5 +55,8 @@ check "Admin lists users" 200 "$(curl -s "${BASE}/api/user/list?page=1&pageSize=
 bold "User detail (admin)"
 check "Admin views user detail" 200 "$(curl -s "${BASE}/api/user/detail?userId=1" -H "Authorization: Bearer ${ADMIN_TOKEN}")"
 
+bold "Department list (admin)"
+check "Admin lists departments" 200 "$(curl -s "${BASE}/api/department/list?page=1&pageSize=5" -H "Authorization: Bearer ${ADMIN_TOKEN}")"
+
 echo ""
 bold "=== Done ==="

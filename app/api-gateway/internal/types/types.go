@@ -10,6 +10,12 @@ type BaseResp struct {
 	Timestamp int64  `json:"timestamp"`
 }
 
+type CreateDepartmentReq struct {
+	Title       string `json:"title"`
+	Description string `json:"description,optional"`
+	ParentId    string `json:"parentId,optional"`
+}
+
 type CreateUserReq struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
@@ -32,6 +38,44 @@ type DeleteUserResp struct {
 	BaseResp
 }
 
+type DepartmentCreateResp struct {
+	BaseResp
+}
+
+type DepartmentDeleteResp struct {
+	BaseResp
+}
+
+type DepartmentInfo struct {
+	Id          string `json:"id"`
+	Title       string `json:"title"`
+	Description string `json:"description"`
+	ParentId    string `json:"parentId"`
+	CreateTime  string `json:"createTime"`
+}
+
+type DepartmentListData struct {
+	List     []DepartmentInfo `json:"list"`
+	Total    int64            `json:"total"`
+	Page     int64            `json:"page"`
+	PageSize int64            `json:"pageSize"`
+}
+
+type DepartmentListReq struct {
+	Keyword  string `form:"keyword,optional"`
+	Page     int64  `form:"page,optional,default=1"`
+	PageSize int64  `form:"pageSize,optional,default=10"`
+}
+
+type DepartmentListResp struct {
+	BaseResp
+	Data *DepartmentListData `json:"data,omitempty"`
+}
+
+type DepartmentUpdateResp struct {
+	BaseResp
+}
+
 type LoginReq struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
@@ -40,6 +84,13 @@ type LoginReq struct {
 type LoginResp struct {
 	BaseResp
 	Data *UserInfo `json:"data,omitempty"`
+}
+
+type UpdateDepartmentReq struct {
+	Id          string `json:"id"`
+	Title       string `json:"title,optional"`
+	Description string `json:"description,optional"`
+	ParentId    string `json:"parentId,optional"`
 }
 
 type UpdatePwdReq struct {

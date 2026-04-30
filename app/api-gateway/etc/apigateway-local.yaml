@@ -11,3 +11,9 @@ UserRpc:
     Hosts:
       - 127.0.0.1:2379
     Key: user.rpc
+
+DepartmentRpc:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: department.rpc

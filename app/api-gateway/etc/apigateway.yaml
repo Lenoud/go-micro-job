@@ -11,3 +11,9 @@ UserRpc:
     Hosts:
       - etcd:2379
     Key: user.rpc
+
+DepartmentRpc:
+  Etcd:
+    Hosts:
+      - etcd:2379
+    Key: department.rpc

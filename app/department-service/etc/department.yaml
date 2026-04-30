@@ -1,0 +1,10 @@
+Name: department.rpc
+ListenOn: 0.0.0.0:9102
+
+Etcd:
+  Hosts:
+    - etcd:2379
+  Key: department.rpc
+
+MySQL:
+  DataSource: "root:root123@tcp(mysql:3306)/micro_job?charset=utf8mb4&parseTime=true&loc=Local"

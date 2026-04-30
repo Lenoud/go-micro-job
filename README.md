@@ -8,6 +8,7 @@
 |------|------|------|------|
 | api-gateway | REST API | 9000 | API 网关，JWT 鉴权，路由转发到 gRPC 服务 |
 | user-service | gRPC | 9101 | 用户模块，注册/登录/CRUD |
+| department-service | gRPC | 9102 | 部门模块，列表/创建/更新/删除 |
 
 ## 依赖
 
@@ -40,6 +41,11 @@
 │           ├── server/    # gRPC server
 │           ├── svc/       # ServiceContext
 │           └── common/    # 工具函数
+│   └── department-service/ # gRPC 部门服务
+│       ├── department.proto
+│       ├── department.go
+│       ├── etc/
+│       └── internal/
 ├── scripts/               # 开发脚本
 ├── go.work                # Go workspace
 └── docker-compose.yml     # 基础设施编排（Redis + etcd）
@@ -109,6 +115,10 @@ curl -s 'http://localhost:9000/api/user/list?page=1&pageSize=5' \
 | POST | /api/user/delete | 批量删除用户 |
 | POST | /api/user/updateUserInfo | 用户更新自己信息 |
 | POST | /api/user/updatePwd | 修改密码 |
+| GET | /api/department/list | 部门列表 |
+| POST | /api/department/create | 创建部门 |
+| POST | /api/department/delete | 删除部门 |
+| POST | /api/department/update | 更新部门 |
 
 ## 代码生成
 
@@ -128,11 +138,19 @@ cd app/api-gateway && goctl api go --api gateway.api --dir . --style goZero
 cd app/user-service && goctl rpc protoc user.proto --go_out=. --go-grpc_out=. --zrpc_out=. --style goZero
 ```
 
+### department-service（protoc + goctl）
+
+修改 `department.proto` 后重新生成：
+
+```bash
+cd app/department-service && goctl rpc protoc department.proto --go_out=. --go-grpc_out=. --zrpc_out=. --style goZero
+```
+
 ## Docker 部署
 
 ```bash
 docker compose up -d
 ```
 
-包含 Redis、etcd、user-service、api-gateway 四个容器。
+包含 Redis、etcd、user-service、department-service、api-gateway 容器。
 MySQL 使用独立库 `micro_job`，依赖父仓库的 MySQL 容器。

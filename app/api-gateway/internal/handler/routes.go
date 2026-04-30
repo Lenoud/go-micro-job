@@ -6,6 +6,7 @@ package handler
 import (
 	"net/http"
 
+	department "api-gateway/internal/handler/department"
 	user "api-gateway/internal/handler/user"
 	"api-gateway/internal/svc"
 
@@ -13,6 +14,37 @@ import (
 )
 
 func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				// 管理员-创建部门
+				Method:  http.MethodPost,
+				Path:    "/create",
+				Handler: department.DepartmentCreateHandler(serverCtx),
+			},
+			{
+				// 管理员-删除部门
+				Method:  http.MethodPost,
+				Path:    "/delete",
+				Handler: department.DepartmentDeleteHandler(serverCtx),
+			},
+			{
+				// 部门列表
+				Method:  http.MethodGet,
+				Path:    "/list",
+				Handler: department.DepartmentListHandler(serverCtx),
+			},
+			{
+				// 管理员-更新部门
+				Method:  http.MethodPost,
+				Path:    "/update",
+				Handler: department.DepartmentUpdateHandler(serverCtx),
+			},
+		},
+		rest.WithJwt(serverCtx.Config.JWT.AccessSecret),
+		rest.WithPrefix("/api/department"),
+	)
+
 	server.AddRoutes(
 		[]rest.Route{
 			{
