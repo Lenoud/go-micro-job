@@ -3,26 +3,22 @@ package common
 import (
 	"strings"
 
+	sharedcommon "micro-shared/common"
 	"user-service/user"
 )
 
 // Role constants — single source of truth for all modules.
 const (
-	RoleJobseeker = "1"
-	RoleRecruiter = "2"
-	RoleAdmin     = "3"
+	RoleJobseeker = sharedcommon.RoleJobseeker
+	RoleRecruiter = sharedcommon.RoleRecruiter
+	RoleAdmin     = sharedcommon.RoleAdmin
 )
 
 func HasRole(auth *user.UserContext, allowedRoles ...string) bool {
 	if auth == nil {
 		return false
 	}
-	for _, role := range allowedRoles {
-		if auth.Role == role {
-			return true
-		}
-	}
-	return false
+	return sharedcommon.HasRole(auth.Role, allowedRoles...)
 }
 
 func IsAdminContext(auth *user.UserContext) bool {

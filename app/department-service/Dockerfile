@@ -1,6 +1,7 @@
 FROM golang:1.25-alpine AS builder
 WORKDIR /build
 COPY go.work go.work
+COPY app/shared/ app/shared/
 COPY app/department-service/ app/department-service/
 WORKDIR /build/app/department-service
 RUN GOWORK=off go mod tidy && GOWORK=off go build -o departmentservice department.go

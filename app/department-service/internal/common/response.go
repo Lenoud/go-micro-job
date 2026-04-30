@@ -1,20 +1,18 @@
 package common
 
 import (
-	"strings"
-	"time"
-
 	"department-service/department"
+	sharedcommon "micro-shared/common"
 )
 
 const (
-	CodeSuccess   int64 = 200
-	CodeParam     int64 = 400
-	CodeForbidden int64 = 403
+	CodeSuccess   = sharedcommon.CodeSuccess
+	CodeParam     = sharedcommon.CodeParam
+	CodeForbidden = sharedcommon.CodeForbidden
 )
 
 func currentTimeMillis() int64 {
-	return time.Now().UnixMilli()
+	return sharedcommon.CurrentTimeMillis()
 }
 
 func OkAction(msg string) *department.ActionResp {
@@ -42,13 +40,5 @@ func FailDepartmentListForbidden(msg string) *department.DepartmentListResp {
 }
 
 func SplitIDs(raw string) []string {
-	parts := strings.Split(raw, ",")
-	result := make([]string, 0, len(parts))
-	for _, part := range parts {
-		part = strings.TrimSpace(part)
-		if part != "" {
-			result = append(result, part)
-		}
-	}
-	return result
+	return sharedcommon.SplitIDs(raw)
 }

@@ -1,24 +1,22 @@
 package common
 
 import (
-	"strings"
-	"time"
-
+	sharedcommon "micro-shared/common"
 	"user-service/user"
 )
 
 // ==================== 错误码 ====================
 const (
-	CodeSuccess      int64 = 200
-	CodeParam        int64 = 400
-	CodeUnauthorized int64 = 401
-	CodeForbidden    int64 = 403
-	CodeNotFound     int64 = 404
-	CodeServer       int64 = 500
+	CodeSuccess      = sharedcommon.CodeSuccess
+	CodeParam        = sharedcommon.CodeParam
+	CodeUnauthorized = sharedcommon.CodeUnauthorized
+	CodeForbidden    = sharedcommon.CodeForbidden
+	CodeNotFound     = sharedcommon.CodeNotFound
+	CodeServer       = sharedcommon.CodeServer
 )
 
 func currentTimeMillis() int64 {
-	return time.Now().UnixMilli()
+	return sharedcommon.CurrentTimeMillis()
 }
 
 // ==================== ActionResp helpers ====================
@@ -66,13 +64,5 @@ func FailUserListForbidden(msg string) *user.UserListResp {
 // ==================== 工具函数 ====================
 
 func SplitIDs(raw string) []string {
-	parts := strings.Split(raw, ",")
-	result := make([]string, 0, len(parts))
-	for _, part := range parts {
-		part = strings.TrimSpace(part)
-		if part != "" {
-			result = append(result, part)
-		}
-	}
-	return result
+	return sharedcommon.SplitIDs(raw)
 }

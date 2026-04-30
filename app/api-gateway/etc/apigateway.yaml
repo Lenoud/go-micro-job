@@ -1,18 +1,69 @@
 Name: apigateway
+Mode: pro
 Host: 0.0.0.0
 Port: 9000
+Timeout: 3000
+MaxConns: 10000
+MaxBytes: 1048576
+CpuThreshold: 900
+
+Log:
+  Mode: console
+  Encoding: json
+  Level: info
+  Stat: true
+
+DevServer:
+  Enabled: true
+  Host: 0.0.0.0
+  Port: 6060
+  MetricsPath: /metrics
+  HealthPath: /healthz
+  EnableMetrics: true
+  EnablePprof: false
+
+Middlewares:
+  Trace: true
+  Log: true
+  Prometheus: true
+  MaxConns: true
+  Breaker: true
+  Shedding: true
+  Timeout: true
+  Recover: true
+  Metrics: true
+  MaxBytes: true
+  Gunzip: true
 
 JWT:
   AccessSecret: "mysecretkey123456"
   AccessExpire: 86400
 
 UserRpc:
+  Timeout: 2000
+  NonBlock: true
+  KeepaliveTime: 20s
+  Middlewares:
+    Trace: true
+    Duration: true
+    Prometheus: true
+    Breaker: true
+    Timeout: true
   Etcd:
     Hosts:
       - etcd:2379
     Key: user.rpc
 
 DepartmentRpc:
+  Timeout: 2000
+  NonBlock: true
+  KeepaliveTime: 20s
+  Middlewares:
+    Trace: true
+    Duration: true
+    Prometheus: true
+    Breaker: true
+    Timeout: true
   Etcd:
     Hosts:
       - etcd:2379

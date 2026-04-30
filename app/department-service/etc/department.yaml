@@ -1,5 +1,31 @@
 Name: department.rpc
+Mode: pro
 ListenOn: 0.0.0.0:9102
+Timeout: 2500
+CpuThreshold: 900
+Health: true
+
+Log:
+  Mode: console
+  Encoding: json
+  Level: info
+  Stat: true
+
+DevServer:
+  Enabled: true
+  Host: 0.0.0.0
+  Port: 6062
+  MetricsPath: /metrics
+  HealthPath: /healthz
+  EnableMetrics: true
+  EnablePprof: false
+
+Middlewares:
+  Trace: true
+  Recover: true
+  Stat: true
+  Prometheus: true
+  Breaker: true
 
 Etcd:
   Hosts:

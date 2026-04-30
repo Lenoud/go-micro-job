@@ -1,5 +1,31 @@
 Name: user.rpc
+Mode: dev
 ListenOn: 0.0.0.0:9101
+Timeout: 2500
+CpuThreshold: 900
+Health: true
+
+Log:
+  Mode: console
+  Encoding: plain
+  Level: debug
+  Stat: true
+
+DevServer:
+  Enabled: true
+  Host: 127.0.0.1
+  Port: 6061
+  MetricsPath: /metrics
+  HealthPath: /healthz
+  EnableMetrics: true
+  EnablePprof: true
+
+Middlewares:
+  Trace: true
+  Recover: true
+  Stat: true
+  Prometheus: true
+  Breaker: true
 
 Etcd:
   Hosts:

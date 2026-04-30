@@ -102,6 +102,27 @@ port_listening() {
   lsof_cmd -tiTCP:"$port" -sTCP:LISTEN 2>/dev/null | grep -q .
 }
 
+wait_for_port() {
+  local port="$1"
+  local name="${2:-service}"
+  local timeout_seconds="${3:-30}"
+  local elapsed=0
+
+  print_info "[dev] waiting for $name on port $port..."
+  while [[ "$elapsed" -lt "$timeout_seconds" ]]; do
+    if port_listening "$port"; then
+      print_success "[dev] $name is listening on port $port"
+      return 0
+    fi
+
+    sleep_cmd 1
+    elapsed=$((elapsed + 1))
+  done
+
+  print_error "[dev] timeout waiting for $name on port $port"
+  return 1
+}
+
 check_infra() {
 	local missing=0
 

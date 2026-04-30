@@ -76,24 +76,34 @@ if [[ -f "$DEPARTMENT_SQL" ]]; then
     || print_warn "[dev] department schema import failed or already imported"
 fi
 
-# 构建
-print_info "[dev] building user-service..."
-(
-  cd "$MICRO_DIR/app/user-service"
-  go build ./...
-)
+# 并行构建
+BUILD_SERVICES=("user-service" "department-service" "api-gateway")
+BUILD_PIDS=()
+BUILD_FAILED=0
 
-print_info "[dev] building department-service..."
-(
-  cd "$MICRO_DIR/app/department-service"
-  go build ./...
-)
+for svc in "${BUILD_SERVICES[@]}"; do
+  print_info "[dev] building $svc..."
+  (
+    cd "$MICRO_DIR/app/$svc"
+    go build ./...
+  ) &
+  BUILD_PIDS+=("$!")
+done
 
-print_info "[dev] building api-gateway..."
-(
-  cd "$MICRO_DIR/app/api-gateway"
-  go build ./...
-)
+for i in "${!BUILD_SERVICES[@]}"; do
+  svc="${BUILD_SERVICES[$i]}"
+  pid="${BUILD_PIDS[$i]}"
+  if wait "$pid"; then
+    print_success "[dev] build $svc ok"
+  else
+    print_error "[dev] build $svc failed"
+    BUILD_FAILED=1
+  fi
+done
+
+if [[ "$BUILD_FAILED" -eq 1 ]]; then
+  exit 1
+fi
 
 # 启动 user-service (gRPC)
 print_info "[dev] starting user-service (gRPC :9101)..."
@@ -113,9 +123,9 @@ print_info "[dev] starting department-service (gRPC :9102)..."
 DEPARTMENT_SVC_PID=$!
 echo "$DEPARTMENT_SVC_PID" > "$DEPARTMENT_SVC_PID_FILE"
 
-# 等待服务注册到 etcd
-print_info "[dev] waiting for services to register on etcd..."
-sleep_cmd 3
+# 等待 RPC 服务就绪，避免 gateway 启动时找不到依赖
+wait_for_port 9101 "user-service" 30
+wait_for_port 9102 "department-service" 30
 
 # 启动 api-gateway (REST)
 print_info "[dev] starting api-gateway (REST :9000)..."

@@ -1,21 +1,19 @@
 package common
 
-import "department-service/department"
+import (
+	"department-service/department"
+	sharedcommon "micro-shared/common"
+)
 
 const (
-	RoleJobseeker = "1"
-	RoleRecruiter = "2"
-	RoleAdmin     = "3"
+	RoleJobseeker = sharedcommon.RoleJobseeker
+	RoleRecruiter = sharedcommon.RoleRecruiter
+	RoleAdmin     = sharedcommon.RoleAdmin
 )
 
 func HasRole(auth *department.DepartmentContext, allowedRoles ...string) bool {
 	if auth == nil {
 		return false
 	}
-	for _, role := range allowedRoles {
-		if auth.Role == role {
-			return true
-		}
-	}
-	return false
+	return sharedcommon.HasRole(auth.Role, allowedRoles...)
 }

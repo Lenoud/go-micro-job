@@ -1,6 +1,7 @@
 FROM golang:1.25-alpine AS builder
 WORKDIR /build
 COPY go.work go.work
+COPY app/shared/ app/shared/
 COPY app/user-service/ app/user-service/
 WORKDIR /build/app/user-service
 RUN GOWORK=off go mod tidy && GOWORK=off go build -o userservice user.go
