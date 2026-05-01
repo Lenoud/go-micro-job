@@ -14,7 +14,6 @@ type OpLogInfo {
 	Success        string `json:"success"`
 	BizCode        int64  `json:"bizCode"`
 	BizMsg         string `json:"bizMsg"`
-	AccessTime     string `json:"accessTime"`
 	ReResponseTime string `json:"reResponseTime"`
 	ReUserAgent    string `json:"reUserAgent"`
 }

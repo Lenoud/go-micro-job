@@ -23,7 +23,6 @@ func ProtoToOpLogInfo(p *oplogclient.OpLogInfo) *types.OpLogInfo {
 		Success:        p.Success,
 		BizCode:        p.BizCode,
 		BizMsg:         p.BizMsg,
-		AccessTime:     p.AccessTime,
 		ReResponseTime: p.ReResponseTime,
 		ReUserAgent:    p.ReUserAgent,
 	}

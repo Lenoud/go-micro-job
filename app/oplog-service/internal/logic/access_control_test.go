@@ -38,7 +38,7 @@ func (m *fakeOpLogModel) FindOpLogList(ctx context.Context, page, pageSize int64
 		RequestId:  "req-1",
 		UserId:     "7",
 		ReIp:       "127.0.0.1",
-		ReTime:     1710000000000,
+		RequestTime: 1710000000000,
 		ReUa:       "ua",
 		ReUrl:      "/api/user/create",
 		ReMethod:   "POST",
@@ -46,7 +46,7 @@ func (m *fakeOpLogModel) FindOpLogList(ctx context.Context, page, pageSize int64
 		Success:    "1",
 		BizCode:    200,
 		BizMsg:     "操作成功",
-		AccessTime: 12,
+		ResponseMs:  12,
 	}}, nil
 }
 
@@ -59,7 +59,7 @@ func (m *fakeOpLogModel) FindLoginLogList(ctx context.Context, page, pageSize in
 		ReUrl:      "/api/user/login",
 		ReMethod:   "POST",
 		ReUa:       "login-ua",
-		AccessTime: 8,
+		ResponseMs:  8,
 	}}, nil
 }
 
@@ -129,8 +129,8 @@ func TestListAllowsAdminAndNormalizesPagination(t *testing.T) {
 		t.Fatalf("List() page/pageSize = %d/%d, want 1/10", resp.GetData().GetPage(), resp.GetData().GetPageSize())
 	}
 	got := resp.GetData().GetList()[0]
-	if got.GetAccessTime() != "12" || got.GetReResponseTime() != "12" || got.GetReUserAgent() != "ua" {
-		t.Fatalf("List() aliases = accessTime:%q reResponseTime:%q reUserAgent:%q", got.GetAccessTime(), got.GetReResponseTime(), got.GetReUserAgent())
+	if got.GetReResponseTime() != "12" || got.GetReUserAgent() != "ua" {
+		t.Fatalf("List() aliases = reResponseTime:%q reUserAgent:%q", got.GetReResponseTime(), got.GetReUserAgent())
 	}
 }
 

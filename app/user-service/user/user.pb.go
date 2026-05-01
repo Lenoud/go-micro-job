@@ -87,14 +87,15 @@ type UserInfo struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	Username      string                 `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
-	Nickname      string                 `protobuf:"bytes,3,opt,name=nickname,proto3" json:"nickname,omitempty"`
-	Mobile        string                 `protobuf:"bytes,4,opt,name=mobile,proto3" json:"mobile,omitempty"`
-	Email         string                 `protobuf:"bytes,5,opt,name=email,proto3" json:"email,omitempty"`
-	Role          string                 `protobuf:"bytes,6,opt,name=role,proto3" json:"role,omitempty"`
-	Status        string                 `protobuf:"bytes,7,opt,name=status,proto3" json:"status,omitempty"`
-	Token         string                 `protobuf:"bytes,8,opt,name=token,proto3" json:"token,omitempty"`
-	CreateTime    string                 `protobuf:"bytes,9,opt,name=createTime,proto3" json:"createTime,omitempty"`
-	Avatar        string                 `protobuf:"bytes,10,opt,name=avatar,proto3" json:"avatar,omitempty"`
+	Password      string                 `protobuf:"bytes,3,opt,name=password,proto3" json:"password,omitempty"`
+	Nickname      string                 `protobuf:"bytes,4,opt,name=nickname,proto3" json:"nickname,omitempty"`
+	Mobile        string                 `protobuf:"bytes,5,opt,name=mobile,proto3" json:"mobile,omitempty"`
+	Email         string                 `protobuf:"bytes,6,opt,name=email,proto3" json:"email,omitempty"`
+	Role          string                 `protobuf:"bytes,7,opt,name=role,proto3" json:"role,omitempty"`
+	Status        string                 `protobuf:"bytes,8,opt,name=status,proto3" json:"status,omitempty"`
+	Token         string                 `protobuf:"bytes,9,opt,name=token,proto3" json:"token,omitempty"`
+	CreateTime    string                 `protobuf:"bytes,10,opt,name=createTime,proto3" json:"createTime,omitempty"`
+	Avatar        string                 `protobuf:"bytes,11,opt,name=avatar,proto3" json:"avatar,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -139,6 +140,13 @@ func (x *UserInfo) GetId() string {
 func (x *UserInfo) GetUsername() string {
 	if x != nil {
 		return x.Username
+	}
+	return ""
+}
+
+func (x *UserInfo) GetPassword() string {
+	if x != nil {
+		return x.Password
 	}
 	return ""
 }
@@ -1234,21 +1242,22 @@ const file_user_proto_rawDesc = "" +
 	"ActionResp\x12\x12\n" +
 	"\x04code\x18\x01 \x01(\x03R\x04code\x12\x10\n" +
 	"\x03msg\x18\x02 \x01(\tR\x03msg\x12\x1c\n" +
-	"\ttimestamp\x18\x03 \x01(\x03R\ttimestamp\"\xfa\x01\n" +
+	"\ttimestamp\x18\x03 \x01(\x03R\ttimestamp\"\x96\x02\n" +
 	"\bUserInfo\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1a\n" +
 	"\busername\x18\x02 \x01(\tR\busername\x12\x1a\n" +
-	"\bnickname\x18\x03 \x01(\tR\bnickname\x12\x16\n" +
-	"\x06mobile\x18\x04 \x01(\tR\x06mobile\x12\x14\n" +
-	"\x05email\x18\x05 \x01(\tR\x05email\x12\x12\n" +
-	"\x04role\x18\x06 \x01(\tR\x04role\x12\x16\n" +
-	"\x06status\x18\a \x01(\tR\x06status\x12\x14\n" +
-	"\x05token\x18\b \x01(\tR\x05token\x12\x1e\n" +
+	"\bpassword\x18\x03 \x01(\tR\bpassword\x12\x1a\n" +
+	"\bnickname\x18\x04 \x01(\tR\bnickname\x12\x16\n" +
+	"\x06mobile\x18\x05 \x01(\tR\x06mobile\x12\x14\n" +
+	"\x05email\x18\x06 \x01(\tR\x05email\x12\x12\n" +
+	"\x04role\x18\a \x01(\tR\x04role\x12\x16\n" +
+	"\x06status\x18\b \x01(\tR\x06status\x12\x14\n" +
+	"\x05token\x18\t \x01(\tR\x05token\x12\x1e\n" +
 	"\n" +
-	"createTime\x18\t \x01(\tR\n" +
+	"createTime\x18\n" +
+	" \x01(\tR\n" +
 	"createTime\x12\x16\n" +
-	"\x06avatar\x18\n" +
-	" \x01(\tR\x06avatar\"v\n" +
+	"\x06avatar\x18\v \x01(\tR\x06avatar\"v\n" +
 	"\fUserInfoResp\x12\x12\n" +
 	"\x04code\x18\x01 \x01(\x03R\x04code\x12\x10\n" +
 	"\x03msg\x18\x02 \x01(\tR\x03msg\x12\"\n" +

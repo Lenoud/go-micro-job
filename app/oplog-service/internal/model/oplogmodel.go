@@ -10,25 +10,25 @@ import (
 
 const (
 	OpLogTableName = "b_op_log"
-	opLogFields    = "id, IFNULL(request_id,'') AS request_id, IFNULL(user_id,'') AS user_id, IFNULL(re_ip,'') AS re_ip, IFNULL(re_time,0) AS re_time, IFNULL(re_ua,'') AS re_ua, IFNULL(re_url,'') AS re_url, IFNULL(re_method,'') AS re_method, IFNULL(re_content,'') AS re_content, IFNULL(success,'1') AS success, IFNULL(biz_code,0) AS biz_code, IFNULL(biz_msg,'') AS biz_msg, IFNULL(access_time,0) AS access_time"
+	opLogFields    = "id, IFNULL(request_id,'') AS request_id, IFNULL(user_id,'') AS user_id, IFNULL(re_ip,'') AS re_ip, IFNULL(request_time,0) AS request_time, IFNULL(re_ua,'') AS re_ua, IFNULL(re_url,'') AS re_url, IFNULL(re_method,'') AS re_method, IFNULL(re_content,'') AS re_content, IFNULL(success,'1') AS success, IFNULL(biz_code,0) AS biz_code, IFNULL(biz_msg,'') AS biz_msg, IFNULL(response_ms,0) AS response_ms"
 )
 
 var loginLogPaths = []string{"/api/user/login", "/api/user/userLogin"}
 
 type OpLog struct {
-	Id         string `db:"id"          json:"id"`
-	RequestId  string `db:"request_id"  json:"requestId"`
-	UserId     string `db:"user_id"     json:"userId"`
-	ReIp       string `db:"re_ip"       json:"reIp"`
-	ReTime     int64  `db:"re_time"     json:"reTime"`
-	ReUa       string `db:"re_ua"       json:"reUa"`
-	ReUrl      string `db:"re_url"      json:"reUrl"`
-	ReMethod   string `db:"re_method"   json:"reMethod"`
-	ReContent  string `db:"re_content"  json:"reContent"`
-	Success    string `db:"success"     json:"success"`
-	BizCode    int64  `db:"biz_code"    json:"bizCode"`
-	BizMsg     string `db:"biz_msg"     json:"bizMsg"`
-	AccessTime int64  `db:"access_time" json:"accessTime"`
+	Id          string `db:"id"           json:"id"`
+	RequestId   string `db:"request_id"   json:"requestId"`
+	UserId      string `db:"user_id"      json:"userId"`
+	ReIp        string `db:"re_ip"        json:"reIp"`
+	RequestTime int64  `db:"request_time" json:"requestTime"`
+	ReUa        string `db:"re_ua"        json:"reUa"`
+	ReUrl       string `db:"re_url"       json:"reUrl"`
+	ReMethod    string `db:"re_method"    json:"reMethod"`
+	ReContent   string `db:"re_content"   json:"reContent"`
+	Success     string `db:"success"      json:"success"`
+	BizCode     int64  `db:"biz_code"     json:"bizCode"`
+	BizMsg      string `db:"biz_msg"      json:"bizMsg"`
+	ResponseMs  int64  `db:"response_ms"  json:"responseMs"`
 }
 
 type OpLogModel interface {
@@ -64,7 +64,7 @@ func (m *defaultOpLogModel) BatchInsert(ctx context.Context, logs []*OpLog) erro
 			log.RequestId,
 			log.UserId,
 			log.ReIp,
-			log.ReTime,
+			log.RequestTime,
 			log.ReUa,
 			log.ReUrl,
 			log.ReMethod,
@@ -72,10 +72,10 @@ func (m *defaultOpLogModel) BatchInsert(ctx context.Context, logs []*OpLog) erro
 			log.Success,
 			log.BizCode,
 			log.BizMsg,
-			log.AccessTime,
+			log.ResponseMs,
 		)
 	}
-	query := fmt.Sprintf("INSERT INTO %s (request_id, user_id, re_ip, re_time, re_ua, re_url, re_method, re_content, success, biz_code, biz_msg, access_time) VALUES %s",
+	query := fmt.Sprintf("INSERT INTO %s (request_id, user_id, re_ip, request_time, re_ua, re_url, re_method, re_content, success, biz_code, biz_msg, response_ms) VALUES %s",
 		m.table, strings.Join(placeholders, ", "))
 	_, err := m.conn.ExecCtx(ctx, query, args...)
 	return err
@@ -99,7 +99,7 @@ func (m *defaultOpLogModel) FindOpLogList(ctx context.Context, page, pageSize in
 	offset := (page - 1) * pageSize
 
 	var resp []*OpLog
-	query := fmt.Sprintf("SELECT %s FROM %s WHERE re_url NOT IN (?, ?) ORDER BY re_time DESC LIMIT ? OFFSET ?", opLogFields, m.table)
+	query := fmt.Sprintf("SELECT %s FROM %s WHERE re_url NOT IN (?, ?) ORDER BY request_time DESC LIMIT ? OFFSET ?", opLogFields, m.table)
 	if err := m.conn.QueryRowsCtx(ctx, &resp, query, loginLogPaths[0], loginLogPaths[1], pageSize, offset); err != nil {
 		return nil, err
 	}
@@ -113,7 +113,7 @@ func (m *defaultOpLogModel) FindLoginLogList(ctx context.Context, page, pageSize
 	offset := (page - 1) * pageSize
 
 	var resp []*OpLog
-	query := fmt.Sprintf("SELECT %s FROM %s WHERE re_url IN (?, ?) ORDER BY re_time DESC LIMIT ? OFFSET ?", opLogFields, m.table)
+	query := fmt.Sprintf("SELECT %s FROM %s WHERE re_url IN (?, ?) ORDER BY request_time DESC LIMIT ? OFFSET ?", opLogFields, m.table)
 	if err := m.conn.QueryRowsCtx(ctx, &resp, query, loginLogPaths[0], loginLogPaths[1], pageSize, offset); err != nil {
 		return nil, err
 	}
@@ -125,7 +125,7 @@ func (m *defaultOpLogModel) FindLoginLogList(ctx context.Context, page, pageSize
 
 func (m *defaultOpLogModel) DeleteBefore(ctx context.Context, beforeTime int64) error {
 	for {
-		query := fmt.Sprintf("DELETE FROM %s WHERE re_time < ? LIMIT 10000", m.table)
+		query := fmt.Sprintf("DELETE FROM %s WHERE request_time < ? LIMIT 10000", m.table)
 		result, err := m.conn.ExecCtx(ctx, query, beforeTime)
 		if err != nil {
 			return err
@@ -136,4 +136,3 @@ func (m *defaultOpLogModel) DeleteBefore(ctx context.Context, beforeTime int64) 
 		}
 	}
 }
-

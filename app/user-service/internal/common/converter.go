@@ -17,6 +17,7 @@ func UserModelToProto(u *model.User) *user.UserInfo {
 	return &user.UserInfo{
 		Id:         u.Id,
 		Username:   u.Username,
+		Password:   u.Password,
 		Nickname:   u.Nickname,
 		Mobile:     u.Mobile,
 		Email:      u.Email,

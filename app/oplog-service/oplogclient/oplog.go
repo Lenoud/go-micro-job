@@ -2,7 +2,7 @@
 // goctl 1.10.1
 // Source: oplog.proto
 
-package oplogclient
+package opLogClient
 
 import (
 	"context"

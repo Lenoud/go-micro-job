@@ -109,7 +109,6 @@ type OpLogInfo struct {
 	Success        string `json:"success"`
 	BizCode        int64  `json:"bizCode"`
 	BizMsg         string `json:"bizMsg"`
-	AccessTime     string `json:"accessTime"`
 	ReResponseTime string `json:"reResponseTime"`
 	ReUserAgent    string `json:"reUserAgent"`
 }
@@ -186,13 +185,14 @@ type UserDetailResp struct {
 type UserInfo struct {
 	Id         string `json:"id"`
 	Username   string `json:"username"`
+	Password   string `json:"password"`
 	Nickname   string `json:"nickname"`
 	Mobile     string `json:"mobile"`
 	Email      string `json:"email"`
 	Role       string `json:"role"`
 	Status     string `json:"status"`
-	Token      string `json:"token,omitempty"`
-	CreateTime string `json:"createTime,omitempty"`
+	Token      string `json:"token"`
+	CreateTime string `json:"createTime"`
 	Avatar     string `json:"avatar,omitempty"`
 }
 

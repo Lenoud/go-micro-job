@@ -56,7 +56,7 @@ func (l *BatchCreateLogic) BatchCreate(in *oplog.BatchCreateReq) (*oplog.ActionR
 			RequestId:  item.GetRequestId(),
 			UserId:     item.GetUserId(),
 			ReIp:       item.GetReIp(),
-			ReTime:     reTime,
+			RequestTime: reTime,
 			ReUa:       item.GetReUa(),
 			ReUrl:      item.GetReUrl(),
 			ReMethod:   item.GetReMethod(),
@@ -64,7 +64,7 @@ func (l *BatchCreateLogic) BatchCreate(in *oplog.BatchCreateReq) (*oplog.ActionR
 			Success:    success,
 			BizCode:    item.GetBizCode(),
 			BizMsg:     item.GetBizMsg(),
-			AccessTime: accessTime,
+			ResponseMs:  accessTime,
 		})
 	}
 	if len(logs) == 0 {

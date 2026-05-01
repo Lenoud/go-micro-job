@@ -13,11 +13,11 @@ CREATE TABLE IF NOT EXISTS `b_op_log` (
   `success` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '1' COMMENT '是否成功',
   `biz_code` bigint DEFAULT '0' COMMENT '业务响应码',
   `biz_msg` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '' COMMENT '业务结果摘要',
-  `re_time` bigint DEFAULT '0' COMMENT '请求时间戳',
-  `access_time` bigint DEFAULT '0' COMMENT '访问耗时',
+  `request_time` bigint DEFAULT '0' COMMENT '请求时间戳',
+  `response_ms` bigint DEFAULT '0' COMMENT '响应耗时(ms)',
   PRIMARY KEY (`id`),
   KEY `idx_request_id` (`request_id`),
   KEY `idx_user` (`user_id`),
-  KEY `idx_re_time` (`re_time`),
-  KEY `idx_re_url_time` (`re_url`(191),`re_time`)
+  KEY `idx_request_time` (`request_time`),
+  KEY `idx_re_url_request_time` (`re_url`(191),`request_time`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='操作日志表';

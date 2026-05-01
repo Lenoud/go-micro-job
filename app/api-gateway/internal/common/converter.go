@@ -13,6 +13,7 @@ func ProtoToUserInfo(u *userclient.UserInfo) *types.UserInfo {
 	return &types.UserInfo{
 		Id:         u.Id,
 		Username:   u.Username,
+		Password:   u.Password,
 		Nickname:   u.Nickname,
 		Mobile:     u.Mobile,
 		Email:      u.Email,

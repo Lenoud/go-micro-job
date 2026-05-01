@@ -155,7 +155,6 @@ type OpLogInfo struct {
 	Success        string                 `protobuf:"bytes,10,opt,name=success,proto3" json:"success,omitempty"`
 	BizCode        int64                  `protobuf:"varint,11,opt,name=bizCode,proto3" json:"bizCode,omitempty"`
 	BizMsg         string                 `protobuf:"bytes,12,opt,name=bizMsg,proto3" json:"bizMsg,omitempty"`
-	AccessTime     string                 `protobuf:"bytes,13,opt,name=accessTime,proto3" json:"accessTime,omitempty"`
 	ReResponseTime string                 `protobuf:"bytes,14,opt,name=reResponseTime,proto3" json:"reResponseTime,omitempty"`
 	ReUserAgent    string                 `protobuf:"bytes,15,opt,name=reUserAgent,proto3" json:"reUserAgent,omitempty"`
 	unknownFields  protoimpl.UnknownFields
@@ -272,13 +271,6 @@ func (x *OpLogInfo) GetBizCode() int64 {
 func (x *OpLogInfo) GetBizMsg() string {
 	if x != nil {
 		return x.BizMsg
-	}
-	return ""
-}
-
-func (x *OpLogInfo) GetAccessTime() string {
-	if x != nil {
-		return x.AccessTime
 	}
 	return ""
 }
@@ -682,7 +674,7 @@ const file_oplog_proto_rawDesc = "" +
 	"\fOpLogContext\x12\x16\n" +
 	"\x06userId\x18\x01 \x01(\tR\x06userId\x12\x1a\n" +
 	"\busername\x18\x02 \x01(\tR\busername\x12\x12\n" +
-	"\x04role\x18\x03 \x01(\tR\x04role\"\x97\x03\n" +
+	"\x04role\x18\x03 \x01(\tR\x04role\"\xfd\x02\n" +
 	"\tOpLogInfo\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1c\n" +
 	"\trequestId\x18\x02 \x01(\tR\trequestId\x12\x16\n" +
@@ -696,12 +688,9 @@ const file_oplog_proto_rawDesc = "" +
 	"\asuccess\x18\n" +
 	" \x01(\tR\asuccess\x12\x18\n" +
 	"\abizCode\x18\v \x01(\x03R\abizCode\x12\x16\n" +
-	"\x06bizMsg\x18\f \x01(\tR\x06bizMsg\x12\x1e\n" +
-	"\n" +
-	"accessTime\x18\r \x01(\tR\n" +
-	"accessTime\x12&\n" +
+	"\x06bizMsg\x18\f \x01(\tR\x06bizMsg\x12&\n" +
 	"\x0ereResponseTime\x18\x0e \x01(\tR\x0ereResponseTime\x12 \n" +
-	"\vreUserAgent\x18\x0f \x01(\tR\vreUserAgent\"{\n" +
+	"\vreUserAgent\x18\x0f \x01(\tR\vreUserAgentJ\x04\b\r\x10\x0e\"{\n" +
 	"\rOpLogListData\x12$\n" +
 	"\x04list\x18\x01 \x03(\v2\x10.oplog.OpLogInfoR\x04list\x12\x14\n" +
 	"\x05total\x18\x02 \x01(\x03R\x05total\x12\x12\n" +

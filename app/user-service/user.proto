@@ -17,14 +17,15 @@ message ActionResp {
 message UserInfo {
   string id         = 1;
   string username   = 2;
-  string nickname   = 3;
-  string mobile     = 4;
-  string email      = 5;
-  string role       = 6;
-  string status     = 7;
-  string token      = 8;
-  string createTime = 9;
-  string avatar     = 10;
+  string password   = 3;
+  string nickname   = 4;
+  string mobile     = 5;
+  string email      = 6;
+  string role       = 7;
+  string status     = 8;
+  string token      = 9;
+  string createTime = 10;
+  string avatar     = 11;
 }
 
 // 带用户信息的响应（login/userLogin/detail 共用）

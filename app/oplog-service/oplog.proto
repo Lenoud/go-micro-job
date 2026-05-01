@@ -29,7 +29,7 @@ message OpLogInfo {
   string success = 10;
   int64 bizCode = 11;
   string bizMsg = 12;
-  string accessTime = 13;
+  reserved 13;
   string reResponseTime = 14;
   string reUserAgent = 15;
 }
