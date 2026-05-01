@@ -12,9 +12,11 @@ func OpLogModelToProto(item *model.OpLog) *oplog.OpLogInfo {
 	if item == nil {
 		return nil
 	}
-	accessTime := ""
+	// DB: re_time = 请求时间(unix ms), access_time = 响应耗时(ms)
+	// 前端: accessTime = "访问时间"(何时), reResponseTime = "耗时(ms)"(多久)
+	responseTimeMs := ""
 	if item.AccessTime > 0 {
-		accessTime = strconv.FormatInt(item.AccessTime, 10)
+		responseTimeMs = strconv.FormatInt(item.AccessTime, 10)
 	}
 	return &oplog.OpLogInfo{
 		Id:             item.Id,
@@ -29,9 +31,9 @@ func OpLogModelToProto(item *model.OpLog) *oplog.OpLogInfo {
 		Success:        item.Success,
 		BizCode:        item.BizCode,
 		BizMsg:         item.BizMsg,
-		AccessTime:     accessTime,
-		ReResponseTime: accessTime, // 别名：数据库无独立 re_response_time 列，复用 access_time
-		ReUserAgent:    item.ReUa,  // 别名：数据库无独立 re_user_agent 列，复用 re_ua
+		AccessTime:     formatUnixMilli(item.ReTime), // 访问时间 = 请求发生的时间
+		ReResponseTime: responseTimeMs,                // 耗时(ms) = 响应耗时
+		ReUserAgent:    item.ReUa,                      // 别名：复用 re_ua
 	}
 }
 

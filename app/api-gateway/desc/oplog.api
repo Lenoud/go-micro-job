@@ -62,5 +62,5 @@ service apigateway {
 
 	@doc "登录日志列表"
 	@handler loginLogList
-	get /loginList (LoginLogListReq) returns (LoginLogListResp)
+	get /loginLogList (LoginLogListReq) returns (LoginLogListResp)
 }

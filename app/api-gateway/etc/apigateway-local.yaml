@@ -35,6 +35,12 @@ Middlewares:
   MaxBytes: true
   Gunzip: true
 
+Telemetry:
+  Name: api-gateway
+  Endpoint: 127.0.0.1:4318
+  Sampler: 1.0
+  Batcher: otlphttp
+
 JWT:
   AccessSecret: "mysecretkey123456"
   AccessExpire: 86400

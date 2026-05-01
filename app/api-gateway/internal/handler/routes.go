@@ -57,7 +57,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			{
 				// 登录日志列表
 				Method:  http.MethodGet,
-				Path:    "/loginList",
+				Path:    "/loginLogList",
 				Handler: oplog.LoginLogListHandler(serverCtx),
 			},
 		},

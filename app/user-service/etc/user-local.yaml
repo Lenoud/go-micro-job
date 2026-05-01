@@ -27,6 +27,12 @@ Middlewares:
   Prometheus: true
   Breaker: true
 
+Telemetry:
+  Name: user-service
+  Endpoint: 127.0.0.1:4318
+  Sampler: 1.0
+  Batcher: otlphttp
+
 Etcd:
   Hosts:
     - 127.0.0.1:2379
