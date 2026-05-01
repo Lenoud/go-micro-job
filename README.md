@@ -6,9 +6,10 @@
 
 | 服务 | 类型 | 端口 | 说明 |
 |------|------|------|------|
-| api-gateway | REST API | 9000 | API 网关，JWT 鉴权，路由转发到 gRPC 服务 |
+| api-gateway | REST API | 9000 | API 网关，JWT 鉴权，路由转发到 gRPC 服务，操作日志写入 |
 | user-service | gRPC | 9101 | 用户模块，注册/登录/CRUD |
 | department-service | gRPC | 9102 | 部门模块，列表/创建/更新/删除 |
+| oplog-service | gRPC | 9103 | 操作日志读写 |
 
 ## 依赖
 
@@ -23,29 +24,37 @@
 ```
 ├── app/
 │   ├── api-gateway/       # REST API 网关
-│   │   ├── gateway.api    # API 定义（goctl 源文件）
+│   │   ├── desc/main.api  # API 定义入口（import desc/*.api）
 │   │   ├── apigateway.go  # 入口
 │   │   ├── etc/           # 配置文件
 │   │   └── internal/
 │   │       ├── handler/   # HTTP handler（goctl 生成）
 │   │       ├── logic/     # 业务逻辑
+│   │       ├── common/    # accesslog、oplog 转换
 │   │       ├── svc/       # ServiceContext
 │   │       └── types/     # 请求/响应类型
-│   └── user-service/      # gRPC 用户服务
-│       ├── user.proto     # Protobuf 定义
-│       ├── user.go        # 入口
-│       ├── etc/           # 配置文件
-│       └── internal/
-│           ├── logic/     # 业务逻辑
-│           ├── model/     # 数据库 model
-│           ├── server/    # gRPC server
-│           ├── svc/       # ServiceContext
-│           └── common/    # 工具函数
-│   └── department-service/ # gRPC 部门服务
-│       ├── department.proto
-│       ├── department.go
+│   ├── user-service/      # gRPC 用户服务
+│   │   ├── user.proto     # Protobuf 定义
+│   │   ├── user.go        # 入口
+│   │   ├── etc/           # 配置文件
+│   │   └── internal/
+│   │       ├── logic/     # 业务逻辑
+│   │       ├── model/     # 数据库 model
+│   │       ├── server/    # gRPC server
+│   │       ├── svc/       # ServiceContext
+│   │       └── common/    # 工具函数
+│   ├── department-service/ # gRPC 部门服务
+│   │   ├── department.proto
+│   │   ├── department.go
+│   │   ├── etc/
+│   │   └── internal/
+│   └── oplog-service/     # gRPC 操作日志服务
+│       ├── oplog.proto
+│       ├── oplog.go
 │       ├── etc/
 │       └── internal/
+├── shared/                # 微服务间共享
+├── sql/                   # 微服务专用 SQL
 ├── scripts/               # 开发脚本
 ├── go.work                # Go workspace
 └── docker-compose.yml     # 基础设施编排（Redis + etcd）
@@ -68,7 +77,7 @@ docker compose up -d redis etcd
 scripts/dev.sh
 ```
 
-自动完成：构建 → 启动 user-service → 启动 api-gateway → 日志输出到 `logs/`。
+自动完成：构建 → 启动 user-service → department-service → oplog-service → api-gateway → 日志输出到 `logs/`。
 
 停止：`Ctrl+C` 或 `scripts/stop-dev.sh`
 
@@ -119,15 +128,17 @@ curl -s 'http://localhost:9000/api/user/list?page=1&pageSize=5' \
 | POST | /api/department/create | 创建部门 |
 | POST | /api/department/delete | 删除部门 |
 | POST | /api/department/update | 更新部门 |
+| GET | /api/opLog/list | 操作日志列表 |
+| GET | /api/opLog/loginLogList | 登录日志列表 |
 
 ## 代码生成
 
 ### api-gateway（goctl）
 
-修改 `gateway.api` 后重新生成：
+修改 `desc/main.api`（及对应 `desc/*.api`）后重新生成：
 
 ```bash
-cd app/api-gateway && goctl api go --api gateway.api --dir . --style goZero
+cd app/api-gateway && goctl api go --api desc/main.api --dir . --style goZero
 ```
 
 ### user-service（protoc + goctl）
@@ -152,5 +163,5 @@ cd app/department-service && goctl rpc protoc department.proto --go_out=. --go-g
 docker compose up -d
 ```
 
-包含 Redis、etcd、user-service、department-service、api-gateway 容器。
+包含 Redis、etcd、user-service、department-service、oplog-service、api-gateway 容器。
 MySQL 使用独立库 `micro_job`，依赖父仓库的 MySQL 容器。
