@@ -1,0 +1,77 @@
+syntax = "v1"
+
+// ---- 部门数据结构 ----
+type DepartmentInfo {
+	Id          string `json:"id"`
+	Title       string `json:"title"`
+	Description string `json:"description"`
+	ParentId    string `json:"parentId"`
+	CreateTime  string `json:"createTime"`
+}
+
+type DepartmentListData {
+	List     []DepartmentInfo `json:"list"`
+	Total    int64            `json:"total"`
+	Page     int64            `json:"page"`
+	PageSize int64            `json:"pageSize"`
+}
+
+// ---- 部门请求类型 ----
+type (
+	DepartmentListReq {
+		Keyword  string `form:"keyword,optional"`
+		Page     int64  `form:"page,optional,default=1"`
+		PageSize int64  `form:"pageSize,optional,default=10"`
+	}
+	CreateDepartmentReq {
+		Title       string `json:"title"`
+		Description string `json:"description,optional"`
+		ParentId    string `json:"parentId,optional"`
+	}
+	UpdateDepartmentReq {
+		Id          string `json:"id"`
+		Title       string `json:"title,optional"`
+		Description string `json:"description,optional"`
+		ParentId    string `json:"parentId,optional"`
+	}
+)
+
+// ---- 部门响应类型 ----
+type (
+	DepartmentListResp {
+		BaseResp
+		Data *DepartmentListData `json:"data,omitempty"`
+	}
+	DepartmentCreateResp {
+		BaseResp
+	}
+	DepartmentDeleteResp {
+		BaseResp
+	}
+	DepartmentUpdateResp {
+		BaseResp
+	}
+)
+
+@server (
+	prefix: /api/department
+	group:  department
+	jwt:    JWT
+)
+service apigateway {
+	@doc "部门列表"
+	@handler departmentList
+	get /list (DepartmentListReq) returns (DepartmentListResp)
+
+	@doc "管理员-创建部门"
+	@handler departmentCreate
+	post /create (CreateDepartmentReq) returns (DepartmentCreateResp)
+
+	@doc "管理员-删除部门"
+	@handler departmentDelete
+	post /delete (DeleteReq) returns (DepartmentDeleteResp)
+
+	@doc "管理员-更新部门"
+	@handler departmentUpdate
+	post /update (UpdateDepartmentReq) returns (DepartmentUpdateResp)
+}

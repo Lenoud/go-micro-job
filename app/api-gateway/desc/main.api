@@ -1,0 +1,16 @@
+syntax = "v1"
+
+info (
+	title:   "api-gateway"
+	desc:    "REST API Gateway for microservices"
+	author:  "micro"
+	version: "v1"
+)
+
+import (
+	"base.api"
+	"user.api"
+	"department.api"
+	"oplog.api"
+)
+
