@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"io"
 	"net"
 	"net/http"
 	"sort"
@@ -116,6 +117,10 @@ func NewAccessLogMiddleware(writer *OpLogWriter, accessSecret string) func(http.
 
 			startedAt := time.Now()
 			recorder := newAccessLogResponseWriter(w)
+			var loginUsername string
+			if isLoginRoute(r) {
+				loginUsername = peekLoginUsername(r)
+			}
 			next(recorder, r)
 			biz := parseAccessLogBizResult(recorder.statusCode, recorder.body.Bytes())
 			recorder.flush(accessLogTraceID(r), biz)
@@ -124,9 +129,14 @@ func NewAccessLogMiddleware(writer *OpLogWriter, accessSecret string) func(http.
 				return
 			}
 
+			userId := accessLogUserID(r, accessSecret)
+			if userId == "" {
+				userId = loginUsername
+			}
+
 			entry := &oplogclient.OpLogRecord{
 				RequestId:  accessLogTraceID(r),
-				UserId:     accessLogUserID(r, accessSecret),
+				UserId:     userId,
 				ReIp:       accessLogIP(r),
 				ReTime:     startedAt.UnixMilli(),
 				ReUa:       strings.TrimSpace(r.UserAgent()),
@@ -164,6 +174,42 @@ func shouldRecordAccessLog(r *http.Request) bool {
 	default:
 		return false
 	}
+}
+
+func isLoginRoute(r *http.Request) bool {
+	if r == nil {
+		return false
+	}
+	path := accessLogURL(r)
+	return path == "/api/user/login" || path == "/api/user/userLogin" || path == "/api/user/userRegister"
+}
+
+// peekLoginUsername reads the request body to extract the username field
+// for login/register routes, then restores the body for downstream handlers.
+func peekLoginUsername(r *http.Request) string {
+	if r == nil || r.Body == nil {
+		return ""
+	}
+
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		return ""
+	}
+	// Restore body so the handler can still read it
+	r.Body = io.NopCloser(bytes.NewReader(body))
+
+	trimmed := bytes.TrimSpace(body)
+	if len(trimmed) == 0 || trimmed[0] != '{' {
+		return ""
+	}
+
+	var payload struct {
+		Username string `json:"username"`
+	}
+	if err := json.Unmarshal(trimmed, &payload); err != nil {
+		return ""
+	}
+	return strings.TrimSpace(payload.Username)
 }
 
 // ---- request data extraction ----
