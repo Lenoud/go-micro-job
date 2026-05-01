@@ -68,3 +68,18 @@ DepartmentRpc:
     Hosts:
       - etcd:2379
     Key: department.rpc
+
+OpLogRpc:
+  Timeout: 2000
+  NonBlock: true
+  KeepaliveTime: 20s
+  Middlewares:
+    Trace: true
+    Duration: true
+    Prometheus: true
+    Breaker: true
+    Timeout: true
+  Etcd:
+    Hosts:
+      - etcd:2379
+    Key: oplog.rpc

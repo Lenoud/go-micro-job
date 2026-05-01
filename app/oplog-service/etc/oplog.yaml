@@ -1,0 +1,38 @@
+Name: oplog.rpc
+Mode: pro
+ListenOn: 0.0.0.0:9103
+Timeout: 2500
+CpuThreshold: 900
+Health: true
+
+Log:
+  Mode: console
+  Encoding: json
+  Level: info
+  Stat: true
+
+DevServer:
+  Enabled: true
+  Host: 0.0.0.0
+  Port: 6063
+  MetricsPath: /metrics
+  HealthPath: /healthz
+  EnableMetrics: true
+  EnablePprof: false
+
+Middlewares:
+  Trace: true
+  Recover: true
+  Stat: true
+  Prometheus: true
+  Breaker: true
+
+Etcd:
+  Hosts:
+    - etcd:2379
+  Key: oplog.rpc
+
+MySQL:
+  DataSource: "root:root123@tcp(mysql:3306)/micro_job?charset=utf8mb4&parseTime=true&loc=Local"
+
+RetentionDays: 90

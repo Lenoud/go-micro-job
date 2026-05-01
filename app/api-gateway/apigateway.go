@@ -7,6 +7,7 @@ import (
 	"flag"
 	"fmt"
 
+	"api-gateway/internal/common"
 	"api-gateway/internal/config"
 	"api-gateway/internal/handler"
 	"api-gateway/internal/svc"
@@ -27,6 +28,14 @@ func main() {
 	defer server.Stop()
 
 	ctx := svc.NewServiceContext(c)
+
+	// 操作日志异步写入器（通过 gRPC 发送到 oplog-service）
+	opLogWriter := common.NewOpLogWriter(ctx.OpLogRpc)
+	defer opLogWriter.Stop()
+
+	server.Use(common.NewRequestMetaMiddleware())
+	server.Use(common.NewAccessLogMiddleware(opLogWriter, c.JWT.AccessSecret))
+
 	handler.RegisterHandlers(server, ctx)
 
 	fmt.Printf("Starting server at %s:%d...\n", c.Host, c.Port)

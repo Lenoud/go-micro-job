@@ -1,0 +1,80 @@
+syntax = "proto3";
+
+package oplog;
+
+option go_package = "./oplog";
+
+message ActionResp {
+  int64 code = 1;
+  string msg = 2;
+  int64 timestamp = 3;
+}
+
+message OpLogContext {
+  string userId = 1;
+  string username = 2;
+  string role = 3;
+}
+
+message OpLogInfo {
+  string id = 1;
+  string requestId = 2;
+  string userId = 3;
+  string reIp = 4;
+  string reTime = 5;
+  string reUa = 6;
+  string reUrl = 7;
+  string reMethod = 8;
+  string reContent = 9;
+  string success = 10;
+  int64 bizCode = 11;
+  string bizMsg = 12;
+  string accessTime = 13;
+  string reResponseTime = 14;
+  string reUserAgent = 15;
+}
+
+message OpLogListData {
+  repeated OpLogInfo list = 1;
+  int64 total = 2;
+  int64 page = 3;
+  int64 pageSize = 4;
+}
+
+message OpLogListResp {
+  int64 code = 1;
+  string msg = 2;
+  OpLogListData data = 3;
+  int64 timestamp = 4;
+}
+
+message OpLogListReq {
+  int64 page = 1;
+  int64 pageSize = 2;
+  OpLogContext auth = 3;
+}
+
+message OpLogRecord {
+  string requestId = 1;
+  string userId = 2;
+  string reIp = 3;
+  int64 reTime = 4;
+  string reUa = 5;
+  string reUrl = 6;
+  string reMethod = 7;
+  string reContent = 8;
+  string success = 9;
+  int64 bizCode = 10;
+  string bizMsg = 11;
+  int64 accessTime = 12;
+}
+
+message BatchCreateReq {
+  repeated OpLogRecord logs = 1;
+}
+
+service OpLog {
+  rpc List(OpLogListReq) returns(OpLogListResp);
+  rpc LoginList(OpLogListReq) returns(OpLogListResp);
+  rpc BatchCreate(BatchCreateReq) returns(ActionResp);
+}

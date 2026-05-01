@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	department "api-gateway/internal/handler/department"
+	oplog "api-gateway/internal/handler/oplog"
 	user "api-gateway/internal/handler/user"
 	"api-gateway/internal/svc"
 
@@ -43,6 +44,25 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		},
 		rest.WithJwt(serverCtx.Config.JWT.AccessSecret),
 		rest.WithPrefix("/api/department"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				// 操作日志列表
+				Method:  http.MethodGet,
+				Path:    "/list",
+				Handler: oplog.OpLogListHandler(serverCtx),
+			},
+			{
+				// 登录日志列表
+				Method:  http.MethodGet,
+				Path:    "/loginList",
+				Handler: oplog.LoginLogListHandler(serverCtx),
+			},
+		},
+		rest.WithJwt(serverCtx.Config.JWT.AccessSecret),
+		rest.WithPrefix("/api/opLog"),
 	)
 
 	server.AddRoutes(

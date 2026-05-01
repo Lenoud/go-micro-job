@@ -76,6 +76,16 @@ type DepartmentUpdateResp struct {
 	BaseResp
 }
 
+type LoginLogListReq struct {
+	Page     int64 `form:"page,optional,default=1"`
+	PageSize int64 `form:"pageSize,optional,default=10"`
+}
+
+type LoginLogListResp struct {
+	BaseResp
+	Data *OpLogListData `json:"data,omitempty"`
+}
+
 type LoginReq struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
@@ -84,6 +94,41 @@ type LoginReq struct {
 type LoginResp struct {
 	BaseResp
 	Data *UserInfo `json:"data,omitempty"`
+}
+
+type OpLogInfo struct {
+	Id             string `json:"id"`
+	RequestId      string `json:"requestId"`
+	UserId         string `json:"userId"`
+	ReIp           string `json:"reIp"`
+	ReTime         string `json:"reTime"`
+	ReUa           string `json:"reUa"`
+	ReUrl          string `json:"reUrl"`
+	ReMethod       string `json:"reMethod"`
+	ReContent      string `json:"reContent"`
+	Success        string `json:"success"`
+	BizCode        int64  `json:"bizCode"`
+	BizMsg         string `json:"bizMsg"`
+	AccessTime     string `json:"accessTime"`
+	ReResponseTime string `json:"reResponseTime"`
+	ReUserAgent    string `json:"reUserAgent"`
+}
+
+type OpLogListData struct {
+	List     []OpLogInfo `json:"list"`
+	Total    int64       `json:"total"`
+	Page     int64       `json:"page"`
+	PageSize int64       `json:"pageSize"`
+}
+
+type OpLogListReq struct {
+	Page     int64 `form:"page,optional,default=1"`
+	PageSize int64 `form:"pageSize,optional,default=10"`
+}
+
+type OpLogListResp struct {
+	BaseResp
+	Data *OpLogListData `json:"data,omitempty"`
 }
 
 type UpdateDepartmentReq struct {

@@ -13,4 +13,5 @@ type Config struct {
 	}
 	UserRpc       zrpc.RpcClientConf
 	DepartmentRpc zrpc.RpcClientConf
+	OpLogRpc      zrpc.RpcClientConf
 }

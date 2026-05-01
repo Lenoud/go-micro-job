@@ -13,9 +13,11 @@ RUN_DIR="$MICRO_DIR/run"
 export GOCACHE="${GOCACHE:-/tmp/go-server-resume-micro-gocache}"
 USER_SVC_LOG="$LOG_DIR/user-service.log"
 DEPARTMENT_SVC_LOG="$LOG_DIR/department-service.log"
+OPLOG_SVC_LOG="$LOG_DIR/oplog-service.log"
 GW_LOG="$LOG_DIR/api-gateway.log"
 USER_SVC_PID_FILE="$RUN_DIR/user-service.pid"
 DEPARTMENT_SVC_PID_FILE="$RUN_DIR/department-service.pid"
+OPLOG_SVC_PID_FILE="$RUN_DIR/oplog-service.pid"
 GW_PID_FILE="$RUN_DIR/api-gateway.pid"
 
 CLEANED_UP=0
@@ -33,6 +35,7 @@ cleanup() {
   printf '\n'
   print_warn "[dev] stopping processes..."
   stop_pid_file "$GW_PID_FILE" "api-gateway"
+  stop_pid_file "$OPLOG_SVC_PID_FILE" "oplog-service"
   stop_pid_file "$DEPARTMENT_SVC_PID_FILE" "department-service"
   stop_pid_file "$USER_SVC_PID_FILE" "user-service"
   print_success "[dev] cleanup complete."
@@ -45,14 +48,17 @@ trap 'exit 130' INT TERM
 
 mkdir -p "$LOG_DIR" "$RUN_DIR"
 stop_pid_file "$GW_PID_FILE" "api-gateway"
+stop_pid_file "$OPLOG_SVC_PID_FILE" "oplog-service"
 stop_pid_file "$DEPARTMENT_SVC_PID_FILE" "department-service"
 stop_pid_file "$USER_SVC_PID_FILE" "user-service"
+stop_port_listener 9103 "oplog-service"
 stop_port_listener 9102 "department-service"
 stop_port_listener 9101 "user-service"
 stop_port_listener 9000 "api-gateway"
 
 : > "$USER_SVC_LOG"
 : > "$DEPARTMENT_SVC_LOG"
+: > "$OPLOG_SVC_LOG"
 : > "$GW_LOG"
 
 # 检查并启动基础设施
@@ -75,9 +81,14 @@ if [[ -f "$DEPARTMENT_SQL" ]]; then
   mysql --protocol=TCP -h127.0.0.1 -P3306 -uroot -proot123 --default-character-set=utf8mb4 < "$DEPARTMENT_SQL" 2>/dev/null \
     || print_warn "[dev] department schema import failed or already imported"
 fi
+OPLOG_SQL="$MICRO_DIR/sql/oplog.sql"
+if [[ -f "$OPLOG_SQL" ]]; then
+  mysql --protocol=TCP -h127.0.0.1 -P3306 -uroot -proot123 --default-character-set=utf8mb4 < "$OPLOG_SQL" 2>/dev/null \
+    || print_warn "[dev] oplog schema import failed or already imported"
+fi
 
 # 并行构建
-BUILD_SERVICES=("user-service" "department-service" "api-gateway")
+BUILD_SERVICES=("user-service" "department-service" "oplog-service" "api-gateway")
 BUILD_PIDS=()
 BUILD_FAILED=0
 
@@ -123,9 +134,19 @@ print_info "[dev] starting department-service (gRPC :9102)..."
 DEPARTMENT_SVC_PID=$!
 echo "$DEPARTMENT_SVC_PID" > "$DEPARTMENT_SVC_PID_FILE"
 
+# 启动 oplog-service (gRPC)
+print_info "[dev] starting oplog-service (gRPC :9103)..."
+(
+  cd "$MICRO_DIR/app/oplog-service"
+  exec go run oplog.go -f etc/oplog.yaml
+) >> "$OPLOG_SVC_LOG" 2>&1 &
+OPLOG_SVC_PID=$!
+echo "$OPLOG_SVC_PID" > "$OPLOG_SVC_PID_FILE"
+
 # 等待 RPC 服务就绪，避免 gateway 启动时找不到依赖
 wait_for_port 9101 "user-service" 30
 wait_for_port 9102 "department-service" 30
+wait_for_port 9103 "oplog-service" 30
 
 # 启动 api-gateway (REST)
 print_info "[dev] starting api-gateway (REST :9000)..."
@@ -136,10 +157,11 @@ print_info "[dev] starting api-gateway (REST :9000)..."
 GW_PID=$!
 echo "$GW_PID" > "$GW_PID_FILE"
 
-print_success "[dev] user-service log: $USER_SVC_LOG"
+print_success "[dev] user-service log:      $USER_SVC_LOG"
 print_success "[dev] department-service log: $DEPARTMENT_SVC_LOG"
-print_success "[dev] api-gateway log:  $GW_LOG"
-print_warn "[dev] Ctrl+C will stop both processes."
+print_success "[dev] oplog-service log:      $OPLOG_SVC_LOG"
+print_success "[dev] api-gateway log:        $GW_LOG"
+print_warn "[dev] Ctrl+C will stop all processes."
 printf '\n'
 
 EXITED_STATUS=0
@@ -151,6 +173,11 @@ while true; do
 
   if ! is_running "$DEPARTMENT_SVC_PID"; then
     wait "$DEPARTMENT_SVC_PID" 2>/dev/null || EXITED_STATUS=$?
+    break
+  fi
+
+  if ! is_running "$OPLOG_SVC_PID"; then
+    wait "$OPLOG_SVC_PID" 2>/dev/null || EXITED_STATUS=$?
     break
   fi
 
@@ -168,6 +195,10 @@ fi
 
 if ! is_running "$DEPARTMENT_SVC_PID"; then
   print_error "[dev] department-service exited. Check $DEPARTMENT_SVC_LOG"
+fi
+
+if ! is_running "$OPLOG_SVC_PID"; then
+  print_error "[dev] oplog-service exited. Check $OPLOG_SVC_LOG"
 fi
 
 if ! is_running "$GW_PID"; then

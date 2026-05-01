@@ -59,6 +59,18 @@ services:
       etcd:
         condition: service_healthy
 
+  oplog-service:
+    build:
+      context: .
+      dockerfile: app/oplog-service/Dockerfile
+    container_name: micro_oplog_service
+    restart: unless-stopped
+    ports:
+      - "9103:9103"
+    depends_on:
+      etcd:
+        condition: service_healthy
+
   api-gateway:
     build:
       context: .
@@ -73,4 +85,6 @@ services:
       user-service:
         condition: service_started
       department-service:
+        condition: service_started
+      oplog-service:
         condition: service_started
