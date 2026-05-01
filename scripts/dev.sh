@@ -64,26 +64,12 @@ stop_port_listener 9000 "api-gateway"
 # 检查并启动基础设施
 check_infra
 
-# 确保 micro_job 数据库和表存在（本地 mysql 3306）
-print_info "[dev] ensuring database micro_job exists..."
-mysql --protocol=TCP -h127.0.0.1 -P3306 -uroot -proot123 --default-character-set=utf8mb4 \
-  -e "CREATE DATABASE IF NOT EXISTS micro_job CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;" 2>/dev/null \
-  || print_warn "[dev] could not create database, may already exist or mysql not accessible"
-
-print_info "[dev] importing schema into micro_job..."
-USER_SQL="$MICRO_DIR/sql/user.sql"
-if [[ -f "$USER_SQL" ]]; then
-  mysql --protocol=TCP -h127.0.0.1 -P3306 -uroot -proot123 --default-character-set=utf8mb4 < "$USER_SQL" 2>/dev/null \
-    || print_warn "[dev] schema import failed or already imported"
-fi
-DEPARTMENT_SQL="$MICRO_DIR/sql/department.sql"
-if [[ -f "$DEPARTMENT_SQL" ]]; then
-  mysql --protocol=TCP -h127.0.0.1 -P3306 -uroot -proot123 --default-character-set=utf8mb4 < "$DEPARTMENT_SQL" 2>/dev/null \
-    || print_warn "[dev] department schema import failed or already imported"
-fi
+# 微服务共用单体数据库 go_job（Docker 容器 3306）
+# 仅需确保 oplog 表存在，user/department 表由单体服务维护
+print_info "[dev] ensuring go_job.b_op_log table exists..."
 OPLOG_SQL="$MICRO_DIR/sql/oplog.sql"
 if [[ -f "$OPLOG_SQL" ]]; then
-  mysql --protocol=TCP -h127.0.0.1 -P3306 -uroot -proot123 --default-character-set=utf8mb4 < "$OPLOG_SQL" 2>/dev/null \
+  mysql --protocol=TCP -h127.0.0.1 -P3306 -ugo_job -pgo_job123 --default-character-set=utf8mb4 < "$OPLOG_SQL" 2>/dev/null \
     || print_warn "[dev] oplog schema import failed or already imported"
 fi
 
@@ -138,7 +124,7 @@ echo "$DEPARTMENT_SVC_PID" > "$DEPARTMENT_SVC_PID_FILE"
 print_info "[dev] starting oplog-service (gRPC :9103)..."
 (
   cd "$MICRO_DIR/app/oplog-service"
-  exec go run oplog.go -f etc/oplog.yaml
+  exec go run oplog.go -f etc/oplog-local.yaml
 ) >> "$OPLOG_SVC_LOG" 2>&1 &
 OPLOG_SVC_PID=$!
 echo "$OPLOG_SVC_PID" > "$OPLOG_SVC_PID_FILE"

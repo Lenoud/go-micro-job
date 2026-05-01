@@ -1,6 +1,6 @@
-Name: department.rpc
+Name: oplog.rpc
 Mode: dev
-ListenOn: 0.0.0.0:9102
+ListenOn: 0.0.0.0:9103
 Timeout: 2500
 CpuThreshold: 900
 Health: true
@@ -14,7 +14,7 @@ Log:
 DevServer:
   Enabled: true
   Host: 127.0.0.1
-  Port: 6062
+  Port: 6063
   MetricsPath: /metrics
   HealthPath: /healthz
   EnableMetrics: true
@@ -30,7 +30,9 @@ Middlewares:
 Etcd:
   Hosts:
     - 127.0.0.1:2379
-  Key: department.rpc
+  Key: oplog.rpc
 
 MySQL:
   DataSource: "go_job:go_job123@tcp(127.0.0.1:3306)/go_job?charset=utf8mb4&parseTime=true&loc=Local"
+
+RetentionDays: 90

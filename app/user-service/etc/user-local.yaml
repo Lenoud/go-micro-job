@@ -33,7 +33,7 @@ Etcd:
   Key: user.rpc
 
 MySQL:
-  DataSource: "root:root123@tcp(127.0.0.1:3306)/micro_job?charset=utf8mb4&parseTime=true&loc=Local"
+  DataSource: "go_job:go_job123@tcp(127.0.0.1:3306)/go_job?charset=utf8mb4&parseTime=true&loc=Local"
 
 RedisConf:
   Addr: "127.0.0.1:6379"

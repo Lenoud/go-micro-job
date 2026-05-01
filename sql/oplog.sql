@@ -1,7 +1,5 @@
--- micro_job 数据库初始化：oplog-service 所需的 b_op_log 表
-
-CREATE DATABASE IF NOT EXISTS `micro_job` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE `micro_job`;
+-- go_job 数据库：oplog-service 所需的 b_op_log 表（共用单体数据库）
+USE `go_job`;
 
 CREATE TABLE IF NOT EXISTS `b_op_log` (
   `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
