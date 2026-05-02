@@ -6,6 +6,7 @@ import (
 	"user-service/internal/common"
 	"user-service/internal/svc"
 	"user-service/user"
+	sharedcommon "micro-shared/common"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -40,7 +41,12 @@ func (l *UpdatePwdLogic) UpdatePwd(in *user.UpdatePwdReq) (*user.ActionResp, err
 	}
 
 	u, err := l.svcCtx.UserModel.FindOne(l.ctx, targetUserID)
-	if err != nil || u == nil {
+	if err != nil {
+		msg := sharedcommon.Msg("查询", "用户")
+		common.LogErr(l.Logger, msg, err)
+		return common.FailAction(msg), nil
+	}
+	if u == nil {
 		return common.FailAction("用户不存在"), nil
 	}
 
@@ -51,7 +57,9 @@ func (l *UpdatePwdLogic) UpdatePwd(in *user.UpdatePwdReq) (*user.ActionResp, err
 
 	newHashedPwd := common.EncryptPassword(in.NewPassword)
 	if err := l.svcCtx.UserModel.UpdatePassword(l.ctx, targetUserID, newHashedPwd); err != nil {
-		return common.FailAction("修改密码失败"), nil
+		msg := sharedcommon.Msg("修改", "密码")
+		common.LogErr(l.Logger, msg, err)
+		return common.FailAction(msg), nil
 	}
 	return common.OkAction("更新成功"), nil
 }

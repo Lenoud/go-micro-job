@@ -6,6 +6,7 @@ import (
 	"user-service/internal/common"
 	"user-service/internal/svc"
 	"user-service/user"
+	sharedcommon "micro-shared/common"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -35,7 +36,9 @@ func (l *DeleteLogic) Delete(in *user.DeleteReq) (*user.ActionResp, error) {
 		return common.FailAction("删除用户失败"), nil
 	}
 	if err := l.svcCtx.UserModel.DeleteBatch(l.ctx, ids); err != nil {
-		return common.FailAction("删除用户失败"), nil
+		msg := sharedcommon.Msg("删除", "用户")
+		common.LogErr(l.Logger, msg, err)
+		return common.FailAction(msg), nil
 	}
 	return common.OkAction("删除成功"), nil
 }

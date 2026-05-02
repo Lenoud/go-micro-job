@@ -7,6 +7,7 @@ import (
 	"user-service/internal/common"
 	"user-service/internal/svc"
 	"user-service/user"
+	sharedcommon "micro-shared/common"
 
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/zeromicro/go-zero/core/logx"
@@ -35,7 +36,9 @@ func (l *LoginLogic) Login(in *user.LoginReq) (*user.UserInfoResp, error) {
 	password := common.EncryptPassword(in.Password)
 	u, err := l.svcCtx.UserModel.FindAdminUser(l.ctx, in.Username, password)
 	if err != nil {
-		return common.FailUserInfo("查询管理员失败"), nil
+		msg := sharedcommon.Msg("查询", "管理员")
+		common.LogErr(l.Logger, msg, err)
+		return common.FailUserInfo(msg), nil
 	}
 	if u == nil || u.Role != common.RoleAdmin {
 		return common.FailUserInfo("用户名或密码错误"), nil
@@ -52,7 +55,9 @@ func (l *LoginLogic) Login(in *user.LoginReq) (*user.UserInfoResp, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	tokenString, err := token.SignedString([]byte(l.svcCtx.Config.JWT.AccessSecret))
 	if err != nil {
-		return common.FailUserInfo("生成token失败"), nil
+		msg := sharedcommon.Msg("生成", "token")
+		common.LogErr(l.Logger, msg, err)
+		return common.FailUserInfo(msg), nil
 	}
 
 	info := common.UserModelToProto(u)

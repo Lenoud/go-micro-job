@@ -8,6 +8,7 @@ import (
 	"oplog-service/internal/model"
 	"oplog-service/internal/svc"
 	"oplog-service/oplog"
+	sharedcommon "micro-shared/common"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -71,7 +72,9 @@ func (l *BatchCreateLogic) BatchCreate(in *oplog.BatchCreateReq) (*oplog.ActionR
 		return common.OkAction("操作成功"), nil
 	}
 	if err := l.svcCtx.OpLogModel.BatchInsert(l.ctx, logs); err != nil {
-		return common.FailAction("写入操作日志失败"), nil
+		msg := sharedcommon.Msg("写入", "操作日志")
+		common.LogErr(l.Logger, msg, err)
+		return common.FailAction(msg), nil
 	}
 	return common.OkAction("操作成功"), nil
 }

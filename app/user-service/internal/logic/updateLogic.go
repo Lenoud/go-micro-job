@@ -7,6 +7,7 @@ import (
 	"user-service/internal/common"
 	"user-service/internal/svc"
 	"user-service/user"
+	sharedcommon "micro-shared/common"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -36,7 +37,12 @@ func (l *UpdateLogic) Update(in *user.UpdateUserReq) (*user.ActionResp, error) {
 	}
 
 	existing, err := l.svcCtx.UserModel.FindOne(l.ctx, in.Id)
-	if err != nil || existing == nil {
+	if err != nil {
+		msg := sharedcommon.Msg("查询", "用户")
+		common.LogErr(l.Logger, msg, err)
+		return common.FailAction(msg), nil
+	}
+	if existing == nil {
 		return common.FailAction("用户不存在"), nil
 	}
 
@@ -60,12 +66,16 @@ func (l *UpdateLogic) Update(in *user.UpdateUserReq) (*user.ActionResp, error) {
 	}
 	if strings.TrimSpace(in.Password) != "" {
 		if err := l.svcCtx.UserModel.UpdatePassword(l.ctx, existing.Id, common.EncryptPassword(in.Password)); err != nil {
-			return common.FailAction("重置密码失败"), nil
+			msg := sharedcommon.Msg("重置", "密码")
+			common.LogErr(l.Logger, msg, err)
+			return common.FailAction(msg), nil
 		}
 	}
 
 	if err := l.svcCtx.UserModel.Update(l.ctx, existing); err != nil {
-		return common.FailAction("更新用户失败"), nil
+		msg := sharedcommon.Msg("更新", "用户")
+		common.LogErr(l.Logger, msg, err)
+		return common.FailAction(msg), nil
 	}
 	return common.OkAction("更新成功"), nil
 }

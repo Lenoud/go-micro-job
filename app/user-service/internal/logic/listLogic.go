@@ -6,6 +6,7 @@ import (
 	"user-service/internal/common"
 	"user-service/internal/svc"
 	"user-service/user"
+	sharedcommon "micro-shared/common"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -40,7 +41,9 @@ func (l *ListLogic) List(in *user.UserListReq) (*user.UserListResp, error) {
 
 	list, total, err := l.svcCtx.UserModel.FindList(l.ctx, in.GetKeyword(), page, pageSize)
 	if err != nil {
-		return common.FailUserList("查询用户列表失败"), nil
+		msg := sharedcommon.Msg("查询", "用户列表")
+		common.LogErr(l.Logger, msg, err)
+		return common.FailUserList(msg), nil
 	}
 
 	items := make([]*user.UserInfo, 0, len(list))

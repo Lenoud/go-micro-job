@@ -2,10 +2,10 @@ syntax = "v1"
 
 // ---- 部门数据结构 ----
 type DepartmentInfo {
-	Id          string `json:"id"`
+	Id          int64  `json:"id"`
 	Title       string `json:"title"`
 	Description string `json:"description"`
-	ParentId    string `json:"parentId"`
+	ParentId    int64  `json:"parentId"`
 	CreateTime  string `json:"createTime"`
 }
 
@@ -26,13 +26,13 @@ type (
 	CreateDepartmentReq {
 		Title       string `json:"title"`
 		Description string `json:"description,optional"`
-		ParentId    string `json:"parentId,optional"`
+		ParentId    int64  `json:"parentId,optional"`
 	}
 	UpdateDepartmentReq {
-		Id          string `json:"id"`
+		Id          int64  `json:"id"`
 		Title       string `json:"title,optional"`
 		Description string `json:"description,optional"`
-		ParentId    string `json:"parentId,optional"`
+		ParentId    int64  `json:"parentId,optional"`
 	}
 )
 

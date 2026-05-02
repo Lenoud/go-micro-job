@@ -6,6 +6,7 @@ import (
 	"user-service/internal/common"
 	"user-service/internal/svc"
 	"user-service/user"
+	sharedcommon "micro-shared/common"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -36,7 +37,9 @@ func (l *DetailLogic) Detail(in *user.IdReq) (*user.UserInfoResp, error) {
 
 	u, err := l.svcCtx.UserModel.FindOne(l.ctx, targetUserID)
 	if err != nil {
-		return common.FailUserInfo("查询用户信息失败"), nil
+		msg := sharedcommon.Msg("查询", "用户信息")
+		common.LogErr(l.Logger, msg, err)
+		return common.FailUserInfo(msg), nil
 	}
 	if u == nil {
 		return common.FailUserInfo("用户不存在"), nil

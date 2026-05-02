@@ -13,7 +13,7 @@ type BaseResp struct {
 type CreateDepartmentReq struct {
 	Title       string `json:"title"`
 	Description string `json:"description,optional"`
-	ParentId    string `json:"parentId,optional"`
+	ParentId    int64  `json:"parentId,optional"`
 }
 
 type CreateUserReq struct {
@@ -47,10 +47,10 @@ type DepartmentDeleteResp struct {
 }
 
 type DepartmentInfo struct {
-	Id          string `json:"id"`
+	Id          int64  `json:"id"`
 	Title       string `json:"title"`
 	Description string `json:"description"`
-	ParentId    string `json:"parentId"`
+	ParentId    int64  `json:"parentId"`
 	CreateTime  string `json:"createTime"`
 }
 
@@ -70,6 +70,13 @@ type DepartmentListReq struct {
 type DepartmentListResp struct {
 	BaseResp
 	Data *DepartmentListData `json:"data,omitempty"`
+}
+
+type UpdateDepartmentReq struct {
+	Id          int64  `json:"id"`
+	Title       string `json:"title,optional"`
+	Description string `json:"description,optional"`
+	ParentId    int64  `json:"parentId,optional"`
 }
 
 type DepartmentUpdateResp struct {
@@ -130,12 +137,6 @@ type OpLogListResp struct {
 	Data *OpLogListData `json:"data,omitempty"`
 }
 
-type UpdateDepartmentReq struct {
-	Id          string `json:"id"`
-	Title       string `json:"title,optional"`
-	Description string `json:"description,optional"`
-	ParentId    string `json:"parentId,optional"`
-}
 
 type UpdatePwdReq struct {
 	UserId      string `json:"userId"`

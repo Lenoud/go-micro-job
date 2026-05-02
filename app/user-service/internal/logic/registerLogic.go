@@ -7,6 +7,7 @@ import (
 	"user-service/internal/model"
 	"user-service/internal/svc"
 	"user-service/user"
+	sharedcommon "micro-shared/common"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -33,10 +34,12 @@ func (l *RegisterLogic) Register(in *user.RegisterReq) (*user.ActionResp, error)
 
 	existing, err := l.svcCtx.UserModel.FindByUsername(l.ctx, in.Username)
 	if err != nil {
-		return common.FailAction("查询用户失败"), nil
+		msg := sharedcommon.Msg("查询", "用户")
+		common.LogErr(l.Logger, msg, err)
+		return common.FailAction(msg), nil
 	}
 	if existing != nil {
-		return common.FailAction("用户名重复"), nil
+		return common.FailActionDuplicate("用户名重复"), nil
 	}
 
 	if in.Password != in.RePassword {
@@ -58,7 +61,9 @@ func (l *RegisterLogic) Register(in *user.RegisterReq) (*user.ActionResp, error)
 	}
 	_, err = l.svcCtx.UserModel.Insert(l.ctx, u)
 	if err != nil {
-		return common.FailAction("注册用户失败"), nil
+		msg := sharedcommon.Msg("注册", "用户")
+		common.LogErr(l.Logger, msg, err)
+		return common.FailAction(msg), nil
 	}
 	return common.OkAction("创建成功"), nil
 }

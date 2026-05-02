@@ -6,6 +6,7 @@ import (
 	"user-service/internal/common"
 	"user-service/internal/svc"
 	"user-service/user"
+	sharedcommon "micro-shared/common"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -36,7 +37,12 @@ func (l *UpdateUserInfoLogic) UpdateUserInfo(in *user.UpdateUserInfoReq) (*user.
 	}
 
 	existing, err := l.svcCtx.UserModel.FindOne(l.ctx, targetUserID)
-	if err != nil || existing == nil {
+	if err != nil {
+		msg := sharedcommon.Msg("查询", "用户")
+		common.LogErr(l.Logger, msg, err)
+		return common.FailAction(msg), nil
+	}
+	if existing == nil {
 		return common.FailAction("用户不存在"), nil
 	}
 
@@ -51,7 +57,9 @@ func (l *UpdateUserInfoLogic) UpdateUserInfo(in *user.UpdateUserInfoReq) (*user.
 	}
 
 	if err := l.svcCtx.UserModel.Update(l.ctx, existing); err != nil {
-		return common.FailAction("更新用户信息失败"), nil
+		msg := sharedcommon.Msg("更新", "用户信息")
+		common.LogErr(l.Logger, msg, err)
+		return common.FailAction(msg), nil
 	}
 	return common.OkAction("更新成功"), nil
 }

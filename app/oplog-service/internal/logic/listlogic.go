@@ -6,6 +6,7 @@ import (
 	"oplog-service/internal/common"
 	"oplog-service/internal/svc"
 	"oplog-service/oplog"
+	sharedcommon "micro-shared/common"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -32,11 +33,15 @@ func (l *ListLogic) List(in *oplog.OpLogListReq) (*oplog.OpLogListResp, error) {
 	page, pageSize := normalizePage(in.GetPage(), in.GetPageSize())
 	total, err := l.svcCtx.OpLogModel.CountOpLogList(l.ctx)
 	if err != nil {
-		return common.FailOpLogList("查询操作日志失败"), nil
+		msg := sharedcommon.Msg("查询", "操作日志")
+		common.LogErr(l.Logger, msg, err)
+		return common.FailOpLogList(msg), nil
 	}
 	list, err := l.svcCtx.OpLogModel.FindOpLogList(l.ctx, page, pageSize)
 	if err != nil {
-		return common.FailOpLogList("查询操作日志失败"), nil
+		msg := sharedcommon.Msg("查询", "操作日志列表")
+		common.LogErr(l.Logger, msg, err)
+		return common.FailOpLogList(msg), nil
 	}
 
 	items := make([]*oplog.OpLogInfo, 0, len(list))
