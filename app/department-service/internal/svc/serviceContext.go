@@ -1,21 +1,24 @@
 package svc
 
 import (
+	"department-service/ent"
 	"department-service/internal/config"
-	"department-service/internal/model"
 
-	"github.com/zeromicro/go-zero/core/stores/sqlx"
+	_ "github.com/go-sql-driver/mysql"
 )
 
 type ServiceContext struct {
-	Config          config.Config
-	DepartmentModel model.DepartmentModel
+	Config    config.Config
+	EntClient *ent.Client
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
-	conn := sqlx.NewMysql(c.MySQL.DataSource)
+	client, err := ent.Open("mysql", c.MySQL.DataSource)
+	if err != nil {
+		panic(err)
+	}
 	return &ServiceContext{
-		Config:          c,
-		DepartmentModel: model.NewDepartmentModel(conn),
+		Config:    c,
+		EntClient: client,
 	}
 }

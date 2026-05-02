@@ -83,10 +83,10 @@ func (x *ActionResp) GetTimestamp() int64 {
 
 type DepartmentInfo struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	Title         string                 `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
 	Description   string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
-	ParentId      string                 `protobuf:"bytes,4,opt,name=parentId,proto3" json:"parentId,omitempty"`
+	ParentId      int64                  `protobuf:"varint,4,opt,name=parentId,proto3" json:"parentId,omitempty"`
 	CreateTime    string                 `protobuf:"bytes,5,opt,name=createTime,proto3" json:"createTime,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -122,11 +122,11 @@ func (*DepartmentInfo) Descriptor() ([]byte, []int) {
 	return file_department_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *DepartmentInfo) GetId() string {
+func (x *DepartmentInfo) GetId() int64 {
 	if x != nil {
 		return x.Id
 	}
-	return ""
+	return 0
 }
 
 func (x *DepartmentInfo) GetTitle() string {
@@ -143,11 +143,11 @@ func (x *DepartmentInfo) GetDescription() string {
 	return ""
 }
 
-func (x *DepartmentInfo) GetParentId() string {
+func (x *DepartmentInfo) GetParentId() int64 {
 	if x != nil {
 		return x.ParentId
 	}
-	return ""
+	return 0
 }
 
 func (x *DepartmentInfo) GetCreateTime() string {
@@ -365,7 +365,7 @@ type CreateDepartmentReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Title         string                 `protobuf:"bytes,1,opt,name=title,proto3" json:"title,omitempty"`
 	Description   string                 `protobuf:"bytes,2,opt,name=description,proto3" json:"description,omitempty"`
-	ParentId      string                 `protobuf:"bytes,3,opt,name=parentId,proto3" json:"parentId,omitempty"`
+	ParentId      int64                  `protobuf:"varint,3,opt,name=parentId,proto3" json:"parentId,omitempty"`
 	Auth          *DepartmentContext     `protobuf:"bytes,4,opt,name=auth,proto3" json:"auth,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -415,11 +415,11 @@ func (x *CreateDepartmentReq) GetDescription() string {
 	return ""
 }
 
-func (x *CreateDepartmentReq) GetParentId() string {
+func (x *CreateDepartmentReq) GetParentId() int64 {
 	if x != nil {
 		return x.ParentId
 	}
-	return ""
+	return 0
 }
 
 func (x *CreateDepartmentReq) GetAuth() *DepartmentContext {
@@ -431,10 +431,10 @@ func (x *CreateDepartmentReq) GetAuth() *DepartmentContext {
 
 type UpdateDepartmentReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	Title         string                 `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
 	Description   string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
-	ParentId      string                 `protobuf:"bytes,4,opt,name=parentId,proto3" json:"parentId,omitempty"`
+	ParentId      int64                  `protobuf:"varint,4,opt,name=parentId,proto3" json:"parentId,omitempty"`
 	Auth          *DepartmentContext     `protobuf:"bytes,5,opt,name=auth,proto3" json:"auth,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -470,11 +470,11 @@ func (*UpdateDepartmentReq) Descriptor() ([]byte, []int) {
 	return file_department_proto_rawDescGZIP(), []int{6}
 }
 
-func (x *UpdateDepartmentReq) GetId() string {
+func (x *UpdateDepartmentReq) GetId() int64 {
 	if x != nil {
 		return x.Id
 	}
-	return ""
+	return 0
 }
 
 func (x *UpdateDepartmentReq) GetTitle() string {
@@ -491,11 +491,11 @@ func (x *UpdateDepartmentReq) GetDescription() string {
 	return ""
 }
 
-func (x *UpdateDepartmentReq) GetParentId() string {
+func (x *UpdateDepartmentReq) GetParentId() int64 {
 	if x != nil {
 		return x.ParentId
 	}
-	return ""
+	return 0
 }
 
 func (x *UpdateDepartmentReq) GetAuth() *DepartmentContext {
@@ -629,10 +629,10 @@ const file_department_proto_rawDesc = "" +
 	"\x03msg\x18\x02 \x01(\tR\x03msg\x12\x1c\n" +
 	"\ttimestamp\x18\x03 \x01(\x03R\ttimestamp\"\x94\x01\n" +
 	"\x0eDepartmentInfo\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x14\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x14\n" +
 	"\x05title\x18\x02 \x01(\tR\x05title\x12 \n" +
 	"\vdescription\x18\x03 \x01(\tR\vdescription\x12\x1a\n" +
-	"\bparentId\x18\x04 \x01(\tR\bparentId\x12\x1e\n" +
+	"\bparentId\x18\x04 \x01(\x03R\bparentId\x12\x1e\n" +
 	"\n" +
 	"createTime\x18\x05 \x01(\tR\n" +
 	"createTime\"\x8a\x01\n" +
@@ -654,13 +654,13 @@ const file_department_proto_rawDesc = "" +
 	"\x13CreateDepartmentReq\x12\x14\n" +
 	"\x05title\x18\x01 \x01(\tR\x05title\x12 \n" +
 	"\vdescription\x18\x02 \x01(\tR\vdescription\x12\x1a\n" +
-	"\bparentId\x18\x03 \x01(\tR\bparentId\x121\n" +
+	"\bparentId\x18\x03 \x01(\x03R\bparentId\x121\n" +
 	"\x04auth\x18\x04 \x01(\v2\x1d.department.DepartmentContextR\x04auth\"\xac\x01\n" +
 	"\x13UpdateDepartmentReq\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x14\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x14\n" +
 	"\x05title\x18\x02 \x01(\tR\x05title\x12 \n" +
 	"\vdescription\x18\x03 \x01(\tR\vdescription\x12\x1a\n" +
-	"\bparentId\x18\x04 \x01(\tR\bparentId\x121\n" +
+	"\bparentId\x18\x04 \x01(\x03R\bparentId\x121\n" +
 	"\x04auth\x18\x05 \x01(\v2\x1d.department.DepartmentContextR\x04auth\"P\n" +
 	"\tDeleteReq\x12\x10\n" +
 	"\x03ids\x18\x01 \x01(\tR\x03ids\x121\n" +

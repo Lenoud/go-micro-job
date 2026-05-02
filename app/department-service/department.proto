@@ -11,10 +11,10 @@ message ActionResp {
 }
 
 message DepartmentInfo {
-  string id = 1;
+  int64 id = 1;
   string title = 2;
   string description = 3;
-  string parentId = 4;
+  int64 parentId = 4;
   string createTime = 5;
 }
 
@@ -42,15 +42,15 @@ message DepartmentListReq {
 message CreateDepartmentReq {
   string title = 1;
   string description = 2;
-  string parentId = 3;
+  int64 parentId = 3;
   DepartmentContext auth = 4;
 }
 
 message UpdateDepartmentReq {
-  string id = 1;
+  int64 id = 1;
   string title = 2;
   string description = 3;
-  string parentId = 4;
+  int64 parentId = 4;
   DepartmentContext auth = 5;
 }
 

@@ -33,6 +33,7 @@ func main() {
 		}
 	})
 	defer s.Stop()
+	defer ctx.EntClient.Close()
 
 	fmt.Printf("Starting rpc server at %s...\n", c.ListenOn)
 	s.Start()

@@ -5,8 +5,8 @@ import (
 
 	"department-service/department"
 	"department-service/internal/common"
-	"department-service/internal/model"
 	"department-service/internal/svc"
+	sharedcommon "micro-shared/common"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -33,13 +33,15 @@ func (l *CreateLogic) Create(in *department.CreateDepartmentReq) (*department.Ac
 		return common.FailAction("部门名称不能为空"), nil
 	}
 
-	data := &model.Department{
-		Title:       in.GetTitle(),
-		Description: in.GetDescription(),
-		ParentId:    in.GetParentId(),
-	}
-	if _, err := l.svcCtx.DepartmentModel.Insert(l.ctx, data); err != nil {
-		return common.FailAction("创建部门失败"), nil
+	_, err := l.svcCtx.EntClient.Department.Create().
+		SetTitle(in.GetTitle()).
+		SetDescription(in.GetDescription()).
+		SetParentID(int(in.GetParentId())).
+		Save(l.ctx)
+	if err != nil {
+		msg := sharedcommon.Msg("创建", "部门")
+		common.LogErr(l.Logger, msg, err)
+		return common.FailAction(msg), nil
 	}
 	return common.OkAction("创建成功"), nil
 }
