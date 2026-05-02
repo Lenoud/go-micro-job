@@ -17,7 +17,7 @@
 - go-zero v1.10.1
 - etcd v3.5（服务注册/发现）
 - Redis 7（缓存）
-- MySQL 8（共享父仓库 `go_job_mysql` 容器，使用独立库 `micro_job`）
+- MySQL 8（本地开发复用父仓库 `go_job_mysql` 容器和 `go_job` 库；Docker/生产配置使用 `micro_job` 库）
 
 ## 目录结构
 
@@ -65,7 +65,7 @@
 ### 前置条件
 
 1. MySQL 容器运行中（来自父仓库 `docker compose up -d mysql`）
-2. Redis 和 etcd 启动：
+2. Redis 和 etcd 已启动：
 
 ```bash
 docker compose up -d redis etcd
@@ -77,7 +77,7 @@ docker compose up -d redis etcd
 scripts/dev.sh
 ```
 
-自动完成：构建 → 启动 user-service → department-service → oplog-service → api-gateway → 日志输出到 `logs/`。
+自动完成：检查 MySQL/Redis/etcd 端口 → 确保 `go_job.b_op_log` 表存在 → 构建 → 启动 user-service → department-service → oplog-service → api-gateway → 日志输出到 `logs/`。
 
 停止：`Ctrl+C` 或 `scripts/stop-dev.sh`
 
@@ -164,4 +164,4 @@ docker compose up -d
 ```
 
 包含 Redis、etcd、user-service、department-service、oplog-service、api-gateway 容器。
-MySQL 使用独立库 `micro_job`，依赖父仓库的 MySQL 容器。
+Docker/生产配置中的业务服务使用独立库 `micro_job`，依赖父仓库或部署环境提供的 MySQL。

@@ -13,14 +13,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 - **Go 版本**: 1.25.7
 - **框架**: go-zero v1.10.1
-- **数据库**: MySQL `micro_job`（复用父仓库 Docker 容器 3306 端口，`root:root123`）
+- **数据库**: 本地开发配置使用父仓库 MySQL `go_job`（`go_job` / `go_job123`）；Docker/生产配置使用 `micro_job`（`root:root123`）
 - **服务发现**: etcd（2379）
 - **缓存**: Redis（6379，密码 `redis123`）
 
 ## Build & Run
 
 ```bash
-# 一键启动（检查基础设施、建库建表、编译、依次启动 user-service → department-service → oplog-service → api-gateway）
+# 一键启动（检查基础设施端口、确保 oplog 表、编译、依次启动 user-service → department-service → oplog-service → api-gateway）
 scripts/dev.sh
 
 # 停止
@@ -33,7 +33,7 @@ cd app/department-service && go build ./...
 cd app/oplog-service && go build ./...
 ```
 
-基础设施（redis、etcd）由 `dev.sh` 自动通过 `docker compose` 启动。MySQL 依赖父仓库的 `go_job_mysql` 容器。
+`dev.sh` 只检查 MySQL/Redis/etcd 端口是否就绪，不自动启动 Docker 基础设施。MySQL 依赖父仓库的 `go_job_mysql` 容器；Redis 和 etcd 可通过 `micro/docker-compose.yml` 启动。
 
 ## Architecture
 
