@@ -13,8 +13,8 @@ import (
 )
 
 type ServiceContext struct {
-	Config     config.Config
-	OpLogModel model.OpLogModel
+	Config      config.Config
+	OpLogModel  model.OpLogModel
 	stopCleanup chan struct{}
 	stopOnce    sync.Once
 }
@@ -23,7 +23,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	conn := sqlx.NewMysql(c.MySQL.DataSource)
 	ctx := &ServiceContext{
 		Config:      c,
-		OpLogModel: model.NewOpLogModel(conn),
+		OpLogModel:  model.NewOpLogModel(conn),
 		stopCleanup: make(chan struct{}),
 	}
 	ctx.startCleanupLoop()

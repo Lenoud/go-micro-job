@@ -34,18 +34,18 @@ func (m *fakeOpLogModel) CountLoginLogList(ctx context.Context) (int64, error) {
 func (m *fakeOpLogModel) FindOpLogList(ctx context.Context, page, pageSize int64) ([]*model.OpLog, error) {
 	m.opLogListCalled = true
 	return []*model.OpLog{{
-		Id:         "10",
-		RequestId:  "req-1",
-		UserId:     "7",
-		ReIp:       "127.0.0.1",
+		Id:          "10",
+		RequestId:   "req-1",
+		UserId:      "7",
+		ReIp:        "127.0.0.1",
 		RequestTime: 1710000000000,
-		ReUa:       "ua",
-		ReUrl:      "/api/user/create",
-		ReMethod:   "POST",
-		ReContent:  "username=a",
-		Success:    "1",
-		BizCode:    200,
-		BizMsg:     "操作成功",
+		ReUa:        "ua",
+		ReUrl:       "/api/user/create",
+		ReMethod:    "POST",
+		ReContent:   "username=a",
+		Success:     "1",
+		BizCode:     200,
+		BizMsg:      "操作成功",
 		ResponseMs:  12,
 	}}, nil
 }
@@ -59,7 +59,7 @@ func (m *fakeOpLogModel) FindLoginLogList(ctx context.Context, page, pageSize in
 		ReUrl:      "/api/user/login",
 		ReMethod:   "POST",
 		ReUa:       "login-ua",
-		ResponseMs:  8,
+		ResponseMs: 8,
 	}}, nil
 }
 

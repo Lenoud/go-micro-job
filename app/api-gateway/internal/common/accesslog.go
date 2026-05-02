@@ -34,8 +34,8 @@ const (
 
 // OpLogWriter buffers access log entries and batch-writes them via gRPC.
 type OpLogWriter struct {
-	ch  chan *oplogclient.OpLogRecord
-	rpc oplogclient.OpLog
+	ch   chan *oplogclient.OpLogRecord
+	rpc  oplogclient.OpLog
 	done chan struct{}
 }
 

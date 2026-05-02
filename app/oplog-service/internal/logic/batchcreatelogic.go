@@ -53,17 +53,17 @@ func (l *BatchCreateLogic) BatchCreate(in *oplog.BatchCreateReq) (*oplog.ActionR
 			accessTime = now
 		}
 		logs = append(logs, &model.OpLog{
-			RequestId:  item.GetRequestId(),
-			UserId:     item.GetUserId(),
-			ReIp:       item.GetReIp(),
+			RequestId:   item.GetRequestId(),
+			UserId:      item.GetUserId(),
+			ReIp:        item.GetReIp(),
 			RequestTime: reTime,
-			ReUa:       item.GetReUa(),
-			ReUrl:      item.GetReUrl(),
-			ReMethod:   item.GetReMethod(),
-			ReContent:  item.GetReContent(),
-			Success:    success,
-			BizCode:    item.GetBizCode(),
-			BizMsg:     item.GetBizMsg(),
+			ReUa:        item.GetReUa(),
+			ReUrl:       item.GetReUrl(),
+			ReMethod:    item.GetReMethod(),
+			ReContent:   item.GetReContent(),
+			Success:     success,
+			BizCode:     item.GetBizCode(),
+			BizMsg:      item.GetBizMsg(),
 			ResponseMs:  accessTime,
 		})
 	}
