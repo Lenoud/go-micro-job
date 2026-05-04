@@ -23,7 +23,6 @@ func UserModelToProto(u *model.User) *user.UserInfo {
 		Email:      u.Email,
 		Role:       u.Role,
 		Status:     u.Status,
-		Token:      u.Token,
 		CreateTime: createTime,
 	}
 }

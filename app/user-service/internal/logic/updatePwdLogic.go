@@ -3,10 +3,10 @@ package logic
 import (
 	"context"
 
+	sharedcommon "micro-shared/common"
 	"user-service/internal/common"
 	"user-service/internal/svc"
 	"user-service/user"
-	sharedcommon "micro-shared/common"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )

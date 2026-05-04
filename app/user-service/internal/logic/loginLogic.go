@@ -4,10 +4,10 @@ import (
 	"context"
 	"time"
 
+	sharedcommon "micro-shared/common"
 	"user-service/internal/common"
 	"user-service/internal/svc"
 	"user-service/user"
-	sharedcommon "micro-shared/common"
 
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/zeromicro/go-zero/core/logx"

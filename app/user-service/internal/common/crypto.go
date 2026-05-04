@@ -15,7 +15,3 @@ func Md5(input string) string {
 func EncryptPassword(password string) string {
 	return Md5(password + Salt)
 }
-
-func GenerateToken(username string) string {
-	return Md5(username + Salt)
-}

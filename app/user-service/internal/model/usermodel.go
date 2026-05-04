@@ -11,7 +11,7 @@ import (
 
 const (
 	UserTableName = "b_user"
-	userFields    = "id, username, password, IFNULL(nickname,'') AS nickname, IFNULL(mobile,'') AS mobile, IFNULL(email,'') AS email, IFNULL(role,'1') AS role, IFNULL(status,'0') AS status, IFNULL(token,'') AS token, create_time"
+	userFields    = "id, username, password, IFNULL(nickname,'') AS nickname, IFNULL(mobile,'') AS mobile, IFNULL(email,'') AS email, IFNULL(role,'1') AS role, IFNULL(status,'0') AS status, create_time"
 )
 
 type User struct {
@@ -23,7 +23,6 @@ type User struct {
 	Email      string   `db:"email"       json:"email"`
 	Role       string   `db:"role"        json:"role"`
 	Status     string   `db:"status"      json:"status"`
-	Token      string   `db:"token"       json:"token"`
 	CreateTime NullTime `db:"create_time" json:"createTime"`
 }
 
@@ -53,10 +52,10 @@ func NewUserModel(conn sqlx.SqlConn) UserModel {
 }
 
 func (m *defaultUserModel) Insert(ctx context.Context, data *User) (sql.Result, error) {
-	query := fmt.Sprintf("INSERT INTO %s (username, password, nickname, mobile, email, role, status, token, create_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())", m.table)
+	query := fmt.Sprintf("INSERT INTO %s (username, password, nickname, mobile, email, role, status, create_time) VALUES (?, ?, ?, ?, ?, ?, ?, NOW())", m.table)
 	return m.conn.ExecCtx(ctx, query,
 		data.Username, data.Password, data.Nickname, data.Mobile, data.Email,
-		data.Role, data.Status, data.Token,
+		data.Role, data.Status,
 	)
 }
 
@@ -168,9 +167,9 @@ func (m *defaultUserModel) DeleteBatch(ctx context.Context, ids []string) error 
 }
 
 func (m *defaultUserModel) Update(ctx context.Context, data *User) error {
-	query := fmt.Sprintf("UPDATE %s SET username=?, nickname=?, mobile=?, email=?, role=?, status=?, token=? WHERE id=?", m.table)
+	query := fmt.Sprintf("UPDATE %s SET username=?, nickname=?, mobile=?, email=?, role=?, status=? WHERE id=?", m.table)
 	_, err := m.conn.ExecCtx(ctx, query,
-		data.Username, data.Nickname, data.Mobile, data.Email, data.Role, data.Status, data.Token, data.Id,
+		data.Username, data.Nickname, data.Mobile, data.Email, data.Role, data.Status, data.Id,
 	)
 	return err
 }

@@ -3,11 +3,11 @@ package logic
 import (
 	"context"
 
+	sharedcommon "micro-shared/common"
 	"user-service/internal/common"
 	"user-service/internal/model"
 	"user-service/internal/svc"
 	"user-service/user"
-	sharedcommon "micro-shared/common"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -47,7 +47,6 @@ func (l *CreateLogic) Create(in *user.CreateUserReq) (*user.ActionResp, error) {
 	}
 
 	md5Password := common.EncryptPassword(in.Password)
-	token := common.GenerateToken(in.Username)
 
 	role := in.Role
 	if role == "" {
@@ -66,7 +65,6 @@ func (l *CreateLogic) Create(in *user.CreateUserReq) (*user.ActionResp, error) {
 		Email:    in.Email,
 		Role:     role,
 		Status:   status,
-		Token:    token,
 	}
 	_, err = l.svcCtx.UserModel.Insert(l.ctx, u)
 	if err != nil {

@@ -137,7 +137,6 @@ type OpLogListResp struct {
 	Data *OpLogListData `json:"data,omitempty"`
 }
 
-
 type UpdatePwdReq struct {
 	UserId      string `json:"userId"`
 	OldPassword string `json:"oldPassword"`
