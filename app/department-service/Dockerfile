@@ -1,10 +1,13 @@
 FROM golang:1.25-alpine AS builder
+ENV GOPROXY=https://goproxy.cn,direct
 WORKDIR /build
 COPY go.work go.work
 COPY app/shared/ app/shared/
-COPY app/department-service/ app/department-service/
+COPY app/department-service/go.mod app/department-service/go.sum app/department-service/
 WORKDIR /build/app/department-service
-RUN GOWORK=off go mod tidy && GOWORK=off go build -o departmentservice department.go
+RUN GOWORK=off go mod download
+COPY app/department-service/ app/department-service/
+RUN GOWORK=off go build -o departmentservice department.go
 
 FROM alpine:3.20
 RUN apk --no-cache add ca-certificates tzdata

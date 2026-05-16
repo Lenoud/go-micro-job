@@ -1,14 +1,13 @@
 FROM golang:1.25-alpine AS builder
+ENV GOPROXY=https://goproxy.cn,direct
 WORKDIR /build
-# 先复制 go.work 和各模块
 COPY go.work go.work
 COPY app/user-service/go.mod app/user-service/go.sum app/user-service/
 COPY app/department-service/go.mod app/department-service/go.sum app/department-service/
 COPY app/api-gateway/go.mod app/api-gateway/go.sum app/api-gateway/
 WORKDIR /build/app/api-gateway
-RUN go mod tidy
+RUN go mod download
 WORKDIR /build
-# 复制完整源码
 COPY app/user-service/ app/user-service/
 COPY app/department-service/ app/department-service/
 COPY app/api-gateway/ app/api-gateway/
