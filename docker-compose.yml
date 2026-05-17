@@ -85,6 +85,8 @@ services:
     restart: unless-stopped
     ports:
       - "9101:9101"
+    volumes:
+      - ./app/user-service/etc/user.yaml:/app/etc/user.yaml:ro
     depends_on:
       redis:
         condition: service_healthy
@@ -99,6 +101,8 @@ services:
     restart: unless-stopped
     ports:
       - "9102:9102"
+    volumes:
+      - ./app/department-service/etc/department.yaml:/app/etc/department.yaml:ro
     depends_on:
       etcd:
         condition: service_healthy
@@ -111,6 +115,8 @@ services:
     restart: unless-stopped
     ports:
       - "9103:9103"
+    volumes:
+      - ./app/oplog-service/etc/oplog.yaml:/app/etc/oplog.yaml:ro
     depends_on:
       etcd:
         condition: service_healthy
@@ -123,6 +129,8 @@ services:
     restart: unless-stopped
     ports:
       - "9000:9000"
+    volumes:
+      - ./app/api-gateway/etc/apigateway.yaml:/app/etc/apigateway.yaml:ro
     depends_on:
       etcd:
         condition: service_healthy

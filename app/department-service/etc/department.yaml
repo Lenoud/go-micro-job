@@ -20,6 +20,12 @@ DevServer:
   EnableMetrics: true
   EnablePprof: false
 
+Telemetry:
+  Name: department.rpc
+  Endpoint: http://jaeger:4318
+  Sampler: 1.0
+  Batcher: otlphttp
+
 Middlewares:
   Trace: true
   Recover: true
