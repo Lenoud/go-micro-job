@@ -6,8 +6,8 @@ COPY app/shared/ app/shared/
 COPY app/oplog-service/go.mod app/oplog-service/go.sum app/oplog-service/
 WORKDIR /build/app/oplog-service
 RUN GOWORK=off go mod download
-COPY app/oplog-service/ app/oplog-service/
-RUN GOWORK=off go build -o oplogservice oplog.go
+COPY app/oplog-service/ .
+RUN GOWORK=off go build -o oplogservice .
 
 FROM alpine:3.20
 RUN apk --no-cache add ca-certificates tzdata

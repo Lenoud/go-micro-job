@@ -4,15 +4,19 @@ WORKDIR /build
 COPY go.work go.work
 COPY app/user-service/go.mod app/user-service/go.sum app/user-service/
 COPY app/department-service/go.mod app/department-service/go.sum app/department-service/
+COPY app/oplog-service/go.mod app/oplog-service/go.sum app/oplog-service/
+COPY app/shared/go.mod app/shared/
 COPY app/api-gateway/go.mod app/api-gateway/go.sum app/api-gateway/
 WORKDIR /build/app/api-gateway
 RUN go mod download
 WORKDIR /build
 COPY app/user-service/ app/user-service/
 COPY app/department-service/ app/department-service/
+COPY app/oplog-service/ app/oplog-service/
+COPY app/shared/ app/shared/
 COPY app/api-gateway/ app/api-gateway/
 WORKDIR /build/app/api-gateway
-RUN go build -o apigateway apigateway.go
+RUN go build -o apigateway .
 
 FROM alpine:3.20
 RUN apk --no-cache add ca-certificates tzdata

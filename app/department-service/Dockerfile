@@ -6,8 +6,8 @@ COPY app/shared/ app/shared/
 COPY app/department-service/go.mod app/department-service/go.sum app/department-service/
 WORKDIR /build/app/department-service
 RUN GOWORK=off go mod download
-COPY app/department-service/ app/department-service/
-RUN GOWORK=off go build -o departmentservice department.go
+COPY app/department-service/ .
+RUN GOWORK=off go build -o departmentservice .
 
 FROM alpine:3.20
 RUN apk --no-cache add ca-certificates tzdata

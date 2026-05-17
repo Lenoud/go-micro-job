@@ -6,8 +6,8 @@ COPY app/shared/ app/shared/
 COPY app/user-service/go.mod app/user-service/go.sum app/user-service/
 WORKDIR /build/app/user-service
 RUN GOWORK=off go mod download
-COPY app/user-service/ app/user-service/
-RUN GOWORK=off go build -o userservice user.go
+COPY app/user-service/ .
+RUN GOWORK=off go build -o userservice .
 
 FROM alpine:3.20
 RUN apk --no-cache add ca-certificates tzdata
