@@ -22,7 +22,7 @@ DevServer:
 
 Telemetry:
   Name: department.rpc
-  Endpoint: http://jaeger:4318
+  Endpoint: jaeger:4318
   Sampler: 1.0
   Batcher: otlphttp
 
