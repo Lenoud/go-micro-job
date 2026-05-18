@@ -5,6 +5,7 @@ package department
 
 import (
 	"context"
+	"strconv"
 
 	"api-gateway/internal/common"
 	"api-gateway/internal/svc"
@@ -36,11 +37,14 @@ func (l *DepartmentUpdateLogic) DepartmentUpdate(req *types.UpdateDepartmentReq)
 		return &types.DepartmentUpdateResp{BaseResp: common.FailBaseForbidden("无权访问")}, nil
 	}
 
+	id, _ := strconv.ParseInt(req.Id, 10, 64)
+	parentId, _ := strconv.ParseInt(req.ParentId, 10, 64)
+
 	rpcResp, err := l.svcCtx.DepartmentRpc.Update(l.ctx, &departmentclient.UpdateDepartmentReq{
-		Id:          req.Id,
+		Id:          id,
 		Title:       req.Title,
 		Description: req.Description,
-		ParentId:    req.ParentId,
+		ParentId:    parentId,
 		Auth:        auth,
 	})
 	if err != nil {

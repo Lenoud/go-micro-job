@@ -2,6 +2,7 @@ package common
 
 import (
 	"api-gateway/internal/types"
+	"strconv"
 
 	departmentclient "department-service/departmentClient"
 )
@@ -11,10 +12,10 @@ func ProtoToDepartmentInfo(d *departmentclient.DepartmentInfo) *types.Department
 		return nil
 	}
 	return &types.DepartmentInfo{
-		Id:          d.Id,
+		Id:          strconv.FormatInt(d.Id, 10),
 		Title:       d.Title,
 		Description: d.Description,
-		ParentId:    d.ParentId,
+		ParentId:    strconv.FormatInt(d.ParentId, 10),
 		CreateTime:  d.CreateTime,
 	}
 }
