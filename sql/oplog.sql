@@ -1,5 +1,5 @@
--- go_job 数据库：oplog-service 所需的 b_op_log 表（共用单体数据库）
-USE `go_job`;
+-- micro_job 数据库：oplog-service 所需的 b_op_log 表
+USE `micro_job`;
 
 CREATE TABLE IF NOT EXISTS `b_op_log` (
   `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
